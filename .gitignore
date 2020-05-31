@@ -1,0 +1,6 @@
+discord-files
+libpath
+config.pyc
+__pycache__
+*.obj
+*.o
