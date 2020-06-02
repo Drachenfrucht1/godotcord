@@ -2,12 +2,15 @@
 #include "discord-files/discord.h"
 #include "core/io/marshalls.h"
 
-void NetworkedMultiplayerDiscord::init_discord(Ref<Godotcord> godotcord) {
+Error NetworkedMultiplayerDiscord::init_discord(Ref<Godotcord> godotcord) {
 	lobby_manager = &(godotcord->get_core()->LobbyManager());
 
 	discord::User user{};
-	godotcord->get_core()->UserManager().GetCurrentUser(&user);
+	discord::Result result = godotcord->get_core()->UserManager().GetCurrentUser(&user);
+	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_SKIP);
 	unique_id = user.GetId();
+
+	print_line(vformat("Init NetworkedMultiplayerDiscord with id %d", unique_id));
 
 	//LobbyNetworkMessage handler
 	lobby_manager->OnNetworkMessage.Connect([this](int64_t p_lobby_id, int64_t p_user_id, int p_channel, uint8_t *data, int64_t a) {
@@ -143,6 +146,8 @@ Error NetworkedMultiplayerDiscord::join_lobby(int id, String secret) {
 			active = true;
 			connection_status = CONNECTION_CONNECTED;
 
+			server_peer = lobby.GetOwnerId();
+
 			lobby_manager->ConnectNetwork(lobby_id);
 			lobby_manager->OpenNetworkChannel(lobby_id, 0, true);
 			lobby_manager->OpenNetworkChannel(lobby_id, 0, false);
@@ -158,14 +163,12 @@ Error NetworkedMultiplayerDiscord::join_lobby(int id, String secret) {
 			for (int i = 0; i < count; i++) {
 				result = lobby_manager->GetMemberUserId(lobby_id, i, &user_id);
 				ERR_CONTINUE(result != discord::Result::Ok);
-				result = lobby_manager->GetMemberMetadataValue(lobby_id, user_id, "server", value);
 
-				if (value == "true" && result == discord::Result::Ok) {
-					peers.push_back(user_id);
-					server_peer = user_id;
-				} else {
-					peers.push_back(user_id);
+				if (user_id == unique_id) {
+					continue;
 				}
+
+				peers.push_back(user_id);
 			}
 
 			emit_signal("connection_succeeded");
@@ -189,6 +192,8 @@ Error NetworkedMultiplayerDiscord::join_lobby_activity(String activitySecret) {
 			active = true;
 			connection_status = CONNECTION_CONNECTED;
 
+			server_peer = lobby.GetOwnerId();
+
 			lobby_manager->ConnectNetwork(lobby_id);
 			lobby_manager->OpenNetworkChannel(lobby_id, 0, true);
 			lobby_manager->OpenNetworkChannel(lobby_id, 0, false);
@@ -204,14 +209,10 @@ Error NetworkedMultiplayerDiscord::join_lobby_activity(String activitySecret) {
 			for (int i = 0; i < count; i++) {
 				result = lobby_manager->GetMemberUserId(lobby_id, i, &user_id);
 				ERR_CONTINUE(result != discord::Result::Ok);
-				result = lobby_manager->GetMemberMetadataValue(lobby_id, user_id, "server", value);
-
-				if (value == "true" && result == discord::Result::Ok) {
-					peers.push_back(user_id);
-					server_peer = user_id;
-				} else {
-					peers.push_back(user_id);
+				if (user_id == unique_id) {
+					continue;
 				}
+				peers.push_back(user_id);
 			}
 
 			emit_signal("connection_succeeded");
@@ -278,15 +279,13 @@ Error NetworkedMultiplayerDiscord::put_packet(const uint8_t *p_buffer, int p_buf
 	ERR_FAIL_COND_V_MSG(!active, ERR_UNCONFIGURED, "The multiplayer instance isn't currently active.");
 	ERR_FAIL_COND_V_MSG(connection_status != CONNECTION_CONNECTED, ERR_UNCONFIGURED, "The multiplayer instance isn't currently connected to any server or client.");
 
-	int packet_flags = 0;
 	int channel = 0;
+	uint32_t discord_size = p_buffer_size + 5;
 
-	uint32_t size = p_buffer_size;
-
-	uint8_t *data = (uint8_t*)memalloc(sizeof(uint8_t) * (size + 5));
+	uint8_t *data = (uint8_t*)memalloc(discord_size);
 	data[0] = 'i';
-	encode_uint32(size, &data[1]);
-	copymem(&data[5], p_buffer, size);
+	encode_uint32(p_buffer_size, &data[1]);
+	copymem(&data[5], p_buffer, p_buffer_size);
 
 	if (transfer_mode == TRANSFER_MODE_UNRELIABLE) {
 		channel = 1;
@@ -298,16 +297,16 @@ Error NetworkedMultiplayerDiscord::put_packet(const uint8_t *p_buffer, int p_buf
 			if (target_peer == 1) {
 				target_peer = server_peer;
 			}
-			result = lobby_manager->SendNetworkMessage(lobby_id, target_peer, channel, data, (size + 5));
+			result = lobby_manager->SendNetworkMessage(lobby_id, target_peer, channel, data, discord_size);
 			ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, Error::ERR_CANT_RESOLVE, vformat("Failed to send message to %d", target_peer))
 		} else {
-			ERR_FAIL_V_MSG(Error::ERR_INVALID_PARAMETER, "Couldn't find peer id: %d", target_peer);
+			ERR_FAIL_V_MSG(Error::ERR_INVALID_PARAMETER, vformat("Couldn't find peer id: %d", target_peer))
 		}
 	} else if (target_peer == 0) {
 		discord::Result result;
 		for (List<int64_t>::Element *E = peers.front(); E;E=E->next()) {
-			result = lobby_manager->SendNetworkMessage(lobby_id, E->get(), channel, data, (size + 5));
-			ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to user &d", E->get()));
+			result = lobby_manager->SendNetworkMessage(lobby_id, E->get(), channel, data, discord_size);
+			ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to user &d", E->get()))
 		}
 	} else {
 		target_peer *= -1;
@@ -319,11 +318,11 @@ Error NetworkedMultiplayerDiscord::put_packet(const uint8_t *p_buffer, int p_buf
 			for (List<int64_t>::Element *E = peers.front(); E; E = E->next()) {
 				if (E->get() == target_peer)
 					continue;
-				result = lobby_manager->SendNetworkMessage(lobby_id, E->get(), channel, data, (size + 5));
+				result = lobby_manager->SendNetworkMessage(lobby_id, E->get(), channel, data, discord_size);
 				ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to user &d", E->get()));
 			}
 		} else {
-			ERR_FAIL_V_MSG(Error::ERR_INVALID_PARAMETER, "Couldn't find peer id: %d", target_peer);
+			ERR_FAIL_V_MSG(Error::ERR_INVALID_PARAMETER, vformat("Couldn't find peer id: %d", target_peer))
 		}
 	}
 
@@ -386,6 +385,8 @@ void NetworkedMultiplayerDiscord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_lobby_id"), &NetworkedMultiplayerDiscord::get_lobby_id);
 	ClassDB::bind_method(D_METHOD("get_lobby_secret"), &NetworkedMultiplayerDiscord::get_lobby_secret);
 	ClassDB::bind_method(D_METHOD("get_lobby_activity_secret"), &NetworkedMultiplayerDiscord::get_lobby_activity_secret);
+	ClassDB::bind_method(D_METHOD("get_current_members"), &NetworkedMultiplayerDiscord::get_current_members);
+	ClassDB::bind_method(D_METHOD("get_max_members"), &NetworkedMultiplayerDiscord::get_max_members);
 
 	ADD_SIGNAL(MethodInfo("created_lobby"));
 }
@@ -396,8 +397,8 @@ int NetworkedMultiplayerDiscord::get_lobby_id() const {
 	return lobby_id;
 }
 
-String NetworkedMultiplayerDiscord::get_lobby_secret() {
-	ERR_FAIL_COND_V_MSG(!active, "", "The multiplayer instance is not active currently.");
+String NetworkedMultiplayerDiscord::get_lobby_secret() const {
+	ERR_FAIL_COND_V_MSG(!active, "", "The multiplayer instance is not active currently.")
 
 	discord::Lobby lobby;
 	lobby_manager->GetLobby(lobby_id, &lobby);
@@ -405,13 +406,31 @@ String NetworkedMultiplayerDiscord::get_lobby_secret() {
 	return s;
 }
 
-String NetworkedMultiplayerDiscord::get_lobby_activity_secret() {
-	ERR_FAIL_COND_V_MSG(!active, "", "The multiplayer instance is not active currently.");
+String NetworkedMultiplayerDiscord::get_lobby_activity_secret() const {
+	ERR_FAIL_COND_V_MSG(!active, "", "The multiplayer instance is not active currently.")
 
 	char c_str[128];
 	lobby_manager->GetLobbyActivitySecret(lobby_id, c_str);
 	String s(c_str);
 	return s;
+}
+
+int NetworkedMultiplayerDiscord::get_current_members() const {
+	ERR_FAIL_COND_V_MSG(!active, -1, "The multiplayer instance is not active currently.")
+	int32_t count;
+	discord::Result result = lobby_manager->MemberCount(lobby_id, &count);
+	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, -1, "Could not get current members")
+
+	return count;
+}
+
+int NetworkedMultiplayerDiscord::get_max_members() const {
+	ERR_FAIL_COND_V_MSG(!active, -1, "The multiplayer instance is not active currently.")
+	discord::Lobby lobby;
+	discord::Result result = lobby_manager->GetLobby(lobby_id, &lobby);
+	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, -1, "Could not get max members")
+
+	return lobby.GetCapacity();
 }
 
 NetworkedMultiplayerDiscord::NetworkedMultiplayerDiscord() {
@@ -427,6 +446,7 @@ NetworkedMultiplayerDiscord::NetworkedMultiplayerDiscord() {
 	connection_status = CONNECTION_DISCONNECTED;
 	current_packet = {NULL, 0, 0};
 	lobby_manager = NULL;
+	server_peer = -1;
 }
 
 NetworkedMultiplayerDiscord::~NetworkedMultiplayerDiscord() {

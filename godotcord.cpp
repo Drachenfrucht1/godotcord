@@ -6,6 +6,9 @@ void Godotcord::_bind_methods() {
     ClassDB::bind_method(D_METHOD("callbacks"), &Godotcord::callbacks);
     ClassDB::bind_method(D_METHOD("set_activity", "activity" ), &Godotcord::setActivity);
     ClassDB::bind_method(D_METHOD("clear_activity"), &Godotcord::clearActivity);
+
+	ADD_SIGNAL(MethodInfo("join_request", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id")));
+	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
 }
 
 void Godotcord::init(discord::ClientId clientId) {
@@ -14,6 +17,19 @@ void Godotcord::init(discord::ClientId clientId) {
 	if (result != discord::Result::Ok) {
 		//error
 	}
+
+	_core->ActivityManager().OnActivityJoinRequest.Connect([this](discord::User p_user) {
+		emit_signal("join_request", p_user.GetUsername(), p_user.GetId());
+	});
+
+	_core->ActivityManager().OnActivityJoin.Connect([this](const char * p_secret) {
+		//workaround because onActivityJoin event is fired twice by discord
+		emit_signal("activity_join", String(p_secret));
+	});
+
+	_core->UserManager().OnCurrentUserUpdate.Connect([this]() {
+		print_verbose("Local Discord user updated");
+	});
 }
 
 /*void Godotcord::init_debug(discord::ClientId clientId, String id) {

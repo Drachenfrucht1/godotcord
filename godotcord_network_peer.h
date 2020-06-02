@@ -10,12 +10,12 @@ class NetworkedMultiplayerDiscord : public NetworkedMultiplayerPeer {
 
 private:
 	discord::LobbyManager *lobby_manager;
-	int lobby_id;
+	int64_t lobby_id;
 
 	bool active;
 	bool server;
 
-	uint32_t unique_id;
+	int64_t unique_id;
 	int target_peer;
 	TransferMode transfer_mode;
 	int transfer_channel;
@@ -51,7 +51,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	void init_discord(Ref<Godotcord> discord);
+	Error init_discord(Ref<Godotcord> discord);
 
 	virtual void set_transfer_mode(TransferMode p_mode);
 	virtual TransferMode get_transfer_mode() const;
@@ -87,8 +87,10 @@ public:
 	//Some methods from Enet implemtation missing - adding when needed
 
 	int get_lobby_id() const;
-	String get_lobby_secret();
-	String get_lobby_activity_secret();
+	String get_lobby_secret() const;
+	String get_lobby_activity_secret() const;
+	int get_current_members() const;
+	int get_max_members() const;
 
 	NetworkedMultiplayerDiscord();
 	~NetworkedMultiplayerDiscord();

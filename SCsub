@@ -32,4 +32,4 @@ if env["platform"] == "windows":
     env.Append(LINKFLAGS=['discord_game_sdk.dll.lib'])
 elif(env["platform"] == "x11"):
     module_env.Append(LIBS=['discord_game_sdk.so']);
-    env.Append(LINKFLAGS=['discord_game_sdk.so']);
+    env.Append(LINKFLAGS=['modules/godotcord/libpath/discord_game_sdk.so']);
