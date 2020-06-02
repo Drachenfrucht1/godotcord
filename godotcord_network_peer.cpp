@@ -116,7 +116,7 @@ Error NetworkedMultiplayerDiscord::create_lobby(int size, bool pub) {
 			unique_id = 1;
 
 
-
+			emit_signal("peer_connected", unique_id);
 			emit_signal("created_lobby");
 			//SetOwner causes currently crash of game
 			/*discord::LobbyTransaction uxn{};
@@ -169,8 +169,10 @@ Error NetworkedMultiplayerDiscord::join_lobby(int id, String secret) {
 				}
 
 				peers.push_back(user_id);
+				emit_signal("peer_connected", user_id);
 			}
 
+			emit_signal("peer_connected", unique_id);
 			emit_signal("connection_succeeded");
 		} else {
 			connection_status = CONNECTION_DISCONNECTED;
@@ -213,8 +215,10 @@ Error NetworkedMultiplayerDiscord::join_lobby_activity(String activitySecret) {
 					continue;
 				}
 				peers.push_back(user_id);
+				emit_signal("peer_connected", user_id);
 			}
 
+			emit_signal("peer_connected", unique_id);
 			emit_signal("connection_succeeded");
 		} else {
 			connection_status = CONNECTION_DISCONNECTED;
