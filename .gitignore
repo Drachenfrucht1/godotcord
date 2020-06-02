@@ -4,3 +4,4 @@ config.pyc
 __pycache__
 *.obj
 *.o
+build.txt
