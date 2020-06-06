@@ -26,6 +26,10 @@ public:
 
     void clearActivity();
 
+	String get_current_username();
+	String get_current_user_discriminator();
+	int64_t get_current_user_id();
+
 	void removeRouteEvent();
 
 	String get_route() { return _route; }

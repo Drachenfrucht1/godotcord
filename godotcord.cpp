@@ -1,4 +1,5 @@
 #include "godotcord.h"
+
 Godotcord::Godotcord() {
 	_route = String("");
 }
@@ -8,6 +9,14 @@ void Godotcord::_bind_methods() {
     ClassDB::bind_method(D_METHOD("callbacks"), &Godotcord::callbacks);
     ClassDB::bind_method(D_METHOD("set_activity", "activity" ), &Godotcord::setActivity);
     ClassDB::bind_method(D_METHOD("clear_activity"), &Godotcord::clearActivity);
+
+	ClassDB::bind_method(D_METHOD("get_current_username"), &Godotcord::get_current_username);
+	ClassDB::bind_method(D_METHOD("get_current_user_discriminator"), &Godotcord::get_current_user_discriminator);
+	ClassDB::bind_method(D_METHOD("get_current_user_id"), &Godotcord::get_current_user_id);
+
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_name"), "", "get_current_username");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_discriminator"), "", "get_current_user_discriminator");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_id"), "", "get_current_user_id");
 
 	ADD_SIGNAL(MethodInfo("join_request", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id")));
 	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
@@ -19,6 +28,20 @@ void Godotcord::init(discord::ClientId clientId) {
 	if (result != discord::Result::Ok) {
 		//error
 	}
+
+	_core->SetLogHook(discord::LogLevel::Info, [](discord::LogLevel level, const char *msg) {
+		switch (level) {
+			case discord::LogLevel::Warn:
+				print_line(vformat("[DiscordGameSDK][Warn] %s", msg));
+				break;
+			case discord::LogLevel::Info:
+				print_line(vformat("[DiscordGameSDK][Info] %s", msg));
+				break;
+			case discord::LogLevel::Error:
+				print_error(vformat("[DiscordGameSDK][ERR] %s", msg));
+				break;
+		}
+	});
 
 	_core->ActivityManager().OnActivityJoinRequest.Connect([this](discord::User p_user) {
 		emit_signal("join_request", p_user.GetUsername(), p_user.GetId());
@@ -35,7 +58,7 @@ void Godotcord::init(discord::ClientId clientId) {
 
 	_core->NetworkManager().OnRouteUpdate.Connect([this](const char *p_route) {
 		_route = String(p_route);
-		print_line(vformat("Route is %s", _route));
+		print_verbose(vformat("Route is %s", _route));
 	});
 }
 
@@ -127,6 +150,36 @@ void Godotcord::clearActivity() {
             //error
         }
     });
+}
+
+String Godotcord::get_current_username() {
+	//has to be added - editor crashed otherwise
+	if (!_core)
+		return "";
+	discord::User user;
+	discord::Result result = _core->UserManager().GetCurrentUser(&user);
+	ERR_FAIL_COND_V(result != discord::Result::Ok, "")
+	return user.GetUsername();
+}
+
+String Godotcord::get_current_user_discriminator() {
+	//has to be added - editor crashed otherwise
+	if (!_core)
+		return "";
+	discord::User user;
+	discord::Result result = _core->UserManager().GetCurrentUser(&user);
+	ERR_FAIL_COND_V(result != discord::Result::Ok, "")
+	return user.GetDiscriminator();
+}
+
+int64_t Godotcord::get_current_user_id() {
+	//has to be added - editor crashed otherwise
+	if (!_core)
+		return 0;
+	discord::User user;
+	discord::Result result = _core->UserManager().GetCurrentUser(&user);
+	ERR_FAIL_COND_V(result != discord::Result::Ok, 0)
+	return user.GetId();
 }
 
 void Godotcord::removeRouteEvent() {
