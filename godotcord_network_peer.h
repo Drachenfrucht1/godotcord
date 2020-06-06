@@ -10,12 +10,17 @@ class NetworkedMultiplayerDiscord : public NetworkedMultiplayerPeer {
 
 private:
 	discord::LobbyManager *lobby_manager;
+	discord::NetworkManager *network_manager;
 	int64_t lobby_id;
+	static int64_t local_user_id;
+	static uint64_t unique_peer_id;
+	static String route;
 
 	bool active;
 	bool server;
 
-	int64_t unique_id;
+
+	int unique_id;
 	int target_peer;
 	TransferMode transfer_mode;
 	int transfer_channel;
@@ -32,20 +37,39 @@ private:
 		int channel;
 	};
 
+	struct GodotcordPeer {
+		int64_t discord_id = 0;
+		uint64_t discord_peer_id = 0;
+		int target_id = 0;
+		bool confirmed = false;
+
+
+		//needed in order for list (and set?) to work
+		bool operator==(const GodotcordPeer& p2) {
+			bool r;
+			(this->discord_id == p2.discord_id && this->discord_peer_id == p2.discord_peer_id && this->target_id == p2.target_id) ? r = true : r = false;
+			return r;
+		}
+	};
+
 	List<Packet> incomming_packets;
+	List<Packet> defered_packets;
 
 	Packet current_packet;
 
-	enum LobbyRole {
-		SERVER,
-		USER
-	};
-
-	List<int64_t> peers;
-	int64_t server_peer;
+	List<GodotcordPeer> peers;
 
 	void _pop_current_packet();
+	uint32_t _gen_unique_id() const;
 
+	void _setup_peer(int64_t p_user_id, bool confirm);
+	void _store_connection_details();
+
+	void _resend_messages();
+
+	GodotcordPeer *_get_peer_by_discord_peer_id(uint64_t p_peer_id);
+	GodotcordPeer *_get_peer_by_discord_id(int64_t p_user_id);
+	GodotcordPeer *_get_peer_by_target_id(int p_target_id);
 
 protected:
 	static void _bind_methods();

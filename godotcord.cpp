@@ -1,5 +1,7 @@
 #include "godotcord.h"
-Godotcord::Godotcord() {}
+Godotcord::Godotcord() {
+	_route = String("");
+}
 
 void Godotcord::_bind_methods() {
     ClassDB::bind_method(D_METHOD("init", "id"), &Godotcord::init);
@@ -29,6 +31,11 @@ void Godotcord::init(discord::ClientId clientId) {
 
 	_core->UserManager().OnCurrentUserUpdate.Connect([this]() {
 		print_verbose("Local Discord user updated");
+	});
+
+	_core->NetworkManager().OnRouteUpdate.Connect([this](const char *p_route) {
+		_route = String(p_route);
+		print_line(vformat("Route is %s", _route));
 	});
 }
 
@@ -120,6 +127,10 @@ void Godotcord::clearActivity() {
             //error
         }
     });
+}
+
+void Godotcord::removeRouteEvent() {
+	_core->NetworkManager().OnRouteUpdate.DisconnectAll();
 }
 
 discord::Core* Godotcord::get_core() {

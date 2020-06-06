@@ -1,53 +1,49 @@
 #include "godotcord_network_peer.h"
 #include "discord-files/discord.h"
 #include "core/io/marshalls.h"
+#include "core/os/os.h"
+#include "inttypes.h"
+
+uint64_t NetworkedMultiplayerDiscord::unique_peer_id;
+int64_t NetworkedMultiplayerDiscord::local_user_id;
+String NetworkedMultiplayerDiscord::route;
 
 Error NetworkedMultiplayerDiscord::init_discord(Ref<Godotcord> godotcord) {
 	lobby_manager = &(godotcord->get_core()->LobbyManager());
+	network_manager = &(godotcord->get_core()->NetworkManager());
+
+	NetworkedMultiplayerDiscord::route = godotcord->get_route();
+	godotcord->removeRouteEvent();
 
 	discord::User user{};
 	discord::Result result = godotcord->get_core()->UserManager().GetCurrentUser(&user);
 	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_SKIP);
-	unique_id = user.GetId();
+	NetworkedMultiplayerDiscord::local_user_id = user.GetId();
 
-	print_line(vformat("Init NetworkedMultiplayerDiscord with id %d", unique_id));
+	network_manager->GetPeerId(&NetworkedMultiplayerDiscord::unique_peer_id);
+	print_line(vformat("Peer id is %d", NetworkedMultiplayerDiscord::unique_peer_id));
 
-	//LobbyNetworkMessage handler
-	lobby_manager->OnNetworkMessage.Connect([this](int64_t p_lobby_id, int64_t p_user_id, int p_channel, uint8_t *data, int64_t a) {
-		print_line("Message arrived");
-		if (data[0] == 'c') {
-			//custom event
-		} else if (data[0] == 'b') {
-			Packet p;
-			p.channel = p_channel;
-			p.from = p_user_id;
-			p.data = &data[5];
-			p.size = decode_uint32(&data[1]);
-
-			incomming_packets.push_back(p);
-		}
-
-		return 0;
-	});
-
+	//LOBBY EVENTS
 	lobby_manager->OnMemberConnect.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
 		if (p_lobby_id != lobby_id)
 			return;
 
-		peers.push_back(p_user_id);
+		int target = _gen_unique_id();
+		GodotcordPeer p;
+		p.discord_id = p_user_id;
+		p.target_id = target;
 
-		emit_signal("peer_connected", p_user_id);
+		peers.push_back(p);
 	});
 
 	lobby_manager->OnMemberDisconnect.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
 		if (p_lobby_id != lobby_id)
 			return;
-		peers.erase(p_user_id);
+		peers.erase(*_get_peer_by_discord_id(p_user_id));
 
 		emit_signal("peer_disconnected", p_user_id);
 	});
 
-	//LobbyDelete handler
 	lobby_manager->OnLobbyDelete.Connect([this](int64_t p_lobby_id, uint32_t p_reason) {
 		if (lobby_id == p_lobby_id) {
 			lobby_manager->DisconnectNetwork(p_lobby_id); //try if it has to be called
@@ -64,6 +60,82 @@ Error NetworkedMultiplayerDiscord::init_discord(Ref<Godotcord> godotcord) {
 			emit_signal("server_disconnected");
 		}
 	});
+
+	lobby_manager->OnMemberUpdate.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
+		if (p_user_id == NetworkedMultiplayerDiscord::local_user_id) {
+			char peer_id[4096];
+			lobby_manager->GetMemberMetadataValue(lobby_id, p_user_id, "peer_id", peer_id);
+
+			String s(peer_id);
+			Variant v(s);
+			uint64_t t = static_cast<uint64_t>((int64_t)v);
+			return;
+		}
+
+		GodotcordPeer peer = *_get_peer_by_discord_id(p_user_id);
+		if (peer.discord_peer_id != 0) {
+			char route[4096];
+			lobby_manager->GetMemberMetadataValue(lobby_id, p_user_id, "route", route);
+
+			network_manager->UpdatePeer(peer.discord_peer_id, route);
+
+		} else {
+			_setup_peer(p_user_id, true);
+			emit_signal("peer_connected", peer.target_id);
+		}
+	});
+
+	lobby_manager->OnLobbyMessage.Connect([this](int64_t p_lobby_id, int64_t p_user_id, uint8_t *data, uint32_t p_length) {
+		print_line("Received lobby message");
+		if (data[0] == 'c' && p_length == 17) {
+			uint64_t l_p_id = decode_uint64(&data[9]);
+			if (l_p_id == NetworkedMultiplayerDiscord::unique_peer_id) {
+				uint64_t p_id = decode_uint64(&data[1]);
+				_get_peer_by_discord_peer_id(p_id)->confirmed = true;
+				_resend_messages();
+			}
+		}
+	});
+
+	//NETWORK EVENTS
+	network_manager->OnMessage.Connect([this](uint64_t p_peer_id, int p_channel, uint8_t *data, uint32_t discord_size) {
+		print_line("Message arrived");
+		if (data[0] == 'c') {
+			//custom event
+		} else if (data[0] == 'i') {
+			Packet p;
+			p.channel = p_channel;
+			p.from = _get_peer_by_discord_peer_id(p_peer_id)->target_id;
+			p.size = decode_uint32(&data[1]);
+			p.data = (uint8_t *)memalloc(p.size);
+			memcpy(&p.data[0], &data[5], p.size);
+			//&p.data[0] = &data[5];
+			
+
+			incomming_packets.push_back(p);
+		}
+
+		return 0;
+	});
+
+	network_manager->OnRouteUpdate.Connect([this](const char *p_route) {
+		NetworkedMultiplayerDiscord::route = String(p_route);
+		print_line(vformat("Route is %s", NetworkedMultiplayerDiscord::route));
+		if (!active)
+			return;
+		discord::LobbyMemberTransaction txn{};
+		discord::Result result = lobby_manager->GetMemberUpdateTransaction(lobby_id, NetworkedMultiplayerDiscord::local_user_id, &txn);
+		ERR_FAIL_COND(result != discord::Result::Ok)
+		txn.SetMetadata("route", NetworkedMultiplayerDiscord::route.utf8());
+
+		lobby_manager->UpdateMember(lobby_id, NetworkedMultiplayerDiscord::local_user_id, txn, [](discord::Result result) {
+			if (result != discord::Result::Ok) {
+				//error
+			}
+		});
+	});
+
+	return OK;
 }
 
 void NetworkedMultiplayerDiscord::set_transfer_mode(TransferMode p_mode) {
@@ -108,25 +180,18 @@ Error NetworkedMultiplayerDiscord::create_lobby(int size, bool pub) {
 			active = true;
 			connection_status = CONNECTION_CONNECTED;
 
-			lobby_manager->ConnectNetwork(lobby_id);
-			lobby_manager->OpenNetworkChannel(lobby_id, 0, true);
-			lobby_manager->OpenNetworkChannel(lobby_id, 0, false);
+			_store_connection_details();
 
-			server_peer = unique_id;
+			GodotcordPeer p;
+			p.discord_id = NetworkedMultiplayerDiscord::local_user_id;
+			p.target_id = 1;
+			peers.push_back(p);
+
 			unique_id = 1;
 
 
 			emit_signal("peer_connected", unique_id);
 			emit_signal("created_lobby");
-			//SetOwner causes currently crash of game
-			/*discord::LobbyTransaction uxn{};
-			lobby_manager->GetLobbyUpdateTransaction(lobby_id, &uxn);
-			uxn.SetOwner(unique_id);
-			lobby_manager->UpdateLobby(lobby_id, uxn, [](discord::Result result) {
-				if (result != discord::Result::Ok) {
-					//error
-				}
-			});*/
 		} else {
 			connection_status = CONNECTION_DISCONNECTED;
 		}
@@ -146,11 +211,7 @@ Error NetworkedMultiplayerDiscord::join_lobby(int id, String secret) {
 			active = true;
 			connection_status = CONNECTION_CONNECTED;
 
-			server_peer = lobby.GetOwnerId();
-
-			lobby_manager->ConnectNetwork(lobby_id);
-			lobby_manager->OpenNetworkChannel(lobby_id, 0, true);
-			lobby_manager->OpenNetworkChannel(lobby_id, 0, false);
+			_store_connection_details();
 
 			//add all already connected peers to peers list
 			int32_t count;
@@ -164,15 +225,27 @@ Error NetworkedMultiplayerDiscord::join_lobby(int id, String secret) {
 				result = lobby_manager->GetMemberUserId(lobby_id, i, &user_id);
 				ERR_CONTINUE(result != discord::Result::Ok);
 
-				if (user_id == unique_id) {
-					continue;
+				int peer_id;
+				if (lobby.GetOwnerId() == user_id) {
+					peer_id = 1;
+				} else {
+					peer_id = _gen_unique_id();
 				}
 
-				peers.push_back(user_id);
-				emit_signal("peer_connected", user_id);
+				GodotcordPeer p;
+				p.discord_id = user_id;
+				p.target_id = peer_id;
+				peers.push_back(p);
+
+				if (user_id != NetworkedMultiplayerDiscord::local_user_id) {
+					_setup_peer(user_id, false);
+				} else {
+					unique_id = peer_id;
+				}
+
+				emit_signal("peer_connected", peer_id);
 			}
 
-			emit_signal("peer_connected", unique_id);
 			emit_signal("connection_succeeded");
 		} else {
 			connection_status = CONNECTION_DISCONNECTED;
@@ -194,11 +267,7 @@ Error NetworkedMultiplayerDiscord::join_lobby_activity(String activitySecret) {
 			active = true;
 			connection_status = CONNECTION_CONNECTED;
 
-			server_peer = lobby.GetOwnerId();
-
-			lobby_manager->ConnectNetwork(lobby_id);
-			lobby_manager->OpenNetworkChannel(lobby_id, 0, true);
-			lobby_manager->OpenNetworkChannel(lobby_id, 0, false);
+			_store_connection_details();
 
 			//add all already connected peers to peers list
 			int32_t count;
@@ -206,19 +275,32 @@ Error NetworkedMultiplayerDiscord::join_lobby_activity(String activitySecret) {
 			result = lobby_manager->MemberCount(lobby_id, &count);
 			ERR_FAIL_COND(result != discord::Result::Ok);
 			discord::UserId user_id;
-			char *value = (char *)memalloc(sizeof(char) * 5);
 
 			for (int i = 0; i < count; i++) {
 				result = lobby_manager->GetMemberUserId(lobby_id, i, &user_id);
 				ERR_CONTINUE(result != discord::Result::Ok);
-				if (user_id == unique_id) {
-					continue;
+
+				int peer_id;
+				if (lobby.GetOwnerId() == user_id) {
+					peer_id = 1;
+				} else {
+					peer_id = _gen_unique_id();
 				}
-				peers.push_back(user_id);
-				emit_signal("peer_connected", user_id);
+
+				GodotcordPeer p;
+				p.discord_id = user_id;
+				p.target_id = peer_id;
+				peers.push_back(p);
+
+				if (user_id != NetworkedMultiplayerDiscord::local_user_id) {
+					_setup_peer(user_id, false);
+				} else {
+					unique_id = peer_id;
+				}
+					
+				emit_signal("peer_connected", peer_id);
 			}
 
-			emit_signal("peer_connected", unique_id);
 			emit_signal("connection_succeeded");
 		} else {
 			connection_status = CONNECTION_DISCONNECTED;
@@ -229,9 +311,116 @@ Error NetworkedMultiplayerDiscord::join_lobby_activity(String activitySecret) {
 	return OK;
 }
 
+void NetworkedMultiplayerDiscord::_setup_peer(int64_t p_user_id, bool confirm) {
+	discord::Result result;
+
+	char peer_id[4096];
+	char route[4096];
+	result = lobby_manager->GetMemberMetadataValue(lobby_id, p_user_id, "peer_id", peer_id);
+	ERR_FAIL_COND(result != discord::Result::Ok)
+	result = lobby_manager->GetMemberMetadataValue(lobby_id, p_user_id, "route", route);
+	ERR_FAIL_COND(result != discord::Result::Ok)
+
+	String s(peer_id);
+	Variant v(s);
+	uint64_t p_id = static_cast<uint64_t>((int64_t)v);
+
+	print_line(vformat("Opening connection to %d via %s", p_id, route));
+
+	result = network_manager->OpenPeer(p_id, String(route).utf8());
+	ERR_FAIL_COND(result != discord::Result::Ok)
+	result = network_manager->OpenChannel(p_id, 0, true);
+	ERR_FAIL_COND(result != discord::Result::Ok)
+	result = network_manager->OpenChannel(p_id, 1, false);
+	ERR_FAIL_COND(result != discord::Result::Ok)
+
+	GodotcordPeer *p = _get_peer_by_discord_id(p_user_id);
+	ERR_FAIL_COND(p == NULL)
+	p->discord_peer_id = p_id;
+
+	if (confirm) {
+		//size 'c' + this->peer_id + confirm->peer_id
+		//size 1   +  8      +   8
+		uint8_t *data = (uint8_t *)memalloc(17);
+		data[0] = 'c';
+		encode_uint64(NetworkedMultiplayerDiscord::unique_peer_id, &data[1]);
+		encode_uint64(p_id, &data[9]);
+
+		lobby_manager->SendLobbyMessage(lobby_id, data, 17, [](discord::Result result) {
+			ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Couldn't send confirm message to other lobby members")
+		});
+
+		p->confirmed = true;
+	}
+}
+
+void NetworkedMultiplayerDiscord::_store_connection_details() {
+	ERR_FAIL_COND(!active)
+	discord::LobbyMemberTransaction txn{};
+	discord::Result result = lobby_manager->GetMemberUpdateTransaction(lobby_id, NetworkedMultiplayerDiscord::local_user_id, &txn);
+	ERR_FAIL_COND(result != discord::Result::Ok)
+
+	int64_t i = static_cast<int64_t>(NetworkedMultiplayerDiscord::unique_peer_id);
+	Variant v(i);
+	String s = (String) v;
+	txn.SetMetadata("peer_id", s.utf8());
+	txn.SetMetadata("route", NetworkedMultiplayerDiscord::route.utf8());
+
+	lobby_manager->UpdateMember(lobby_id, NetworkedMultiplayerDiscord::local_user_id, txn, [](discord::Result result) {
+		if (result != discord::Result::Ok) {
+		}
+	});
+}
+
+void NetworkedMultiplayerDiscord::_resend_messages() {
+	discord::Result result;
+	for (List<Packet>::Element *E = defered_packets.front(); E; E = E->next()) {
+		GodotcordPeer *peer = _get_peer_by_target_id(E->get().from);
+		if (peer->confirmed) {
+			 result = network_manager->SendMessage(peer->discord_peer_id, E->get().channel, E->get().data, E->get().size);
+			print_line(vformat("Sending message to userid %d", peer->discord_id));
+			ERR_FAIL_COND_MSG(result != discord::Result::Ok, vformat("Failed to send message to %d", target_peer))
+
+			defered_packets.erase(E);
+		}
+	}
+}
+
+NetworkedMultiplayerDiscord::GodotcordPeer *NetworkedMultiplayerDiscord::_get_peer_by_discord_id(int64_t p_user_id) {
+	for (List<GodotcordPeer>::Element *E = peers.front(); E; E = E->next()) {
+		if (E->get().discord_id == p_user_id) {
+			return &(E->get());
+		}
+	}
+
+	return NULL;
+}
+
+NetworkedMultiplayerDiscord::GodotcordPeer *NetworkedMultiplayerDiscord::_get_peer_by_discord_peer_id(uint64_t p_peer_id) {
+	for (List<GodotcordPeer>::Element *E = peers.front(); E; E = E->next()) {
+		if (E->get().discord_peer_id == p_peer_id) {
+			return &(E->get());
+		}
+	}
+
+	return NULL;
+}
+
+NetworkedMultiplayerDiscord::GodotcordPeer *NetworkedMultiplayerDiscord::_get_peer_by_target_id(int p_target_id) {
+	for (List<GodotcordPeer>::Element *E = peers.front(); E; E = E->next()) {
+		if (E->get().target_id == p_target_id) {
+			return &(E->get());
+		}
+	}
+
+	return NULL;
+}
+
 void NetworkedMultiplayerDiscord::poll() {
 	_pop_current_packet();
-	//handle disconnect packet
+
+	discord::Result result = network_manager->Flush();
+	ERR_FAIL_COND(result != discord::Result::Ok)
 }
 
 bool NetworkedMultiplayerDiscord::is_server() const {
@@ -273,8 +462,8 @@ Error NetworkedMultiplayerDiscord::get_packet(const uint8_t **r_buffer, int &r_b
 	current_packet = incomming_packets.front()->get();
 	incomming_packets.pop_front();
 
-	*r_buffer = (const uint8_t *)(&current_packet.data);
-	r_buffer_size = sizeof(current_packet.data);
+	*r_buffer = (const uint8_t *)(&current_packet.data[0]);
+	r_buffer_size = current_packet.size;
 
 	return OK;
 }
@@ -283,7 +472,10 @@ Error NetworkedMultiplayerDiscord::put_packet(const uint8_t *p_buffer, int p_buf
 	ERR_FAIL_COND_V_MSG(!active, ERR_UNCONFIGURED, "The multiplayer instance isn't currently active.");
 	ERR_FAIL_COND_V_MSG(connection_status != CONNECTION_CONNECTED, ERR_UNCONFIGURED, "The multiplayer instance isn't currently connected to any server or client.");
 
-	int channel = 0;
+	if (target_peer == unique_id || target_peer * -1 == unique_id)
+		return ERR_INVALID_PARAMETER;
+
+	uint8_t channel = 0;
 	uint32_t discord_size = p_buffer_size + 5;
 
 	uint8_t *data = (uint8_t*)memalloc(discord_size);
@@ -296,41 +488,58 @@ Error NetworkedMultiplayerDiscord::put_packet(const uint8_t *p_buffer, int p_buf
 	}
 
 	if (target_peer > 0) {
-		if (peers.find(target_peer) != NULL) {
+		GodotcordPeer *peer = _get_peer_by_target_id(target_peer);
+		ERR_FAIL_COND_V_MSG(peer->discord_peer_id == NULL, Error::ERR_INVALID_PARAMETER, vformat("Couldn't find peer id: %d", target_peer))
+		if (peer->confirmed) {
 			discord::Result result;
-			if (target_peer == 1) {
-				target_peer = server_peer;
-			}
-			result = lobby_manager->SendNetworkMessage(lobby_id, target_peer, channel, data, discord_size);
+			result = network_manager->SendMessage(peer->discord_peer_id, channel, data, discord_size);
+			print_line(vformat("Sending message to userid %d", peer->discord_id));
 			ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, Error::ERR_CANT_RESOLVE, vformat("Failed to send message to %d", target_peer))
 		} else {
-			ERR_FAIL_V_MSG(Error::ERR_INVALID_PARAMETER, vformat("Couldn't find peer id: %d", target_peer))
+			Packet p;
+			p.data = data;
+			p.from = target_peer;
+			p.channel = channel;
+			p.size = discord_size;
+			defered_packets.push_back(p);
 		}
 	} else if (target_peer == 0) {
 		discord::Result result;
-		for (List<int64_t>::Element *E = peers.front(); E;E=E->next()) {
-			result = lobby_manager->SendNetworkMessage(lobby_id, E->get(), channel, data, discord_size);
-			ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to user &d", E->get()))
+		for (List<GodotcordPeer>::Element *E = peers.front(); E; E = E->next()) {
+			if (E->get().confirmed) {
+				result = network_manager->SendMessage(E->get().discord_peer_id,channel, data, discord_size);
+				print_line(vformat("Sending message to userid %d", E->get().discord_id));
+				ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to userid &d", E->get().discord_id))
+			} else {
+				Packet p;
+				p.data = data;
+				p.from = E->get().target_id;
+				p.channel = channel;
+				p.size = discord_size;
+				defered_packets.push_back(p);
+			}
 		}
 	} else {
 		target_peer *= -1;
-		if (peers.find(target_peer) != NULL) {
-			discord::Result result;
-			if (target_peer == 1) {
-				target_peer = server_peer;
+		discord::Result result;
+		for (List<GodotcordPeer>::Element *E = peers.front(); E; E = E->next()) {
+			if (E->get().target_id == target_peer)
+				continue;
+
+			if (E->get().confirmed) {
+				result = network_manager->SendMessage(E->get().discord_peer_id, channel, data, discord_size);
+				print_line(vformat("Sending message to userid %d", E->get().discord_id));
+				ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to userid &d", E->get().discord_id))
+			} else {
+				Packet p;
+				p.data = data;
+				p.from = E->get().target_id;
+				p.channel = channel;
+				p.size = discord_size;
+				defered_packets.push_back(p);
 			}
-			for (List<int64_t>::Element *E = peers.front(); E; E = E->next()) {
-				if (E->get() == target_peer)
-					continue;
-				result = lobby_manager->SendNetworkMessage(lobby_id, E->get(), channel, data, discord_size);
-				ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to user &d", E->get()));
-			}
-		} else {
-			ERR_FAIL_V_MSG(Error::ERR_INVALID_PARAMETER, vformat("Couldn't find peer id: %d", target_peer))
 		}
 	}
-
-	lobby_manager->FlushNetwork();
 
 	return OK;
 }
@@ -344,8 +553,9 @@ void NetworkedMultiplayerDiscord::_pop_current_packet() {
 	if (current_packet.data) {
 		memfree(current_packet.data);
 		current_packet.data = NULL;
-		current_packet.from = -0;
+		current_packet.from = 0;
 		current_packet.channel = -1;
+		current_packet.size = 0;
 	}
 }
 
@@ -358,6 +568,29 @@ int NetworkedMultiplayerDiscord::get_unique_id() const {
 
 	ERR_FAIL_COND_V_MSG(!active, 0, "The multiplayer instance isn't currently active.");
 	return unique_id;
+}
+
+uint32_t NetworkedMultiplayerDiscord::_gen_unique_id() const {
+
+	uint32_t hash = 0;
+
+	while (hash == 0 || hash == 1) {
+
+		hash = hash_djb2_one_32(
+				(uint32_t)OS::get_singleton()->get_ticks_usec());
+		hash = hash_djb2_one_32(
+				(uint32_t)OS::get_singleton()->get_unix_time(), hash);
+		hash = hash_djb2_one_32(
+				(uint32_t)OS::get_singleton()->get_user_data_dir().hash64(), hash);
+		hash = hash_djb2_one_32(
+				(uint32_t)((uint64_t)this), hash); // Rely on ASLR heap
+		hash = hash_djb2_one_32(
+				(uint32_t)((uint64_t)&hash), hash); // Rely on ASLR stack
+
+		hash = hash & 0x7FFFFFFF; // Make it compatible with unsigned, since negative ID is used for exclusion
+	}
+
+	return hash;
 }
 
 void NetworkedMultiplayerDiscord::set_refuse_new_connections(bool p_enable) {
@@ -450,7 +683,7 @@ NetworkedMultiplayerDiscord::NetworkedMultiplayerDiscord() {
 	connection_status = CONNECTION_DISCONNECTED;
 	current_packet = {NULL, 0, 0};
 	lobby_manager = NULL;
-	server_peer = -1;
+	network_manager = NULL;
 }
 
 NetworkedMultiplayerDiscord::~NetworkedMultiplayerDiscord() {

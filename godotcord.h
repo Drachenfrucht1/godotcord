@@ -11,6 +11,7 @@ class Godotcord : public Reference {
 
 private:
     discord::Core* _core{};
+	String _route;
 
 protected:
     static void _bind_methods();
@@ -24,6 +25,10 @@ public:
     void setActivity(Ref<GodotcordActivity>);
 
     void clearActivity();
+
+	void removeRouteEvent();
+
+	String get_route() { return _route; }
 
 	discord::Core *get_core();
 
