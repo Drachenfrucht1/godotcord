@@ -9,26 +9,26 @@ class NetworkedMultiplayerDiscord : public NetworkedMultiplayerPeer {
 	GDCLASS(NetworkedMultiplayerDiscord, NetworkedMultiplayerPeer)
 
 private:
-	discord::LobbyManager *lobby_manager;
-	discord::NetworkManager *network_manager;
-	int64_t lobby_id;
+	discord::LobbyManager *_lobby_manager;
+	discord::NetworkManager *_network_manager;
+	int64_t _lobby_id;
 	static int64_t local_user_id;
 	static uint64_t unique_peer_id;
 	static String route;
 
-	bool active;
-	bool server;
+	bool _active;
+	bool _server;
 
 
-	int unique_id;
-	int target_peer;
-	TransferMode transfer_mode;
-	int transfer_channel;
-	int channel_count;
+	int _unique_id;
+	int _target_peer;
+	TransferMode _transfer_mode;
+	int _transfer_channel;
+	int _channel_count;
 
-	bool refuse_connections;
+	bool _refuse_connections;
 
-	ConnectionStatus connection_status;
+	ConnectionStatus _connection_status;
 
 	struct Packet {
 		uint8_t *data;
@@ -52,12 +52,12 @@ private:
 		}
 	};
 
-	List<Packet> incomming_packets;
-	List<Packet> defered_packets;
+	List<Packet> _incomming_packets;
+	List<Packet> _defered_packets;
 
-	Packet current_packet;
+	Packet _current_packet;
 
-	List<GodotcordPeer> peers;
+	List<GodotcordPeer> _peers;
 
 	void _pop_current_packet();
 	uint32_t _gen_unique_id() const;
