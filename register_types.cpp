@@ -8,7 +8,7 @@
 void register_godotcord_types() {
 	ClassDB::register_class<Godotcord>();
 	ClassDB::register_class<GodotcordActivity>();
-	ClassDB::register_class<NetworkedMultiplayerDiscord>();
+	ClassDB::register_class<NetworkedMultiplayerGodotcord>();
 }
 
 void unregister_godotcord_types() {

@@ -5,8 +5,8 @@
 #include "discord-files/discord.h"
 #include "godotcord.h"
 
-class NetworkedMultiplayerDiscord : public NetworkedMultiplayerPeer {
-	GDCLASS(NetworkedMultiplayerDiscord, NetworkedMultiplayerPeer)
+class NetworkedMultiplayerGodotcord : public NetworkedMultiplayerPeer {
+	GDCLASS(NetworkedMultiplayerGodotcord, NetworkedMultiplayerPeer)
 
 private:
 	discord::LobbyManager *_lobby_manager;
@@ -115,9 +115,11 @@ public:
 	String get_lobby_activity_secret() const;
 	int get_current_members() const;
 	int get_max_members() const;
+	int64_t get_user_id_by_peer(int p_target_id);
+	int get_peer_id_by_user(int64_t p_user_id);
 
-	NetworkedMultiplayerDiscord();
-	~NetworkedMultiplayerDiscord();
+	NetworkedMultiplayerGodotcord();
+	~NetworkedMultiplayerGodotcord();
 };
 
 #endif
