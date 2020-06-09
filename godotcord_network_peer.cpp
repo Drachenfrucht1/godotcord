@@ -8,136 +8,6 @@ uint64_t NetworkedMultiplayerGodotcord::unique_peer_id;
 int64_t NetworkedMultiplayerGodotcord::local_user_id;
 String NetworkedMultiplayerGodotcord::route;
 
-Error NetworkedMultiplayerGodotcord::init_discord(Ref<Godotcord> godotcord) {
-	_lobby_manager = &(godotcord->get_core()->LobbyManager());
-	_network_manager = &(godotcord->get_core()->NetworkManager());
-
-	NetworkedMultiplayerGodotcord::route = godotcord->get_route();
-	godotcord->removeRouteEvent();
-
-	discord::User user{};
-	discord::Result result = godotcord->get_core()->UserManager().GetCurrentUser(&user);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_SKIP);
-	NetworkedMultiplayerGodotcord::local_user_id = user.GetId();
-
-	_network_manager->GetPeerId(&NetworkedMultiplayerGodotcord::unique_peer_id);
-	print_line(vformat("Peer id is %d", NetworkedMultiplayerGodotcord::unique_peer_id));
-
-	//LOBBY EVENTS
-	_lobby_manager->OnMemberConnect.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
-		if (p_lobby_id != _lobby_id)
-			return;
-
-		int target = _gen_unique_id();
-		GodotcordPeer p;
-		p.discord_id = p_user_id;
-		p.target_id = target;
-
-		_peers.push_back(p);
-	});
-
-	_lobby_manager->OnMemberDisconnect.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
-		if (p_lobby_id != _lobby_id)
-			return;
-		_peers.erase(*_get_peer_by_discord_id(p_user_id));
-
-		emit_signal("peer_disconnected", p_user_id);
-	});
-
-	_lobby_manager->OnLobbyDelete.Connect([this](int64_t p_lobby_id, uint32_t p_reason) {
-		if (_lobby_id == p_lobby_id) {
-			_lobby_manager->DisconnectNetwork(p_lobby_id); //try if it has to be called
-			_lobby_manager->DisconnectLobby(p_lobby_id, [](discord::Result result) {
-				if (result != discord::Result::Ok) {
-					//error
-				}
-			});
-			_lobby_id = 0;
-			_connection_status = CONNECTION_DISCONNECTED;
-			_active = false;
-			_server = false;
-
-			emit_signal("server_disconnected");
-		}
-	});
-
-	_lobby_manager->OnMemberUpdate.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
-		if (p_user_id == NetworkedMultiplayerGodotcord::local_user_id) {
-			char peer_id[4096];
-			_lobby_manager->GetMemberMetadataValue(_lobby_id, p_user_id, "peer_id", peer_id);
-
-			String s(peer_id);
-			Variant v(s);
-			uint64_t t = static_cast<uint64_t>((int64_t)v);
-			return;
-		}
-
-		GodotcordPeer peer = *_get_peer_by_discord_id(p_user_id);
-		if (peer.discord_peer_id != 0) {
-			char route[4096];
-			_lobby_manager->GetMemberMetadataValue(_lobby_id, p_user_id, "route", route);
-
-			_network_manager->UpdatePeer(peer.discord_peer_id, route);
-
-		} else {
-			_setup_peer(p_user_id, true);
-			emit_signal("peer_connected", peer.target_id);
-		}
-	});
-
-	_lobby_manager->OnLobbyMessage.Connect([this](int64_t p_lobby_id, int64_t p_user_id, uint8_t *data, uint32_t p_length) {
-		print_line("Received lobby message");
-		if (data[0] == 'c' && p_length == 17) {
-			uint64_t l_p_id = decode_uint64(&data[9]);
-			if (l_p_id == NetworkedMultiplayerGodotcord::unique_peer_id) {
-				uint64_t p_id = decode_uint64(&data[1]);
-				_get_peer_by_discord_peer_id(p_id)->confirmed = true;
-				_resend_messages();
-			}
-		}
-	});
-
-	//NETWORK EVENTS
-	_network_manager->OnMessage.Connect([this](uint64_t p_peer_id, int p_channel, uint8_t *data, uint32_t discord_size) {
-		print_line("Message arrived");
-		if (data[0] == 'c') {
-			//custom event
-		} else if (data[0] == 'i') {
-			Packet p;
-			p.channel = p_channel;
-			p.from = _get_peer_by_discord_peer_id(p_peer_id)->target_id;
-			p.size = decode_uint32(&data[1]);
-			p.data = (uint8_t *)memalloc(p.size);
-			memcpy(&p.data[0], &data[5], p.size);
-			//&p.data[0] = &data[5];
-			
-
-			_incomming_packets.push_back(p);
-		}
-
-		return 0;
-	});
-
-	_network_manager->OnRouteUpdate.Connect([this](const char *p_route) {
-		NetworkedMultiplayerGodotcord::route = String(p_route);
-		print_line(vformat("Route is %s", NetworkedMultiplayerGodotcord::route));
-		if (!_active)
-			return;
-		discord::LobbyMemberTransaction txn{};
-		discord::Result result = _lobby_manager->GetMemberUpdateTransaction(_lobby_id, NetworkedMultiplayerGodotcord::local_user_id, &txn);
-		ERR_FAIL_COND(result != discord::Result::Ok)
-		txn.SetMetadata("route", NetworkedMultiplayerGodotcord::route.utf8());
-
-		_lobby_manager->UpdateMember(_lobby_id, NetworkedMultiplayerGodotcord::local_user_id, txn, [](discord::Result result) {
-			if (result != discord::Result::Ok) {
-				//error
-			}
-		});
-	});
-
-	return OK;
-}
-
 void NetworkedMultiplayerGodotcord::set_transfer_mode(TransferMode p_mode) {
     _transfer_mode = p_mode;
 }
@@ -325,8 +195,6 @@ void NetworkedMultiplayerGodotcord::_setup_peer(int64_t p_user_id, bool confirm)
 	Variant v(s);
 	uint64_t p_id = static_cast<uint64_t>((int64_t)v);
 
-	print_line(vformat("Opening connection to %d via %s", p_id, route));
-
 	result = _network_manager->OpenPeer(p_id, String(route).utf8());
 	ERR_FAIL_COND(result != discord::Result::Ok)
 	result = _network_manager->OpenChannel(p_id, 0, true);
@@ -378,7 +246,6 @@ void NetworkedMultiplayerGodotcord::_resend_messages() {
 		GodotcordPeer *peer = _get_peer_by_target_id(E->get().from);
 		if (peer->confirmed) {
 			 result = _network_manager->SendMessage(peer->discord_peer_id, E->get().channel, E->get().data, E->get().size);
-			print_line(vformat("Sending message to userid %d", peer->discord_id));
 			ERR_FAIL_COND_MSG(result != discord::Result::Ok, vformat("Failed to send message to %d", _target_peer))
 
 			_defered_packets.erase(E);
@@ -493,7 +360,6 @@ Error NetworkedMultiplayerGodotcord::put_packet(const uint8_t *p_buffer, int p_b
 		if (peer->confirmed) {
 			discord::Result result;
 			result = _network_manager->SendMessage(peer->discord_peer_id, channel, data, discord_size);
-			print_line(vformat("Sending message to userid %d", peer->discord_id));
 			ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, Error::ERR_CANT_RESOLVE, vformat("Failed to send message to %d", _target_peer))
 		} else {
 			Packet p;
@@ -508,7 +374,6 @@ Error NetworkedMultiplayerGodotcord::put_packet(const uint8_t *p_buffer, int p_b
 		for (List<GodotcordPeer>::Element *E = _peers.front(); E; E = E->next()) {
 			if (E->get().confirmed) {
 				result = _network_manager->SendMessage(E->get().discord_peer_id,channel, data, discord_size);
-				print_line(vformat("Sending message to userid %d", E->get().discord_id));
 				ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to userid &d", E->get().discord_id))
 			} else {
 				Packet p;
@@ -528,7 +393,6 @@ Error NetworkedMultiplayerGodotcord::put_packet(const uint8_t *p_buffer, int p_b
 
 			if (E->get().confirmed) {
 				result = _network_manager->SendMessage(E->get().discord_peer_id, channel, data, discord_size);
-				print_line(vformat("Sending message to userid %d", E->get().discord_id));
 				ERR_CONTINUE_MSG(result != discord::Result::Ok, vformat("Couldn't send message to userid &d", E->get().discord_id))
 			} else {
 				Packet p;
@@ -618,7 +482,6 @@ void NetworkedMultiplayerGodotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("join_server_activity", "secret"), &NetworkedMultiplayerGodotcord::join_lobby_activity);
 	ClassDB::bind_method(D_METHOD("close_connection"), &NetworkedMultiplayerGodotcord::close_connection);
 	ClassDB::bind_method(D_METHOD("disconnect_perr", "id"), &NetworkedMultiplayerGodotcord::disconnect_peer);
-	ClassDB::bind_method(D_METHOD("init_discord", "discord"), &NetworkedMultiplayerGodotcord::init_discord);
 	ClassDB::bind_method(D_METHOD("get_lobby_id"), &NetworkedMultiplayerGodotcord::get_lobby_id);
 	ClassDB::bind_method(D_METHOD("get_lobby_secret"), &NetworkedMultiplayerGodotcord::get_lobby_secret);
 	ClassDB::bind_method(D_METHOD("get_lobby_activity_secret"), &NetworkedMultiplayerGodotcord::get_lobby_activity_secret);
@@ -703,9 +566,134 @@ NetworkedMultiplayerGodotcord::NetworkedMultiplayerGodotcord() {
 	_unique_id = 1;
 	_transfer_channel = 0;
 	_connection_status = CONNECTION_DISCONNECTED;
-	_current_packet = {NULL, 0, 0};
-	_lobby_manager = NULL;
-	_network_manager = NULL;
+	Packet p;
+	p.channel = 0;
+	p.data = NULL;
+	p.from = 0;
+	p.size = 0;
+	_current_packet = p;
+	if (Godotcord::get_singleton()->is_init()) {
+		_lobby_manager = &(Godotcord::get_singleton()->get_core()->LobbyManager());
+		_network_manager = &(Godotcord::get_singleton()->get_core()->NetworkManager());
+
+		NetworkedMultiplayerGodotcord::route = Godotcord::get_singleton()->get_route();
+		Godotcord::get_singleton()->removeRouteEvent();
+
+		discord::User user{};
+		discord::Result result = Godotcord::get_singleton()->get_core()->UserManager().GetCurrentUser(&user);
+		ERR_FAIL_COND(result != discord::Result::Ok);
+		NetworkedMultiplayerGodotcord::local_user_id = user.GetId();
+
+		_network_manager->GetPeerId(&NetworkedMultiplayerGodotcord::unique_peer_id);
+
+		//LOBBY EVENTS
+		_lobby_manager->OnMemberConnect.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
+			if (p_lobby_id != _lobby_id)
+				return;
+
+			int target = _gen_unique_id();
+			GodotcordPeer p;
+			p.discord_id = p_user_id;
+			p.target_id = target;
+
+			_peers.push_back(p);
+		});
+
+		_lobby_manager->OnMemberDisconnect.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
+			if (p_lobby_id != _lobby_id)
+				return;
+			_peers.erase(*_get_peer_by_discord_id(p_user_id));
+
+			emit_signal("peer_disconnected", p_user_id);
+		});
+
+		_lobby_manager->OnLobbyDelete.Connect([this](int64_t p_lobby_id, uint32_t p_reason) {
+			if (_lobby_id == p_lobby_id) {
+				_lobby_manager->DisconnectNetwork(p_lobby_id); //try if it has to be called
+				_lobby_manager->DisconnectLobby(p_lobby_id, [](discord::Result result) {
+					if (result != discord::Result::Ok) {
+						//error
+					}
+				});
+				_lobby_id = 0;
+				_connection_status = CONNECTION_DISCONNECTED;
+				_active = false;
+				_server = false;
+
+				emit_signal("server_disconnected");
+			}
+		});
+
+		_lobby_manager->OnMemberUpdate.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
+			if (p_user_id == NetworkedMultiplayerGodotcord::local_user_id) {
+				char peer_id[4096];
+				_lobby_manager->GetMemberMetadataValue(_lobby_id, p_user_id, "peer_id", peer_id);
+
+				String s(peer_id);
+				Variant v(s);
+				uint64_t t = static_cast<uint64_t>((int64_t)v);
+				return;
+			}
+
+			GodotcordPeer peer = *_get_peer_by_discord_id(p_user_id);
+			if (peer.discord_peer_id != 0) {
+				char route[4096];
+				_lobby_manager->GetMemberMetadataValue(_lobby_id, p_user_id, "route", route);
+
+				_network_manager->UpdatePeer(peer.discord_peer_id, route);
+
+			} else {
+				_setup_peer(p_user_id, true);
+				emit_signal("peer_connected", peer.target_id);
+			}
+		});
+
+		_lobby_manager->OnLobbyMessage.Connect([this](int64_t p_lobby_id, int64_t p_user_id, uint8_t *data, uint32_t p_length) {
+			if (data[0] == 'c' && p_length == 17) {
+				uint64_t l_p_id = decode_uint64(&data[9]);
+				if (l_p_id == NetworkedMultiplayerGodotcord::unique_peer_id) {
+					uint64_t p_id = decode_uint64(&data[1]);
+					_get_peer_by_discord_peer_id(p_id)->confirmed = true;
+					_resend_messages();
+				}
+			}
+		});
+
+		//NETWORK EVENTS
+		_network_manager->OnMessage.Connect([this](uint64_t p_peer_id, int p_channel, uint8_t *data, uint32_t discord_size) {
+			if (data[0] == 'c') {
+				//custom event
+			} else if (data[0] == 'i') {
+				Packet p;
+				p.channel = p_channel;
+				p.from = _get_peer_by_discord_peer_id(p_peer_id)->target_id;
+				p.size = decode_uint32(&data[1]);
+				p.data = (uint8_t *)memalloc(p.size);
+				memcpy(&p.data[0], &data[5], p.size);
+				//&p.data[0] = &data[5];
+
+				_incomming_packets.push_back(p);
+			}
+
+			return 0;
+		});
+
+		_network_manager->OnRouteUpdate.Connect([this](const char *p_route) {
+			NetworkedMultiplayerGodotcord::route = String(p_route);
+			if (!_active)
+				return;
+			discord::LobbyMemberTransaction txn{};
+			discord::Result result = _lobby_manager->GetMemberUpdateTransaction(_lobby_id, NetworkedMultiplayerGodotcord::local_user_id, &txn);
+			ERR_FAIL_COND(result != discord::Result::Ok)
+			txn.SetMetadata("route", NetworkedMultiplayerGodotcord::route.utf8());
+
+			_lobby_manager->UpdateMember(_lobby_id, NetworkedMultiplayerGodotcord::local_user_id, txn, [](discord::Result result) {
+				if (result != discord::Result::Ok) {
+					//error
+				}
+			});
+		});
+	}
 }
 
 NetworkedMultiplayerGodotcord::~NetworkedMultiplayerGodotcord() {

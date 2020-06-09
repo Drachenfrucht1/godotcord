@@ -1,26 +1,30 @@
 #ifndef GODOTCORD_H
 #define GODOTCORD_H
 
-#include "core/reference.h"
+#include "core/object.h"
 #include <string.h>
 #include "discord-files/discord.h"
 #include "godotcord_activity.h"
 
-class Godotcord : public Reference {
-    GDCLASS(Godotcord, Reference)
+class Godotcord : public Object {
+    GDCLASS(Godotcord, Object)
 
 private:
-    discord::Core* _core{};
+	discord::Core *_core{};
+	bool init_bool = false;
 	String _route;
 
 protected:
     static void _bind_methods();
 
 public:
-    void init(discord::ClientId clientId);
+	static Godotcord *singleton;
+	static Godotcord *get_singleton();
+
+    Error init(discord::ClientId clientId);
 	//void init_debug(discord::ClientId clientId, String id);
 
-    void callbacks();
+	void run_callbacks();
 
     void setActivity(Ref<GodotcordActivity>);
 
@@ -31,6 +35,10 @@ public:
 	int64_t get_current_user_id();
 
 	void removeRouteEvent();
+
+	bool is_init() const {
+		return init_bool;
+	}
 
 	String get_route() { return _route; }
 

@@ -1,12 +1,26 @@
 #include "godotcord.h"
 
+Godotcord *Godotcord::singleton = NULL;
+
 Godotcord::Godotcord() {
 	_route = String("");
+
+	singleton = this;
+}
+
+Godotcord* Godotcord::get_singleton() {
+	return singleton;
+}
+
+void Godotcord::run_callbacks() {
+	if (init_bool) {
+		_core->RunCallbacks();
+	}
 }
 
 void Godotcord::_bind_methods() {
     ClassDB::bind_method(D_METHOD("init", "id"), &Godotcord::init);
-    ClassDB::bind_method(D_METHOD("callbacks"), &Godotcord::callbacks);
+	ClassDB::bind_method(D_METHOD("run_callbacks"), &Godotcord::run_callbacks);
     ClassDB::bind_method(D_METHOD("set_activity", "activity" ), &Godotcord::setActivity);
     ClassDB::bind_method(D_METHOD("clear_activity"), &Godotcord::clearActivity);
 
@@ -22,12 +36,14 @@ void Godotcord::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
 }
 
-void Godotcord::init(discord::ClientId clientId) {
+Error Godotcord::init(discord::ClientId clientId) {
 	auto result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
 
-	if (result != discord::Result::Ok) {
-		//error
-	}
+
+	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_CANT_CONNECT);
+
+
+	init_bool = true;
 
 	_core->SetLogHook(discord::LogLevel::Info, [](discord::LogLevel level, const char *msg) {
 		switch (level) {
@@ -58,8 +74,9 @@ void Godotcord::init(discord::ClientId clientId) {
 
 	_core->NetworkManager().OnRouteUpdate.Connect([this](const char *p_route) {
 		_route = String(p_route);
-		print_verbose(vformat("Route is %s", _route));
 	});
+
+	return OK;
 }
 
 /*void Godotcord::init_debug(discord::ClientId clientId, String id) {
@@ -72,10 +89,6 @@ void Godotcord::init(discord::ClientId clientId) {
         //error
     }
 }*/
-
-void Godotcord::callbacks() {
-    _core->RunCallbacks();
-}
 
 void Godotcord::setActivity(Ref<GodotcordActivity> act) {
 
