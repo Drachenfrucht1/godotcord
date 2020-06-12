@@ -3,7 +3,7 @@ A Godot module to integrate the Discord GameSDK into the engine
 
 > This integration is not official and is not supported by the Discord GameSDK Developers.
 
-Godotcord currently only supports the Windows platform (both 32 and 64 bit). Support for linux any mac may come in the future.
+Godotcord currently only supports the Windows platform (both 32 and 64 bit, but only 64 bit tested). Support for linux any mac may come in the future.
 
 # Setup
 
