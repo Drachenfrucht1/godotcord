@@ -253,6 +253,33 @@ void NetworkedMultiplayerGodotcord::_resend_messages() {
 	}
 }
 
+void NetworkedMultiplayerGodotcord::set_public(bool p_pub) {
+	ERR_FAIL_COND_MSG(!_active, "This Multiplayer instance is not active.")
+	discord::LobbyTransaction txn;
+	_lobby_manager->GetLobbyUpdateTransaction(_lobby_id, &txn);
+	switch (p_pub) {
+		case true:
+			txn.SetType(discord::LobbyType::Public);
+			break;
+		case false:
+			txn.SetType(discord::LobbyType::Private);
+	}
+
+	_lobby_manager->UpdateLobby(_lobby_id, txn, [](discord::Result result) {
+		ERR_FAIL_COND(result != discord::Result::Ok)
+	});
+}
+
+void NetworkedMultiplayerGodotcord::set_size(int p_size) {
+	ERR_FAIL_COND_MSG(!_active, "This Multiplayer instance is not active at the moment")
+	discord::LobbyTransaction txn;
+	_lobby_manager->GetLobbyUpdateTransaction(_lobby_id, &txn);
+	txn.SetCapacity(p_size);
+	_lobby_manager->UpdateLobby(_lobby_id, txn, [](discord::Result result) {
+		ERR_FAIL_COND(result != discord::Result::Ok)
+	});
+}
+
 NetworkedMultiplayerGodotcord::GodotcordPeer *NetworkedMultiplayerGodotcord::_get_peer_by_discord_id(int64_t p_user_id) {
 	for (List<GodotcordPeer>::Element *E = _peers.front(); E; E = E->next()) {
 		if (E->get().discord_id == p_user_id) {

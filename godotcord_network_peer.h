@@ -85,6 +85,9 @@ public:
 	Error join_lobby(int id, String secret);
 	Error join_lobby_activity(String activitySecret);
 
+	void set_public(bool p_public);
+	void set_size(int size);
+
 	void close_connection();
 
 	void disconnect_peer(int p_peer);
