@@ -5,6 +5,7 @@
 #include <string.h>
 #include "discord-files/discord.h"
 #include "godotcord_activity.h"
+#include "godotcord_lobby.h"
 
 class Godotcord : public Object {
     GDCLASS(Godotcord, Object)
@@ -33,6 +34,9 @@ public:
 	String get_current_username();
 	String get_current_user_discriminator();
 	int64_t get_current_user_id();
+
+	void search_lobbies(String p_max_users);
+	void get_lobbies(int p_count);
 
 	void removeRouteEvent();
 

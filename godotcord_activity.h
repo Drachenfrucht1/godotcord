@@ -3,18 +3,19 @@
 
 #include "core/reference.h"
 
-#define GET_SET_COMBO(property, type)	\
-	void set_##property(type p_##type) {\
-		property = p_##type;			\
-	}									\
-	type get_##property() const {		\
-		return property;				\
-	}									\
+#define GET_SET_COMBO(property, type)    \
+	void set_##property(type p_##type) { \
+		property = p_##type;             \
+	}                                    \
+	type get_##property() const {        \
+		return property;                 \
+	}
 
-#define ADD_GODOTCORD_PROPERTY(class, property, type)												\
-	ClassDB::bind_method(D_METHOD("set_"#property, #property), &class::set_##property);			\
-	ClassDB::bind_method(D_METHOD("get_"#property), &class::get_##property);						\
-	ADD_PROPERTY(PropertyInfo(type, #property), "set_"#property, "get_"#property);					\
+#define ADD_GODOTCORD_PROPERTY(class, property, type)                                     \
+	ClassDB::bind_method(D_METHOD("set_" #property, #property), &class ::set_##property); \
+	ClassDB::bind_method(D_METHOD("get_" #property), &class ::get_##property);            \
+	ADD_PROPERTY(PropertyInfo(type, #property), "set_" #property, "get_" #property);
+
 
 class GodotcordActivity : public Reference {
 	GDCLASS(GodotcordActivity, Reference)

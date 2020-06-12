@@ -23,6 +23,7 @@ void Godotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("run_callbacks"), &Godotcord::run_callbacks);
     ClassDB::bind_method(D_METHOD("set_activity", "activity" ), &Godotcord::setActivity);
     ClassDB::bind_method(D_METHOD("clear_activity"), &Godotcord::clearActivity);
+	ClassDB::bind_method(D_METHOD("get_lobbies", "limit"), &Godotcord::get_lobbies);
 
 	ClassDB::bind_method(D_METHOD("get_current_username"), &Godotcord::get_current_username);
 	ClassDB::bind_method(D_METHOD("get_current_user_discriminator"), &Godotcord::get_current_user_discriminator);
@@ -34,6 +35,7 @@ void Godotcord::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("join_request", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id")));
 	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
+	ADD_SIGNAL(MethodInfo("search_result", PropertyInfo(Variant::ARRAY, "result")));
 }
 
 Error Godotcord::init(discord::ClientId clientId) {
@@ -193,6 +195,51 @@ int64_t Godotcord::get_current_user_id() {
 	discord::Result result = _core->UserManager().GetCurrentUser(&user);
 	ERR_FAIL_COND_V(result != discord::Result::Ok, 0)
 	return user.GetId();
+}
+
+void Godotcord::search_lobbies(String p_max_users) {
+	discord::LobbySearchQuery query;
+	_core->LobbyManager().GetSearchQuery(&query);
+
+	query.Filter("capacity", discord::LobbySearchComparison::Equal, discord::LobbySearchCast::Number, p_max_users.utf8());
+
+	_core->LobbyManager().Search(query, [this](discord::Result result) {
+		ERR_FAIL_COND(result != discord::Result::Ok)
+
+
+	});
+}
+
+void Godotcord::get_lobbies(int p_count) {
+	discord::LobbySearchQuery query;
+	_core->LobbyManager().GetSearchQuery(&query);
+
+	query.Filter("capacity", discord::LobbySearchComparison::GreaterThanOrEqual, discord::LobbySearchCast::Number, "1");
+
+	_core->LobbyManager().Search(query, [this](discord::Result result) {
+		ERR_FAIL_COND(result != discord::Result::Ok)
+
+		Vector<Variant> vec;
+		int64_t lobby_id;
+		discord::Lobby lobby;
+		int32_t lobby_count;
+		_core->LobbyManager().LobbyCount(&lobby_count);
+
+		for (int32_t i = 0; i < lobby_count; i++) {
+			_core->LobbyManager().GetLobbyId(i, &lobby_id);
+			_core->LobbyManager().GetLobby(lobby_id, &lobby);
+
+			GodotcordLobby gd_lobby;
+			gd_lobby.id = lobby.GetId();
+			gd_lobby.secret = lobby.GetSecret();
+			gd_lobby.max_users = lobby.GetCapacity();
+			_core->LobbyManager().MemberCount(lobby_id, &(gd_lobby.current_users));
+
+			vec.push_back(GodotcordLobby::get_dictionary(&gd_lobby));
+		}
+
+		emit_signal("search_result", vec);
+	});
 }
 
 void Godotcord::removeRouteEvent() {
