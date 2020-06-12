@@ -54,6 +54,7 @@ private:
 
 	List<Packet> _incomming_packets;
 	List<Packet> _defered_packets;
+	List<Packet> _service_packets;
 
 	Packet _current_packet;
 
@@ -65,6 +66,7 @@ private:
 	void _setup_peer(int64_t p_user_id, bool confirm);
 	void _store_connection_details();
 
+	void _send_packet(GodotcordPeer *peer, uint8_t *data, uint8_t channel, uint32_t size);
 	void _resend_messages();
 
 	GodotcordPeer *_get_peer_by_discord_peer_id(uint64_t p_peer_id);
