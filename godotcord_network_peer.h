@@ -63,7 +63,7 @@ private:
 	void _pop_current_packet();
 	uint32_t _gen_unique_id() const;
 
-	void _setup_peer(int64_t p_user_id, bool confirm);
+	GodotcordPeer* _setup_peer(int64_t p_user_id, bool confirm);
 	void _store_connection_details();
 
 	void _send_packet(GodotcordPeer *peer, uint8_t *data, uint8_t channel, uint32_t size);
