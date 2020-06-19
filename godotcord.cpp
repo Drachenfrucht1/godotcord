@@ -233,6 +233,7 @@ void Godotcord::get_lobbies(int p_count) {
 			gd_lobby.id = lobby.GetId();
 			gd_lobby.secret = lobby.GetSecret();
 			gd_lobby.max_users = lobby.GetCapacity();
+			gd_lobby.owner_id = lobby.GetOwnerId();
 			_core->LobbyManager().MemberCount(lobby_id, &(gd_lobby.current_users));
 
 			vec.push_back(GodotcordLobby::get_dictionary(&gd_lobby));

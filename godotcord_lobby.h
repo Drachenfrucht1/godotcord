@@ -5,12 +5,11 @@
 
 class GodotcordLobby {
 
-protected:
-
 public:
 	String secret;
 	//String activity_secret;
 	int64_t id;
+	uint64_t owner_id;
 	int max_users;
 	int32_t current_users;
 
@@ -22,6 +21,7 @@ public:
 		d["secret"] = l->secret;
 		d["max_users"] = l->max_users;
 		d["current_users"] = l->current_users;
+		d["owner_id"] = l->owner_id;
 
         return d;
     }
