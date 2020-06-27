@@ -2,6 +2,7 @@
 #define GODOTCORD_H
 
 #include "core/object.h"
+#include "scene/resources/texture.h"
 #include <string.h>
 #include "discord-files/discord.h"
 #include "godotcord_activity.h"
@@ -39,6 +40,8 @@ public:
 	void get_lobbies(int p_count);
 
 	void removeRouteEvent();
+
+	void request_profile_picture(int64_t p_user_id, uint32_t p_size);
 
 	bool is_init() const {
 		return init_bool;
