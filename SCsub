@@ -21,19 +21,22 @@ sources = [
     "discord-files/user_manager.cpp",
     "discord-files/voice_manager.cpp"
 ]
+    
 
-module_env = env.Clone()
-module_env.add_source_files(env.modules_sources, sources)
-module_env.Append(CPPPATH=['.', "discord-files"])
-module_env.Append(LIBPATH=['libpath'])
-env.Append(LIBPATH=['#modules/godotcord/libpath'])
 if env["platform"] == "windows":
+
+    env.add_source_files(env.modules_sources, sources)
+    env.Append(LIBPATH=['#modules/godotcord/libpath'])
+
     if env["bits"] == "64":
-        module_env.Append(LIBS=['discord_game_sdk.dll.lib'])
         env.Append(LINKFLAGS=['discord_game_sdk.dll.lib'])
     elif env["bits"] == "32":
-        module_env.Append(LIBS=['discord_game_sdk.32.dll.lib'])
         env.Append(LINKFLAGS=['discord_game_sdk.32.dll.lib'])
 elif(env["platform"] == "x11"):
-    module_env.Append(LIBS=['discord_game_sdk.so']);
-    env.Append(LINKFLAGS=['modules/godotcord/libpath/discord_game_sdk.so']);
+    if env["bits"] == "64":
+
+        env.add_source_files(env.modules_sources, sources)
+        env.Append(LIBPATH=['#modules/godotcord/libpath'])
+
+        env.Append(RPATH=["."])
+        env.Append(LIBS=['discord_game_sdk'])

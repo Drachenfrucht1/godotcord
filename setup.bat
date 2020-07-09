@@ -4,6 +4,9 @@ powershell.exe "Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.
 mkdir discord-files
 copy dgsdk\cpp discord-files
 mkdir libpath
+
+copy dgsdk\lib\x86_64\discord_game_sdk.so libpath\libdiscord_game_sdk.so
+del dgsdk\lib\x86_64\discord_game_sdk.so
 copy dgsdk\lib\x86_64 libpath
 copy dgsdk\lib\x86\discord_game_sdk.dll libpath\discord_game_sdk.32.dll
 copy dgsdk\lib\x86\discord_game_sdk.dll.lib libpath\discord_game_sdk.32.dll.lib
