@@ -515,6 +515,8 @@ void NetworkedMultiplayerGodotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_max_members"), &NetworkedMultiplayerGodotcord::get_max_members);
 	ClassDB::bind_method(D_METHOD("get_user_id_by_peer", "peer_id"), &NetworkedMultiplayerGodotcord::get_user_id_by_peer);
 	ClassDB::bind_method(D_METHOD("get_peer_id_by_user", "user_id"), &NetworkedMultiplayerGodotcord::get_peer_id_by_user);
+	ClassDB::bind_method(D_METHOD("set_public", "boolean"), &NetworkedMultiplayerGodotcord::set_public);
+	ClassDB::bind_method(D_METHOD("set_size", "size"), &NetworkedMultiplayerGodotcord::set_size);
 
 	ADD_SIGNAL(MethodInfo("created_lobby"));
 }

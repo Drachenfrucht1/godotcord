@@ -87,9 +87,6 @@ public:
 	Error join_lobby(int id, String secret);
 	Error join_lobby_activity(String activitySecret);
 
-	void set_public(bool p_public);
-	void set_size(int size);
-
 	void close_connection();
 
 	void disconnect_peer(int p_peer);
@@ -112,6 +109,9 @@ public:
 	virtual int get_unique_id() const;
 
 	//Some methods from Enet implemtation missing - adding when needed
+
+	void set_public(bool p_public);
+	void set_size(int size);
 
 	int get_lobby_id() const;
 	String get_lobby_secret() const;
