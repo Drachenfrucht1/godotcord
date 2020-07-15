@@ -508,21 +508,40 @@ void NetworkedMultiplayerGodotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("join_server_activity", "secret"), &NetworkedMultiplayerGodotcord::join_lobby_activity);
 	ClassDB::bind_method(D_METHOD("close_connection"), &NetworkedMultiplayerGodotcord::close_connection);
 	ClassDB::bind_method(D_METHOD("disconnect_perr", "id"), &NetworkedMultiplayerGodotcord::disconnect_peer);
+
 	ClassDB::bind_method(D_METHOD("get_lobby_id"), &NetworkedMultiplayerGodotcord::get_lobby_id);
 	ClassDB::bind_method(D_METHOD("get_lobby_secret"), &NetworkedMultiplayerGodotcord::get_lobby_secret);
 	ClassDB::bind_method(D_METHOD("get_lobby_activity_secret"), &NetworkedMultiplayerGodotcord::get_lobby_activity_secret);
+
 	ClassDB::bind_method(D_METHOD("get_current_members"), &NetworkedMultiplayerGodotcord::get_current_members);
 	ClassDB::bind_method(D_METHOD("get_max_members"), &NetworkedMultiplayerGodotcord::get_max_members);
+
 	ClassDB::bind_method(D_METHOD("get_user_id_by_peer", "peer_id"), &NetworkedMultiplayerGodotcord::get_user_id_by_peer);
 	ClassDB::bind_method(D_METHOD("get_peer_id_by_user", "user_id"), &NetworkedMultiplayerGodotcord::get_peer_id_by_user);
+
 	ClassDB::bind_method(D_METHOD("set_public", "boolean"), &NetworkedMultiplayerGodotcord::set_public);
 	ClassDB::bind_method(D_METHOD("set_size", "size"), &NetworkedMultiplayerGodotcord::set_size);
+
+	ClassDB::bind_method(D_METHOD("set_metadata", "key", "value"), &NetworkedMultiplayerGodotcord::set_metadata);
+	ClassDB::bind_method(D_METHOD("get_metadata", "key"), &NetworkedMultiplayerGodotcord::get_metadata);
 
 	ADD_SIGNAL(MethodInfo("created_lobby"));
 }
 
+void NetworkedMultiplayerGodotcord::set_metadata(String key, String value) {
+	ERR_FAIL_COND_MSG(!_active, "The multiplayer instance is not active currently.")
+
+	Godotcord::get_singleton()->set_lobby_metadata(_lobby_id, key, value);
+}
+
+String NetworkedMultiplayerGodotcord::get_metadata(String key) {
+	ERR_FAIL_COND_V_MSG(!_active, String(""), "The multiplayer instance is not active currently.")
+
+	return Godotcord::get_singleton()->get_lobby_metadata(_lobby_id, key);
+}
+
 int NetworkedMultiplayerGodotcord::get_lobby_id() const {
-	ERR_FAIL_COND_V_MSG(!_active, -1, "The multiplayer instance is not active currently.");
+	ERR_FAIL_COND_V_MSG(!_active, -1, "The multiplayer instance is not active currently.")
 
 	return _lobby_id;
 }

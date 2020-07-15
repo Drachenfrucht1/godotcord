@@ -29,6 +29,9 @@ void Godotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_current_user_discriminator"), &Godotcord::get_current_user_discriminator);
 	ClassDB::bind_method(D_METHOD("get_current_user_id"), &Godotcord::get_current_user_id);
 
+	ClassDB::bind_method(D_METHOD("set_lobby_metadata", "lobby_id", "key", "value"), &Godotcord::set_lobby_metadata);
+	ClassDB::bind_method(D_METHOD("get_lobby_metadata", "lobby_id", "key"), &Godotcord::get_lobby_metadata);
+
 	ClassDB::bind_method(D_METHOD("request_profile_picture", "user_id", "size"), &Godotcord::request_profile_picture);
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_name"), "", "get_current_username");
@@ -198,6 +201,26 @@ int64_t Godotcord::get_current_user_id() {
 	discord::Result result = _core->UserManager().GetCurrentUser(&user);
 	ERR_FAIL_COND_V(result != discord::Result::Ok, 0)
 	return user.GetId();
+}
+
+void Godotcord::set_lobby_metadata(int64_t lobby_id, String key, String value) {
+
+	discord::LobbyTransaction txn{};
+	_core->LobbyManager().GetLobbyUpdateTransaction(lobby_id, &txn);
+
+	txn.SetMetadata(key.utf8(), value.utf8());
+
+	_core->LobbyManager().UpdateLobby(lobby_id, txn, [](discord::Result result) {
+		ERR_FAIL_COND(result != discord::Result::Ok)
+	});
+}
+
+String Godotcord::get_lobby_metadata(int64_t lobby_id, String key) {
+	char value[4096];
+
+	_core->LobbyManager().GetLobbyMetadataValue(lobby_id, key.utf8(), value);
+
+	return String(value);
 }
 
 void Godotcord::search_lobbies(String p_max_users) {

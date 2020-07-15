@@ -113,6 +113,9 @@ public:
 	void set_public(bool p_public);
 	void set_size(int size);
 
+	void set_metadata(String key, String value);
+	String get_metadata(String key);
+
 	int get_lobby_id() const;
 	String get_lobby_secret() const;
 	String get_lobby_activity_secret() const;
