@@ -84,7 +84,7 @@ public:
 	virtual int get_packet_peer() const;
 
 	Error create_lobby(int size, bool pub = false);
-	Error join_lobby(int id, String secret);
+	Error join_lobby(int64_t id, String secret);
 	Error join_lobby_activity(String activitySecret);
 
 	void close_connection();

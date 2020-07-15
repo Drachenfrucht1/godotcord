@@ -67,7 +67,7 @@ Error NetworkedMultiplayerGodotcord::create_lobby(int size, bool pub) {
 	return Error::OK;
 }
 
-Error NetworkedMultiplayerGodotcord::join_lobby(int id, String secret) {
+Error NetworkedMultiplayerGodotcord::join_lobby(int64_t id, String secret) {
 	ERR_FAIL_COND_V_MSG(_active, ERR_ALREADY_IN_USE, "The multiplayer instance is already active.");
 
 	_connection_status = CONNECTION_CONNECTING;
@@ -86,7 +86,6 @@ Error NetworkedMultiplayerGodotcord::join_lobby(int id, String secret) {
 			result = _lobby_manager->MemberCount(_lobby_id, &count);
 			ERR_FAIL_COND(result != discord::Result::Ok);
 			discord::UserId user_id;
-			char *value = (char *)memalloc(sizeof(char) * 5);
 
 			for (int i = 0; i < count; i++) {
 				result = _lobby_manager->GetMemberUserId(_lobby_id, i, &user_id);
@@ -105,7 +104,6 @@ Error NetworkedMultiplayerGodotcord::join_lobby(int id, String secret) {
 					GodotcordPeer *peer = _setup_peer(user_id, false);
 					emit_signal("peer_connected", peer->target_id);
 				}
-
 			}
 
 			emit_signal("connection_succeeded");
