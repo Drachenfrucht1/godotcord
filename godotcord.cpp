@@ -45,11 +45,9 @@ void Godotcord::_bind_methods() {
 }
 
 Error Godotcord::init(discord::ClientId clientId) {
-	auto result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
-
+	discord::Result result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
 
 	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_CANT_CONNECT);
-
 
 	init_bool = true;
 
@@ -72,7 +70,6 @@ Error Godotcord::init(discord::ClientId clientId) {
 	});
 
 	_core->ActivityManager().OnActivityJoin.Connect([this](const char * p_secret) {
-		//workaround because onActivityJoin event is fired twice by discord
 		emit_signal("activity_join", String(p_secret));
 	});
 
@@ -87,6 +84,7 @@ Error Godotcord::init(discord::ClientId clientId) {
 	return OK;
 }
 
+//Does not work currently, see https://github.com/discord/gamesdk-and-dispatch/issues/41
 /*void Godotcord::init_debug(discord::ClientId clientId, String id) {
 	_putenv_s("DISCORD_INSTANCE_ID", id.utf8());
 	print_line(vformat("Set DISCORD_INSTANCE_ID to %s", id));
@@ -179,7 +177,7 @@ String Godotcord::get_current_username() {
 		return "";
 	discord::User user;
 	discord::Result result = _core->UserManager().GetCurrentUser(&user);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, "")
+	ERR_FAIL_COND_V(result != discord::Result::Ok, "");
 	return user.GetUsername();
 }
 
@@ -189,7 +187,7 @@ String Godotcord::get_current_user_discriminator() {
 		return "";
 	discord::User user;
 	discord::Result result = _core->UserManager().GetCurrentUser(&user);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, "")
+	ERR_FAIL_COND_V(result != discord::Result::Ok, "");
 	return user.GetDiscriminator();
 }
 
@@ -199,7 +197,7 @@ int64_t Godotcord::get_current_user_id() {
 		return 0;
 	discord::User user;
 	discord::Result result = _core->UserManager().GetCurrentUser(&user);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, 0)
+	ERR_FAIL_COND_V(result != discord::Result::Ok, 0);
 	return user.GetId();
 }
 
@@ -211,14 +209,16 @@ void Godotcord::set_lobby_metadata(int64_t lobby_id, String key, String value) {
 	txn.SetMetadata(key.utf8(), value.utf8());
 
 	_core->LobbyManager().UpdateLobby(lobby_id, txn, [](discord::Result result) {
-		ERR_FAIL_COND(result != discord::Result::Ok)
+		ERR_FAIL_COND(result != discord::Result::Ok);
 	});
 }
 
 String Godotcord::get_lobby_metadata(int64_t lobby_id, String key) {
 	char value[4096];
 
-	_core->LobbyManager().GetLobbyMetadataValue(lobby_id, key.utf8(), value);
+	discord::Result result = _core->LobbyManager().GetLobbyMetadataValue(lobby_id, key.utf8(), value);
+
+	ERR_FAIL_COND_V(result != discord::Result::Ok, "");
 
 	return String(value);
 }
@@ -230,7 +230,7 @@ void Godotcord::search_lobbies(String p_max_users) {
 	query.Filter("capacity", discord::LobbySearchComparison::Equal, discord::LobbySearchCast::Number, p_max_users.utf8());
 
 	_core->LobbyManager().Search(query, [this](discord::Result result) {
-		ERR_FAIL_COND(result != discord::Result::Ok)
+		ERR_FAIL_COND(result != discord::Result::Ok);
 
 
 	});
@@ -243,7 +243,7 @@ void Godotcord::get_lobbies(int p_count) {
 	query.Filter("capacity", discord::LobbySearchComparison::GreaterThanOrEqual, discord::LobbySearchCast::Number, "1");
 
 	_core->LobbyManager().Search(query, [this](discord::Result result) {
-		ERR_FAIL_COND(result != discord::Result::Ok)
+		ERR_FAIL_COND(result != discord::Result::Ok);
 
 		Vector<Variant> vec;
 		int64_t lobby_id;
