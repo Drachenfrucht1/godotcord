@@ -1,4 +1,4 @@
-wget https://dl-game-sdk.discordapp.net/latest/discord_game_sdk.zip
+wget https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip
 unzip discord_game_sdk -d dgsk
 mv dgsk/cpp ./discord-files
 mv dgsk/lib/x86_64 ./libpath

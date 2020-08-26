@@ -1,5 +1,5 @@
 @echo off
-bitsadmin /transfer DiscordGameSDKDownload /download /priority normal https://dl-game-sdk.discordapp.net/latest/discord_game_sdk.zip %~dp0\discord_game_sdk.zip
+bitsadmin /transfer DiscordGameSDKDownload /download /priority normal https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip %~dp0\discord_game_sdk.zip
 powershell.exe "Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('discord_game_sdk.zip', 'dgsdk');"
 mkdir discord-files
 copy dgsdk\cpp discord-files
