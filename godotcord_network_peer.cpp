@@ -172,25 +172,25 @@ NetworkedMultiplayerGodotcord::GodotcordPeer* NetworkedMultiplayerGodotcord::_se
 	char route[4096];
 	char target_id[4096];
 	result = _lobby_manager->GetMemberMetadataValue(_lobby_id, p_user_id, "peer_id", peer_id);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL)
+	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL);
 	result = _lobby_manager->GetMemberMetadataValue(_lobby_id, p_user_id, "route", route);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL)
+	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL);
 	result = _lobby_manager->GetMemberMetadataValue(_lobby_id, p_user_id, "target_id", target_id);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL)
+	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL);
 
 	String s(peer_id);
 	Variant v(s);
 	uint64_t p_id = static_cast<uint64_t>((int64_t)v);
 
 	result = _network_manager->OpenPeer(p_id, String(route).utf8());
-	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL)
+	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL);
 	result = _network_manager->OpenChannel(p_id, 0, true);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL)
+	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL);
 	result = _network_manager->OpenChannel(p_id, 1, false);
-	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL)
+	ERR_FAIL_COND_V(result != discord::Result::Ok, NULL);
 
 	GodotcordPeer *p = _get_peer_by_discord_id(p_user_id);
-	ERR_FAIL_COND_V(p == NULL, NULL)
+	ERR_FAIL_COND_V(p == NULL, NULL);
 	p->discord_peer_id = p_id;
 	p->target_id = String(target_id).to_int();
 
@@ -203,7 +203,7 @@ NetworkedMultiplayerGodotcord::GodotcordPeer* NetworkedMultiplayerGodotcord::_se
 		encode_uint64(p_id, &data[9]);
 
 		_lobby_manager->SendLobbyMessage(_lobby_id, data, 17, [](discord::Result result) {
-			ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Couldn't send confirm message to other lobby members")
+			ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Couldn't send confirm message to other lobby members");
 		});
 
 		p->confirmed = true;
@@ -213,10 +213,10 @@ NetworkedMultiplayerGodotcord::GodotcordPeer* NetworkedMultiplayerGodotcord::_se
 }
 
 void NetworkedMultiplayerGodotcord::_store_connection_details() {
-	ERR_FAIL_COND(!_active)
+	ERR_FAIL_COND(!_active);
 	discord::LobbyMemberTransaction txn{};
 	discord::Result result = _lobby_manager->GetMemberUpdateTransaction(_lobby_id, NetworkedMultiplayerGodotcord::local_user_id, &txn);
-	ERR_FAIL_COND(result != discord::Result::Ok)
+	ERR_FAIL_COND(result != discord::Result::Ok);
 
 	if (_server) {
 		_unique_id = 1;
@@ -235,7 +235,7 @@ void NetworkedMultiplayerGodotcord::_store_connection_details() {
 	txn.SetMetadata("target_id", id_s.utf8());
 
 	_lobby_manager->UpdateMember(_lobby_id, NetworkedMultiplayerGodotcord::local_user_id, txn, [](discord::Result result) {
-		ERR_FAIL_COND(result != discord::Result::Ok)
+		ERR_FAIL_COND(result != discord::Result::Ok);
 	});
 }
 
@@ -245,7 +245,7 @@ void NetworkedMultiplayerGodotcord::_resend_messages() {
 		GodotcordPeer *peer = _get_peer_by_target_id(E->get().from);
 		if (peer->confirmed) {
 			 result = _network_manager->SendMessage(peer->discord_peer_id, E->get().channel, E->get().data, E->get().size);
-			ERR_FAIL_COND_MSG(result != discord::Result::Ok, vformat("Failed to send message to %d", _target_peer))
+			ERR_FAIL_COND_MSG(result != discord::Result::Ok, vformat("Failed to send message to %d", _target_peer));
 
 			_defered_packets.erase(E);
 		}
@@ -253,7 +253,7 @@ void NetworkedMultiplayerGodotcord::_resend_messages() {
 }
 
 void NetworkedMultiplayerGodotcord::set_public(bool p_pub) {
-	ERR_FAIL_COND_MSG(!_active, "This Multiplayer instance is not active.")
+	ERR_FAIL_COND_MSG(!_active, "This Multiplayer instance is not active.");
 	discord::LobbyTransaction txn;
 	_lobby_manager->GetLobbyUpdateTransaction(_lobby_id, &txn);
 	switch (p_pub) {
@@ -265,17 +265,17 @@ void NetworkedMultiplayerGodotcord::set_public(bool p_pub) {
 	}
 
 	_lobby_manager->UpdateLobby(_lobby_id, txn, [](discord::Result result) {
-		ERR_FAIL_COND(result != discord::Result::Ok)
+		ERR_FAIL_COND(result != discord::Result::Ok);
 	});
 }
 
 void NetworkedMultiplayerGodotcord::set_size(int p_size) {
-	ERR_FAIL_COND_MSG(!_active, "This Multiplayer instance is not active at the moment")
+	ERR_FAIL_COND_MSG(!_active, "This Multiplayer instance is not active at the moment");
 	discord::LobbyTransaction txn;
 	_lobby_manager->GetLobbyUpdateTransaction(_lobby_id, &txn);
 	txn.SetCapacity(p_size);
 	_lobby_manager->UpdateLobby(_lobby_id, txn, [](discord::Result result) {
-		ERR_FAIL_COND(result != discord::Result::Ok)
+		ERR_FAIL_COND(result != discord::Result::Ok);
 	});
 }
 
@@ -313,7 +313,7 @@ void NetworkedMultiplayerGodotcord::poll() {
 	_pop_current_packet();
 
 	discord::Result result = _network_manager->Flush();
-	ERR_FAIL_COND(result != discord::Result::Ok)
+	ERR_FAIL_COND(result != discord::Result::Ok);
 
 	for (List<Packet>::Element *E = _service_packets.front(); E; E = E->next()) {
 		switch (E->get().data[1]) {
@@ -332,7 +332,7 @@ bool NetworkedMultiplayerGodotcord::is_server() const {
 }
 
 void NetworkedMultiplayerGodotcord::close_connection() {
-	ERR_FAIL_COND_MSG(!_active, "This multiplayer instance is not active at the moment")
+	ERR_FAIL_COND_MSG(!_active, "This multiplayer instance is not active at the moment");
 	_connection_status = CONNECTION_DISCONNECTED;
 	_active = false;
 	_lobby_id = 0;
@@ -343,7 +343,7 @@ void NetworkedMultiplayerGodotcord::close_connection() {
 	}
 
 	_lobby_manager->DisconnectLobby(_lobby_id, [this](discord::Result result) {
-		ERR_FAIL_COND(result != discord::Result::Ok)
+		ERR_FAIL_COND(result != discord::Result::Ok);
 
 		emit_signal("server_disconnected");
 	});
@@ -354,7 +354,7 @@ void NetworkedMultiplayerGodotcord::disconnect_peer(int p_peer) {
 	ERR_FAIL_COND_MSG(!is_server(), "Can't remove peer from lobby when not lobby owner.");
 
 	GodotcordPeer *peer = _get_peer_by_target_id(p_peer);
-	ERR_FAIL_COND_MSG(peer == NULL, "Couldn't find peer to disconnect")
+	ERR_FAIL_COND_MSG(peer == NULL, "Couldn't find peer to disconnect");
 
 	uint8_t *data = (uint8_t*)memalloc(2);
 	data[0] = 'c';
@@ -399,7 +399,7 @@ Error NetworkedMultiplayerGodotcord::put_packet(const uint8_t *p_buffer, int p_b
 
 	if (_target_peer > 0) {
 		GodotcordPeer *peer = _get_peer_by_target_id(_target_peer);
-		ERR_FAIL_COND_V_MSG(peer->discord_peer_id == NULL, Error::ERR_INVALID_PARAMETER, vformat("Couldn't find peer id: %d", _target_peer))
+		ERR_FAIL_COND_V_MSG(peer->discord_peer_id == NULL, Error::ERR_INVALID_PARAMETER, vformat("Couldn't find peer id: %d", _target_peer));
 		_send_packet(peer, data, channel, discord_size);
 	} else if (_target_peer == 0) {
 		for (List<GodotcordPeer>::Element *E = _peers.front(); E; E = E->next()) {
@@ -422,7 +422,7 @@ void NetworkedMultiplayerGodotcord::_send_packet(GodotcordPeer* peer, uint8_t* d
 	discord::Result result;
 	if (peer->confirmed) {
 		result = _network_manager->SendMessage(peer->discord_peer_id, channel, data, size);
-		ERR_FAIL_COND_MSG(result != discord::Result::Ok, vformat("Couldn't send message to userid &d", peer->discord_id))
+		ERR_FAIL_COND_MSG(result != discord::Result::Ok, vformat("Couldn't send message to userid &d", peer->discord_id));
 	} else {
 		Packet p;
 		p.data = data;
@@ -483,14 +483,14 @@ uint32_t NetworkedMultiplayerGodotcord::_gen_unique_id() const {
 }
 
 void NetworkedMultiplayerGodotcord::set_refuse_new_connections(bool p_enable) {
-	ERR_FAIL_COND_MSG(!_active, "This multiplayer instance is not active at the moment.")
+	ERR_FAIL_COND_MSG(!_active, "This multiplayer instance is not active at the moment.");
 	discord::LobbyTransaction txn{};
 	_lobby_manager->GetLobbyUpdateTransaction(_lobby_id, &txn);
 
 	txn.SetLocked(p_enable);
 
 	_lobby_manager->UpdateLobby(_lobby_id, txn, [](discord::Result result) {
-		ERR_FAIL_COND(result != discord::Result::Ok)
+		ERR_FAIL_COND(result != discord::Result::Ok);
 	});
 
 	_refuse_connections = p_enable;
@@ -527,25 +527,25 @@ void NetworkedMultiplayerGodotcord::_bind_methods() {
 }
 
 void NetworkedMultiplayerGodotcord::set_metadata(String key, String value) {
-	ERR_FAIL_COND_MSG(!_active, "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_MSG(!_active, "The multiplayer instance is not active currently.");
 
 	Godotcord::get_singleton()->set_lobby_metadata(_lobby_id, key, value);
 }
 
 String NetworkedMultiplayerGodotcord::get_metadata(String key) {
-	ERR_FAIL_COND_V_MSG(!_active, String(""), "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_V_MSG(!_active, String(""), "The multiplayer instance is not active currently.");
 
 	return Godotcord::get_singleton()->get_lobby_metadata(_lobby_id, key);
 }
 
 int NetworkedMultiplayerGodotcord::get_lobby_id() const {
-	ERR_FAIL_COND_V_MSG(!_active, -1, "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_V_MSG(!_active, -1, "The multiplayer instance is not active currently.");
 
 	return _lobby_id;
 }
 
 String NetworkedMultiplayerGodotcord::get_lobby_secret() const {
-	ERR_FAIL_COND_V_MSG(!_active, "", "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_V_MSG(!_active, "", "The multiplayer instance is not active currently.");
 
 	discord::Lobby lobby;
 	_lobby_manager->GetLobby(_lobby_id, &lobby);
@@ -554,7 +554,7 @@ String NetworkedMultiplayerGodotcord::get_lobby_secret() const {
 }
 
 String NetworkedMultiplayerGodotcord::get_lobby_activity_secret() const {
-	ERR_FAIL_COND_V_MSG(!_active, "", "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_V_MSG(!_active, "", "The multiplayer instance is not active currently.");
 
 	char c_str[128];
 	_lobby_manager->GetLobbyActivitySecret(_lobby_id, c_str);
@@ -563,39 +563,39 @@ String NetworkedMultiplayerGodotcord::get_lobby_activity_secret() const {
 }
 
 int NetworkedMultiplayerGodotcord::get_current_members() const {
-	ERR_FAIL_COND_V_MSG(!_active, -1, "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_V_MSG(!_active, -1, "The multiplayer instance is not active currently.");
 	int32_t count;
 	discord::Result result = _lobby_manager->MemberCount(_lobby_id, &count);
-	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, -1, "Could not get current members")
+	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, -1, "Could not get current members");
 
 	return count;
 }
 
 int NetworkedMultiplayerGodotcord::get_max_members() const {
-	ERR_FAIL_COND_V_MSG(!_active, -1, "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_V_MSG(!_active, -1, "The multiplayer instance is not active currently.");
 	discord::Lobby lobby;
 	discord::Result result = _lobby_manager->GetLobby(_lobby_id, &lobby);
-	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, -1, "Could not get max members")
+	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, -1, "Could not get max members");
 
 	return lobby.GetCapacity();
 }
 
 int64_t NetworkedMultiplayerGodotcord::get_user_id_by_peer(int p_target_id) {
-	ERR_FAIL_COND_V_MSG(!_active, 0, "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_V_MSG(!_active, 0, "The multiplayer instance is not active currently.");
 
 	GodotcordPeer *peer = _get_peer_by_target_id(p_target_id);
 
-	ERR_FAIL_COND_V_MSG(peer == NULL, 0, "Unknown peer id")
+	ERR_FAIL_COND_V_MSG(peer == NULL, 0, "Unknown peer id");
 
 	return peer->discord_id;
 }
 
 int NetworkedMultiplayerGodotcord::get_peer_id_by_user(int64_t p_user_id) {
-	ERR_FAIL_COND_V_MSG(!_active, 0, "The multiplayer instance is not active currently.")
+	ERR_FAIL_COND_V_MSG(!_active, 0, "The multiplayer instance is not active currently.");
 
 	GodotcordPeer *peer = _get_peer_by_discord_id(p_user_id);
 
-	ERR_FAIL_COND_V_MSG(peer == NULL, 0, "Unknown peer id")
+	ERR_FAIL_COND_V_MSG(peer == NULL, 0, "Unknown peer id");
 
 	return peer->target_id;
 }
@@ -714,11 +714,11 @@ NetworkedMultiplayerGodotcord::NetworkedMultiplayerGodotcord() {
 				return;
 			discord::LobbyMemberTransaction txn{};
 			discord::Result result = _lobby_manager->GetMemberUpdateTransaction(_lobby_id, NetworkedMultiplayerGodotcord::local_user_id, &txn);
-			ERR_FAIL_COND(result != discord::Result::Ok)
+			ERR_FAIL_COND(result != discord::Result::Ok);
 			txn.SetMetadata("route", NetworkedMultiplayerGodotcord::route.utf8());
 
 			_lobby_manager->UpdateMember(_lobby_id, NetworkedMultiplayerGodotcord::local_user_id, txn, [](discord::Result result) {
-				ERR_FAIL_COND(result != discord::Result::Ok)
+				ERR_FAIL_COND(result != discord::Result::Ok);
 			});
 		});
 	}
