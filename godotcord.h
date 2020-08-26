@@ -24,7 +24,7 @@ public:
 	static Godotcord *get_singleton();
 
     Error init(discord::ClientId clientId);
-	//void init_debug(discord::ClientId clientId, String id);
+	void init_debug(discord::ClientId clientId, String id);
 
 	void run_callbacks();
 

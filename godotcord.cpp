@@ -19,7 +19,8 @@ void Godotcord::run_callbacks() {
 }
 
 void Godotcord::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("init", "id"), &Godotcord::init);
+    ClassDB::bind_method(D_METHOD("init", "client_id"), &Godotcord::init);
+	ClassDB::bind_method(D_METHOD("init_debug", "client_id", "instance_id"), &Godotcord::init_debug);
 	ClassDB::bind_method(D_METHOD("run_callbacks"), &Godotcord::run_callbacks);
     ClassDB::bind_method(D_METHOD("set_activity", "activity" ), &Godotcord::setActivity);
     ClassDB::bind_method(D_METHOD("clear_activity"), &Godotcord::clearActivity);
@@ -84,17 +85,46 @@ Error Godotcord::init(discord::ClientId clientId) {
 	return OK;
 }
 
-//Does not work currently, see https://github.com/discord/gamesdk-and-dispatch/issues/41
-/*void Godotcord::init_debug(discord::ClientId clientId, String id) {
+void Godotcord::init_debug(discord::ClientId clientId, String id) {
 	_putenv_s("DISCORD_INSTANCE_ID", id.utf8());
 	print_line(vformat("Set DISCORD_INSTANCE_ID to %s", id));
 	print_line(vformat("Read DISCORD_INSTANCE_ID is %s", getenv("DISCORD_INSTANCE_ID")));
-    auto result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
+    discord::Result result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
 
-    if (result != discord::Result::Ok) {
-        //error
-    }
-}*/
+    ERR_FAIL_COND(result != discord::Result::Ok);
+
+	init_bool = true;
+
+	_core->SetLogHook(discord::LogLevel::Info, [](discord::LogLevel level, const char *msg) {
+		switch (level) {
+			case discord::LogLevel::Warn:
+				print_line(vformat("[DiscordGameSDK][Warn] %s", msg));
+				break;
+			case discord::LogLevel::Info:
+				print_line(vformat("[DiscordGameSDK][Info] %s", msg));
+				break;
+			case discord::LogLevel::Error:
+				print_error(vformat("[DiscordGameSDK][ERR] %s", msg));
+				break;
+		}
+	});
+
+	_core->ActivityManager().OnActivityJoinRequest.Connect([this](discord::User p_user) {
+		emit_signal("join_request", p_user.GetUsername(), p_user.GetId());
+	});
+
+	_core->ActivityManager().OnActivityJoin.Connect([this](const char *p_secret) {
+		emit_signal("activity_join", String(p_secret));
+	});
+
+	_core->UserManager().OnCurrentUserUpdate.Connect([this]() {
+		print_verbose("Local Discord user updated");
+	});
+
+	_core->NetworkManager().OnRouteUpdate.Connect([this](const char *p_route) {
+		_route = String(p_route);
+	});
+}
 
 void Godotcord::setActivity(Ref<GodotcordActivity> act) {
 
