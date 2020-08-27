@@ -15,7 +15,7 @@ Godotcord currently supports Windows (64 and 32 bit) and Linux (64 bit).
   
 The following steps can all be done by running the setup.bat in the godotcord directory.<br>
 If you want to do the setup on your own, here are the steps:
-- [Download the curent version of the Discord Game SDK](https://dl-game-sdk.discordapp.net/latest/discord_game_sdk.zip)
+- [Download version 2.5.6 of the Discord Game SDK](https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip)
 - Unzip the file
 - Copy the files in the cpp into a folder called 'discord-files' in the godotcord directory
 - Rename the x86 dlls to discord_game_sdk.32.dll and discord_game_sdk.32.dll.lib
