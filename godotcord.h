@@ -11,6 +11,28 @@
 class Godotcord : public Object {
     GDCLASS(Godotcord, Object)
 
+public:
+	enum LobbyDistance {
+		LOCAL,
+		DEFAULT,
+		EXTENDED,
+		GLOBAL
+	};
+
+	enum LobbyComparison {
+		LESS_THAN_OR_EQUAL,
+		LESS_THAN,
+		EQUAL,
+		GREATER_THAN,
+		GREATER_THAN_OR_EQUAL,
+		NOT_EQUAL
+	};
+
+	enum LobbyCast {
+		STRING,
+		INT,
+	};
+
 private:
 	discord::Core *_core{};
 	bool init_bool = false;
@@ -39,7 +61,7 @@ public:
 	void set_lobby_metadata(int64_t lobby_id, String key, String value);
 	String get_lobby_metadata(int64_t lobby_id, String key);
 
-	void search_lobbies(String p_max_users);
+	void search_lobbies(Variant params, int limit);
 	void get_lobbies(int p_count);
 
 	void removeRouteEvent();
@@ -56,5 +78,9 @@ public:
 
     Godotcord();
 };
+
+VARIANT_ENUM_CAST(Godotcord::LobbyDistance);
+VARIANT_ENUM_CAST(Godotcord::LobbyCast);
+VARIANT_ENUM_CAST(Godotcord::LobbyComparison);
 
 #endif

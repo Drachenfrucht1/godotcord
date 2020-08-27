@@ -24,6 +24,7 @@ void Godotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("run_callbacks"), &Godotcord::run_callbacks);
     ClassDB::bind_method(D_METHOD("set_activity", "activity" ), &Godotcord::setActivity);
     ClassDB::bind_method(D_METHOD("clear_activity"), &Godotcord::clearActivity);
+	ClassDB::bind_method(D_METHOD("search_lobbies", "search_parameters", "limit"), &Godotcord::search_lobbies);
 	ClassDB::bind_method(D_METHOD("get_lobbies", "limit"), &Godotcord::get_lobbies);
 
 	ClassDB::bind_method(D_METHOD("get_current_username"), &Godotcord::get_current_username);
@@ -43,6 +44,21 @@ void Godotcord::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
 	ADD_SIGNAL(MethodInfo("search_result", PropertyInfo(Variant::ARRAY, "result")));
 	ADD_SIGNAL(MethodInfo("profile_image", PropertyInfo(Variant::INT, "user_id"), PropertyInfo(Variant::POOL_BYTE_ARRAY, "img_data")));
+
+	BIND_ENUM_CONSTANT(LOCAL);
+	BIND_ENUM_CONSTANT(DEFAULT);
+	BIND_ENUM_CONSTANT(EXTENDED);
+	BIND_ENUM_CONSTANT(LOCAL);
+
+	BIND_ENUM_CONSTANT(LESS_THAN_OR_EQUAL);
+	BIND_ENUM_CONSTANT(LESS_THAN);
+	BIND_ENUM_CONSTANT(EQUAL);
+	BIND_ENUM_CONSTANT(GREATER_THAN);
+	BIND_ENUM_CONSTANT(GREATER_THAN_OR_EQUAL);
+	BIND_ENUM_CONSTANT(NOT_EQUAL);
+
+	BIND_ENUM_CONSTANT(STRING);
+	BIND_ENUM_CONSTANT(INT);
 }
 
 Error Godotcord::init(discord::ClientId clientId) {
@@ -86,7 +102,11 @@ Error Godotcord::init(discord::ClientId clientId) {
 }
 
 void Godotcord::init_debug(discord::ClientId clientId, String id) {
+#ifdef _WIN32
 	_putenv_s("DISCORD_INSTANCE_ID", id.utf8());
+#else
+	setenv("DISCORD_INSTANCE_ID", id.utf8());
+#endif
 	print_line(vformat("Set DISCORD_INSTANCE_ID to %s", id));
 	print_line(vformat("Read DISCORD_INSTANCE_ID is %s", getenv("DISCORD_INSTANCE_ID")));
     discord::Result result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
@@ -253,24 +273,123 @@ String Godotcord::get_lobby_metadata(int64_t lobby_id, String key) {
 	return String(value);
 }
 
-void Godotcord::search_lobbies(String p_max_users) {
+void Godotcord::search_lobbies(Variant ref_params, int limit) {
+	ERR_FAIL_COND(!ref_params.is_array());
+	Array params = ref_params;
 	discord::LobbySearchQuery query;
-	_core->LobbyManager().GetSearchQuery(&query);
+	discord::Result result = _core->LobbyManager().GetSearchQuery(&query);
+	ERR_FAIL_COND(result != discord::Result::Ok);
 
-	query.Filter("capacity", discord::LobbySearchComparison::Equal, discord::LobbySearchCast::Number, p_max_users.utf8());
+	for (int i = 0; i < params.size(); i++) {
+		Variant element = params[i];
+		ERR_CONTINUE(element.get_type() != Variant::DICTIONARY);
+		Dictionary d = element;
+
+		String property = d.get("property", "");
+		int comparison = d.get("comparison", -1);
+		int cast = d.get("cast", -1);
+		Variant value = d.get("value", "");
+
+		query.Limit(limit);
+
+		if (property == "distance") {
+			ERR_CONTINUE(value.get_type() != Variant::INT);
+			discord::LobbySearchDistance distance;
+			int i_value = value;
+			switch (i_value) {
+				case LOCAL:
+					distance = discord::LobbySearchDistance::Local;
+					break;
+				case DEFAULT:
+					distance = discord::LobbySearchDistance::Default;
+					break;
+				case EXTENDED:
+					distance = discord::LobbySearchDistance::Extended;
+					break;
+				case GLOBAL:
+					distance = discord::LobbySearchDistance::Global;
+					break;
+				default:
+					continue;
+			}
+
+			query.Distance(distance);
+		}
+		else {
+			ERR_CONTINUE(property == "" || comparison == -1 || cast == -1 || value.get_type() != Variant::STRING);
+			String s_value = value;
+
+			discord::LobbySearchCast d_cast;
+			discord::LobbySearchComparison d_comp;
+
+			switch (cast) {
+				case STRING:
+					d_cast = discord::LobbySearchCast::String;
+					break;
+				case INT:
+					d_cast = discord::LobbySearchCast::Number;
+					break;
+				default:
+					continue;
+			}
+
+			switch (comparison) {
+				case LESS_THAN_OR_EQUAL:
+					d_comp = discord::LobbySearchComparison::LessThanOrEqual;
+					break;
+				case LESS_THAN:
+					d_comp = discord::LobbySearchComparison::LessThan;
+					break;
+				case EQUAL:
+					d_comp = discord::LobbySearchComparison::Equal;
+					break;
+				case GREATER_THAN:
+					d_comp = discord::LobbySearchComparison::GreaterThan;
+					break;
+				case GREATER_THAN_OR_EQUAL:
+					d_comp = discord::LobbySearchComparison::GreaterThanOrEqual;
+					break;
+				case NOT_EQUAL:
+					d_comp = discord::LobbySearchComparison::NotEqual;
+					break;
+				default:
+					continue;
+			}
+
+			query.Filter(property.utf8(), d_comp, d_cast, s_value.utf8());
+		}
+	}
 
 	_core->LobbyManager().Search(query, [this](discord::Result result) {
 		ERR_FAIL_COND(result != discord::Result::Ok);
 
+		Vector<Variant> vec;
+		int64_t lobby_id;
+		discord::Lobby lobby;
+		int32_t lobby_count;
+		_core->LobbyManager().LobbyCount(&lobby_count);
 
+		for (int32_t i = 0; i < lobby_count; i++) {
+			_core->LobbyManager().GetLobbyId(i, &lobby_id);
+			_core->LobbyManager().GetLobby(lobby_id, &lobby);
+
+			GodotcordLobby gd_lobby;
+			gd_lobby.id = lobby.GetId();
+			gd_lobby.secret = lobby.GetSecret();
+			gd_lobby.max_users = lobby.GetCapacity();
+			gd_lobby.owner_id = lobby.GetOwnerId();
+			_core->LobbyManager().MemberCount(lobby_id, &(gd_lobby.current_users));
+
+			vec.push_back(GodotcordLobby::get_dictionary(&gd_lobby));
+		}
+
+		emit_signal("search_result", vec);
 	});
 }
 
 void Godotcord::get_lobbies(int p_count) {
 	discord::LobbySearchQuery query;
 	_core->LobbyManager().GetSearchQuery(&query);
-
-	query.Filter("capacity", discord::LobbySearchComparison::GreaterThanOrEqual, discord::LobbySearchCast::Number, "1");
 
 	_core->LobbyManager().Search(query, [this](discord::Result result) {
 		ERR_FAIL_COND(result != discord::Result::Ok);
@@ -321,7 +440,7 @@ void Godotcord::request_profile_picture(int64_t p_user_id, uint32_t p_size) {
 				write.release();
 
 				emit_signal("profile_image", p_user_id, data);
-				});
+			});
 }
 
 void Godotcord::removeRouteEvent() {
