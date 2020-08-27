@@ -23,6 +23,8 @@ If you want to do the setup on your own, here are the steps:
   
 The final step is to [recompile Godot](https://docs.godotengine.org/en/stable/development/compiling/compiling_for_windows.html).
 
+Remember that the shared library has to be accesible by the final executable.
+
 # Documentation
 
 The documentation can be found in the [wiki](https://github.com/Drachenfrucht1/godotcord/wiki)
