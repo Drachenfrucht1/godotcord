@@ -197,7 +197,7 @@ NetworkedMultiplayerGodotcord::GodotcordPeer* NetworkedMultiplayerGodotcord::_se
 	if (confirm) {
 		//size 'c' + this->peer_id + confirm->peer_id
 		//size 1   +  8      +   8
-		uint8_t *data = (uint8_t *)memalloc(17);
+		uint8_t data[17];
 		data[0] = 'c';
 		encode_uint64(NetworkedMultiplayerGodotcord::unique_peer_id, &data[1]);
 		encode_uint64(p_id, &data[9]);
@@ -246,6 +246,8 @@ void NetworkedMultiplayerGodotcord::_resend_messages() {
 		if (peer->confirmed) {
 			 result = _network_manager->SendMessage(peer->discord_peer_id, E->get().channel, E->get().data, E->get().size);
 			ERR_FAIL_COND_MSG(result != discord::Result::Ok, vformat("Failed to send message to %d", _target_peer));
+
+			memfree(E->get().data);
 
 			_defered_packets.erase(E);
 		}
@@ -331,6 +333,9 @@ void NetworkedMultiplayerGodotcord::poll() {
 				emit_signal("peer_disconnected", target_id);
 				break;
 		}
+
+		memfree(E->get().data);
+		_service_packets.erase(E);
 	}
 }
 
@@ -346,7 +351,7 @@ void NetworkedMultiplayerGodotcord::close_connection() {
 	_active = false;
 	_lobby_id = 0;
 	_server = false;
-	for (List<GodotcordPeer>::Element *E = _peers.front(); E; E = E->next()) {
+	for (List<GodotcordPeer>::Element *E = _peers.front(); E != NULL; E = E->next()) {
 		_network_manager->ClosePeer(E->get().discord_peer_id);
 		_peers.erase(E);
 	}
@@ -365,7 +370,7 @@ void NetworkedMultiplayerGodotcord::disconnect_peer(int p_peer) {
 	GodotcordPeer *peer = _get_peer_by_target_id(p_peer);
 	ERR_FAIL_COND_MSG(peer == NULL, "Couldn't find peer to disconnect");
 
-	uint8_t *data = (uint8_t*)memalloc(2);
+	uint8_t data[2];
 	data[0] = 'c';
 	data[1] = 'd';
 
@@ -436,6 +441,8 @@ Error NetworkedMultiplayerGodotcord::put_packet(const uint8_t *p_buffer, int p_b
 		}
 	}
 
+	memfree(data);
+
 	return OK;
 }
 
@@ -445,8 +452,10 @@ void NetworkedMultiplayerGodotcord::_send_packet(GodotcordPeer* peer, uint8_t* d
 		result = _network_manager->SendMessage(peer->discord_peer_id, channel, data, size);
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, vformat("Couldn't send message to userid &d", peer->discord_id));
 	} else {
+		uint8_t *cp_data = (uint8_t*)memalloc(size);
+		memcpy(cp_data, data, size);
 		Packet p;
-		p.data = data;
+		p.data = cp_data;
 		p.from = peer->target_id;
 		p.channel = channel;
 		p.size = size;
