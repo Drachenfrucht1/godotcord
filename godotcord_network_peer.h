@@ -11,17 +11,16 @@ class NetworkedMultiplayerGodotcord : public NetworkedMultiplayerPeer {
 private:
 	discord::LobbyManager *_lobby_manager;
 	discord::NetworkManager *_network_manager;
-	int64_t _lobby_id;
-	static int64_t local_user_id;
-	static uint64_t unique_peer_id;
+	int64_t _lobby_id;							///< id of the joined discord lobby
+	static int64_t local_user_id;				///< discord user id
+	static uint64_t unique_peer_id;				///< discord peer id
 	static String route;
+	int _unique_id;								///< localy generated godot peer id 
 
 	bool _active;
 	bool _server;
 
-
-	int _unique_id;
-	int _target_peer;
+	int _target_peer;							///< godot peer id of the target of the next packet to be send
 	TransferMode _transfer_mode;
 	int _transfer_channel;
 	int _channel_count;
@@ -38,9 +37,9 @@ private:
 	};
 
 	struct GodotcordPeer {
-		int64_t discord_id = 0;
+		int64_t discord_id = 0;					///< discord user id
 		uint64_t discord_peer_id = 0;
-		int target_id = 0;
+		int target_id = 0;						///< godot peer id
 		bool confirmed = false;
 
 
