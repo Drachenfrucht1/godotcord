@@ -321,6 +321,15 @@ void NetworkedMultiplayerGodotcord::poll() {
 			case 'd':
 				close_connection();
 				break;
+			case 'r':
+				int target_id = decode_uint32(&E->get().data[2]);
+				GodotcordPeer *peer = _get_peer_by_target_id(target_id);
+				ERR_FAIL_COND(peer == NULL);
+				_network_manager->ClosePeer(peer->discord_peer_id);
+				_peers.erase(*peer);
+
+				emit_signal("peer_disconnected", target_id);
+				break;
 		}
 	}
 }
@@ -361,6 +370,18 @@ void NetworkedMultiplayerGodotcord::disconnect_peer(int p_peer) {
 	data[1] = 'd';
 
 	_send_packet(peer, data, 0, 2);
+
+	for (List<GodotcordPeer>::Element *E = _peers.front(); E != NULL; E = E->next()) {
+		if (E->get().target_id == p_peer && E->get().target_id == _unique_id) {
+
+			uint8_t remove_packet[6];
+			remove_packet[0] = 'c';
+			remove_packet['1'] = 'r';
+			encode_uint32(p_peer, &remove_packet[2]);
+
+			_send_packet(&E->get(), remove_packet, 0, 10);
+		}
+	}
 }
 
 int NetworkedMultiplayerGodotcord::get_available_packet_count() const {
@@ -645,9 +666,11 @@ NetworkedMultiplayerGodotcord::NetworkedMultiplayerGodotcord() {
 		_lobby_manager->OnMemberDisconnect.Connect([this](int64_t p_lobby_id, int64_t p_user_id) {
 			if (p_lobby_id != _lobby_id)
 				return;
-			_peers.erase(*_get_peer_by_discord_id(p_user_id));
+			GodotcordPeer *peer = _get_peer_by_discord_id(p_user_id);
+			ERR_FAIL_COND(peer == NULL);
+			_peers.erase(*peer);
 
-			emit_signal("peer_disconnected", p_user_id);
+			emit_signal("peer_disconnected", peer->target_id);
 		});
 
 		_lobby_manager->OnLobbyDelete.Connect([this](int64_t p_lobby_id, uint32_t p_reason) {
