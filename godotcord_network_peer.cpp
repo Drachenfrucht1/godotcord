@@ -381,7 +381,7 @@ void NetworkedMultiplayerGodotcord::disconnect_peer(int p_peer) {
 
 			uint8_t remove_packet[6];
 			remove_packet[0] = 'c';
-			remove_packet['1'] = 'r';
+			remove_packet[1] = 'r';
 			encode_uint32(p_peer, &remove_packet[2]);
 
 			_send_packet(&E->get(), remove_packet, 0, 10);
