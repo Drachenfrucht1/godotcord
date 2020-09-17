@@ -10,13 +10,13 @@ jobs:
                 os: [macos-latest, ubuntu-latest, windows-latest]
                 include:
                 - os: macos-latest
-                  SETUP: setup.sh
+                  SETUP: ./setup.sh
                   PLATFORM: osx
                 - os: ubuntu-latest
-                  SETUP: setup.sh
+                  SETUP: ./setup.sh
                   PLATFORM: x11
                 - os: windows-latest
-                  SETUP: setup.bat
+                  SETUP: \setup.bat
                   PLATFORM: windows
         steps:
         - uses: actions/checkout@v2
@@ -28,7 +28,8 @@ jobs:
             path: 'modules/godotcord'
         - run: ls -R
         - name: Download Discord Game SDK
-          run: ./${{runner.workspace}}/modules/godotcord/${{matrix.SETUP}}
+          working-directory: modules/godotcord
+          run: ${{matrix.SETUP}}
         - name: Compile
           run: scons bits=64 target=release_debug -j2
 
