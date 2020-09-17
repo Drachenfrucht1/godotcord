@@ -26,13 +26,32 @@ jobs:
           with: 
             repository: 'godotengine/godot'
             ref: '3.2.2-stable'
+            
         - uses: actions/checkout@v2
           with:
             path: 'modules/godotcord'
+
+        - name: Cache build files
+          id: cache
+          uses: actions/cache@v2
+          with:
+            path: |
+              **/*.o*
+              **/*.gen.*
+              **/__pycache__
+              modules/godotcord/libpath
+              moduels/godotcord/discord-files
+            key: ${{ runner.os }}-build-${{ github.sha }}
+            restore-keys: |
+              ${{ runner.os }}-build-
+
         - name: Download Discord Game SDK
+          if: steps.cache.outputs.cache-hit != 'true'
           working-directory: modules/godotcord
           run: ${{matrix.SETUP}}
+
         - run: ${{matrix.DOWNLOAD}}
+
         - name: Compile
           run: scons bits=64 target=release_debug -j2
 
