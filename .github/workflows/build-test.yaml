@@ -11,12 +11,16 @@ jobs:
                 include:
                 - os: macos-latest
                   SETUP: ./setup.sh
+                  DOWNLOAD: brew install scons
                   PLATFORM: osx
                 - os: ubuntu-latest
                   SETUP: ./setup.sh
+                  DOWNLOAD: sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev \
+                    libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
                   PLATFORM: x11
                 - os: windows-latest
                   SETUP: \setup.bat
+                  DOWNLOAD: python -m pip install scons
                   PLATFORM: windows
         steps:
         - uses: actions/checkout@v2
@@ -30,6 +34,7 @@ jobs:
         - name: Download Discord Game SDK
           working-directory: modules/godotcord
           run: ${{matrix.SETUP}}
+        - run: ${{matrix.DOWNLOAD}}
         - name: Compile
           run: scons bits=64 target=release_debug -j2
 
