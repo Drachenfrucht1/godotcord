@@ -1,0 +1,59 @@
+name: Compile
+
+on: [push]
+
+jobs:
+    build:
+        runs-on: ${{matrix.os}}
+        strategy:
+            matrix:
+                os: [macos-latest, ubuntu-latest, windows-latest]
+                include:
+                - os: macos-latest
+                  SETUP: ./setup.sh
+                  DOWNLOAD: brew install scons
+                  PLATFORM: osx
+                - os: ubuntu-latest
+                  SETUP: ./setup.sh
+                  DOWNLOAD: sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
+                  PLATFORM: x11
+                - os: windows-latest
+                  SETUP: .\setup.bat
+                  DOWNLOAD: python -m pip install scons
+                  PLATFORM: windows
+        steps:
+        - uses: actions/checkout@v2
+          with: 
+            repository: 'godotengine/godot'
+            ref: '3.2.2-stable'
+            
+        - uses: actions/checkout@v2
+          with:
+            path: 'modules/godotcord'
+
+        - name: Cache build files
+          id: cache
+          uses: actions/cache@v2
+          with:
+            path: |
+              **/*.o*
+              **/*.gen.*
+              **/__pycache__
+              modules/godotcord/libpath
+              moduels/godotcord/discord-files
+            key: ${{ runner.os }}-build-${{ github.sha }}
+            restore-keys: |
+              ${{ runner.os }}-build-
+
+        - name: Download Discord Game SDK
+          if: steps.cache.outputs.cache-hit != 'true'
+          working-directory: modules/godotcord
+          run: ${{matrix.SETUP}}
+
+        - run: ${{matrix.DOWNLOAD}}
+
+        - name: Compile
+          run: scons bits=64 target=release_debug -j2
+
+        
+
