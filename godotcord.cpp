@@ -105,7 +105,7 @@ void Godotcord::init_debug(discord::ClientId clientId, String id) {
 #ifdef _WIN32
 	_putenv_s("DISCORD_INSTANCE_ID", id.utf8());
 #else
-	setenv("DISCORD_INSTANCE_ID", id.utf8());
+	setenv("DISCORD_INSTANCE_ID", id.utf8(), true);
 #endif
 	print_line(vformat("Set DISCORD_INSTANCE_ID to %s", id));
 	print_line(vformat("Read DISCORD_INSTANCE_ID is %s", getenv("DISCORD_INSTANCE_ID")));
