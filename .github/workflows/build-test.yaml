@@ -1,0 +1,36 @@
+name: Compile
+
+on: [push]
+
+jobs:
+    build:
+        runs-on: ${{matrix.os}}
+        strategy:
+            matrix:
+                os: [macos-latest, ubuntu-latest, windows-latest]
+                include:
+                - os: macos-latest
+                  SETUP: setup.sh
+                  PLATFORM: osx
+                - os: ubuntu-latest
+                  SETUP: setup.sh
+                  PLATFORM: x11
+                - os: windows-latest
+                  SETUP: setup.bat
+                  PLATFORM: windows
+        steps:
+        - uses: actions/checkout@v2
+          with: 
+            repository: 'godotengine/godot'
+            ref: '3.2.2-stable'
+        - uses: actions/checkout@v2
+          with:
+            path: 'modules'
+        - name: Download Discord Game SDK
+          working-directory: ${{runner.workspace}}/modules/godotcord
+          run: ./${{matrix.SETUP}}
+        - name: Compile
+          run: scons bits=64 target=release_debug -j2
+
+        
+
