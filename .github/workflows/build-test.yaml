@@ -26,6 +26,7 @@ jobs:
         - uses: actions/checkout@v2
           with:
             path: 'modules'
+        - run: ls -R
         - name: Download Discord Game SDK
           run: ./${{runner.workspace}}/modules/godotcord/${{matrix.SETUP}}
         - name: Compile
