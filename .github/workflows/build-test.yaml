@@ -27,8 +27,7 @@ jobs:
           with:
             path: 'modules'
         - name: Download Discord Game SDK
-          working-directory: ${{runner.workspace}}/modules/godotcord
-          run: ./${{matrix.SETUP}}
+          run: ./${{runner.workspace}}/modules/godotcord/${{matrix.SETUP}}
         - name: Compile
           run: scons bits=64 target=release_debug -j2
 
