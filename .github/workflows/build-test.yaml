@@ -25,7 +25,7 @@ jobs:
             ref: '3.2.2-stable'
         - uses: actions/checkout@v2
           with:
-            path: 'modules'
+            path: 'modules/godotcord'
         - run: ls -R
         - name: Download Discord Game SDK
           run: ./${{runner.workspace}}/modules/godotcord/${{matrix.SETUP}}
