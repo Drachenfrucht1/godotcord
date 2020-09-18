@@ -40,3 +40,9 @@ elif(env["platform"] == "x11"):
 
         env.Append(RPATH=["."])
         env.Append(LIBS=['discord_game_sdk'])
+elif(env["platform"] == "osx"):
+    env.add_source_files(env.modules_sources, sources)
+    env.Append(LIBPATH=['#modules/godotcord/libpath'])
+
+    env.Append(LIBS=['discord_game_sdk'])
+    env.Append(RPATH=["."])
