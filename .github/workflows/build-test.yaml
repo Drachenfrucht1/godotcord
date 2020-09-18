@@ -41,8 +41,9 @@ jobs:
               **/__pycache__
               modules/godotcord/libpath
               moduels/godotcord/discord-files
-            key: ${{ runner.os }}-build-${{ github.sha }}
+            key: ${{ runner.os }}-build-3.2.2-${{ github.sha }}
             restore-keys: |
+              ${{ runner.os }}-build-3.2.2-
               ${{ runner.os }}-build-
 
         - name: Download Discord Game SDK
@@ -53,7 +54,7 @@ jobs:
         - run: ${{matrix.DOWNLOAD}}
 
         - name: Compile
-          run: scons bits=64 target=release_debug -j2
+          run: scons bits=64 target=debug tools=no disable_3d=yes disable_advanced_gui=yes module_arkit_enabled=no module_bullet_enabled=no module_hdr_enabled=no module_camera_enabled=no -j2
 
         
 
