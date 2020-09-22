@@ -23,9 +23,28 @@ protected:
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, spectateSecret, Variant::STRING)
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, start, Variant::INT)
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, end, Variant::INT)
+		
+		ADD_GODOTCORD_PROPERTY(GodotcordActivity, application_id, Variant::INT);
 	}
 
 public:
+	static Dictionary from_discord_activity(discord::Activity p_act) {
+		Dictionary ret;
+		ret["state"] = p_act.GetState();
+		ret["details"] = p_act.GetDetails();
+		ret["partyID"] = p_act.GetParty().GetId();
+		ret["partyCurrent"] = p_act.GetParty().GetSize().GetCurrentSize();
+		ret["partyMax"] = p_act.GetParty().GetSize().GetMaxSize();
+		ret["application_id"] = p_act.GetApplicationId();
+		ret["matchSecret"] = p_act.GetSecrets().GetMatch();
+		ret["joinSecret"] = p_act.GetSecrets().GetJoin();
+		ret["spectateSecret"] = p_act.GetSecrets().GetSpectate();
+		ret["start"] = p_act.GetTimestamps().GetStart();
+		ret["end"] = p_act.GetTimestamps().GetEnd();
+
+		return ret;
+	}
+
 	String state = "";
 	String details = "";
 	String largeImage = "";
@@ -41,6 +60,8 @@ public:
 	int start = 0;
 	int end = 0;
 
+	int64_t application_id;
+
 	GET_SET_COMBO(state, String)
 	GET_SET_COMBO(details, String)
 	GET_SET_COMBO(largeImage, String)
@@ -55,6 +76,8 @@ public:
 	GET_SET_COMBO(spectateSecret, String)
 	GET_SET_COMBO(start, int)
 	GET_SET_COMBO(end, int)
+
+	GET_SET_COMBO(application_id, int64_t);
 };
 
 #endif

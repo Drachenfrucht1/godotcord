@@ -66,29 +66,36 @@ public:
 
 	void run_callbacks();
 
-    void setActivity(Ref<GodotcordActivity>);
+	//ACTIVITY
+    void setActivity(Ref<GodotcordActivity> p_act);
 
     void clearActivity();
 
+	//USER
 	String get_current_username();
 	String get_current_user_discriminator();
 	int64_t get_current_user_id();
 
+	//LOBBY
 	void set_lobby_metadata(int64_t lobby_id, String key, String value);
 	String get_lobby_metadata(int64_t lobby_id, String key);
 
 	void search_lobbies(Variant params, int limit);
 	void get_lobbies(int p_count);
 
-	void removeRouteEvent();
-
+	//IMAGE
 	void request_profile_picture(int64_t p_user_id, uint32_t p_size);
+
+	//RELATIONSHIP
+	void filter_relationships(Object* p_object, StringName p_func_name);
 
 	bool is_init() const {
 		return init_bool;
 	}
 
 	String get_route() { return _route; }
+
+	void removeRouteEvent();
 
 	discord::Core *get_core();
 
