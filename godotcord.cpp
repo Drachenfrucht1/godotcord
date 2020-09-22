@@ -1,4 +1,5 @@
 #include "godotcord.h"
+#include "godotcord_relationship.h"
 
 Godotcord *Godotcord::singleton = NULL;
 
@@ -59,6 +60,18 @@ void Godotcord::_bind_methods() {
 
 	BIND_ENUM_CONSTANT(STRING);
 	BIND_ENUM_CONSTANT(INT);
+
+	BIND_ENUM_CONSTANT(NONE);
+	BIND_ENUM_CONSTANT(FRIEND);
+	BIND_ENUM_CONSTANT(BLOCKED);
+	BIND_ENUM_CONSTANT(PENDING_INCOMING);
+	BIND_ENUM_CONSTANT(PENDING_OUTGOING);
+	BIND_ENUM_CONSTANT(IMPLICIT);
+
+	BIND_ENUM_CONSTANT(OFFLINE);
+	BIND_ENUM_CONSTANT(ONLINE);
+	BIND_ENUM_CONSTANT(IDLE);
+	BIND_ENUM_CONSTANT(DO_NOT_DISTURB);
 }
 
 Error Godotcord::init(discord::ClientId clientId) {
