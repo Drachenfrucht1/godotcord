@@ -33,22 +33,6 @@ public:
 		INT,
 	};
 
-	enum RelationshipType {
-		NONE,
-		FRIEND,
-		BLOCKED,
-		PENDING_INCOMING,
-		PENDING_OUTGOING,
-		IMPLICIT
-	};
-
-	enum PresenceStatus {
-		OFFLINE,
-		ONLINE,
-		IDLE,
-		DO_NOT_DISTURB
-	};
-
 private:
 	discord::Core *_core{};
 	bool init_bool = false;
@@ -105,7 +89,5 @@ public:
 VARIANT_ENUM_CAST(Godotcord::LobbyDistance);
 VARIANT_ENUM_CAST(Godotcord::LobbyCast);
 VARIANT_ENUM_CAST(Godotcord::LobbyComparison);
-VARIANT_ENUM_CAST(Godotcord::RelationshipType);
-VARIANT_ENUM_CAST(Godotcord::PresenceStatus);
 
 #endif
