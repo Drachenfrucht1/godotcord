@@ -6,6 +6,7 @@
 #include <string.h>
 #include "discord-files/discord.h"
 #include "godotcord_activity.h"
+#include "godotcord_relationship.h"
 #include "godotcord_lobby.h"
 
 class Godotcord : public Object {
@@ -71,7 +72,8 @@ public:
 	void request_profile_picture(int64_t p_user_id, uint32_t p_size);
 
 	//RELATIONSHIP
-	void filter_relationships(Object* p_object, StringName p_func_name);
+	Array filter_relationships(Object* p_object, StringName p_func_name);
+	Array get_relationsips();
 
 	bool is_init() const {
 		return init_bool;

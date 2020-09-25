@@ -1,5 +1,4 @@
 #include "godotcord.h"
-#include "godotcord_relationship.h"
 #include "core/func_ref.h"
 
 Godotcord *Godotcord::singleton = NULL;
@@ -451,20 +450,21 @@ void Godotcord::request_profile_picture(int64_t p_user_id, uint32_t p_size) {
 			});
 }
 
-void Godotcord::filter_relationships(Object* p_object, StringName p_func_name) {
-	ERR_FAIL_NULL(p_object);
+Array Godotcord::filter_relationships(Object* p_object, StringName p_func_name) {
+	Array ret;
+	ERR_FAIL_NULL_V(p_object, ret);
 	FuncRef filter_func;
 	filter_func.set_instance(p_object);
 	filter_func.set_function(p_func_name);
 
-	ERR_FAIL_COND(!filter_func.is_valid());
+	ERR_FAIL_COND_V(!filter_func.is_valid(), ret);
 
 	_core->RelationshipManager().Filter([&filter_func](discord::Relationship p_relationship) -> bool {
 		GodotcordRelationship rel_ship;
-		rel_ship.set_type((Godotcord::RelationshipType)p_relationship.GetType());
+		rel_ship.set_type((GodotcordRelationship::RelationshipType)p_relationship.GetType());
 		rel_ship.set_user_id(p_relationship.GetUser().GetId());
 		Dictionary d;
-		d["status"] = (Godotcord::PresenceStatus)p_relationship.GetPresence().GetStatus();
+		d["status"] = (GodotcordRelationship::PresenceStatus)p_relationship.GetPresence().GetStatus();
 		d["activity"] = GodotcordActivity::from_discord_activity(p_relationship.GetPresence().GetActivity());
 
 		rel_ship.set_presence(d);
@@ -474,6 +474,30 @@ void Godotcord::filter_relationships(Object* p_object, StringName p_func_name) {
 
 		return filter_func.call_funcv(a);
 	});
+
+	return get_relationsips();
+}
+
+Array Godotcord::get_relationsips() {
+	Array ret;
+	int count;
+	_core->RelationshipManager().Count(&count);
+	discord::Relationship d_relationship;
+	for (int i = 0; i < count; i++) {
+		_core->RelationshipManager().GetAt(i, &d_relationship);
+
+		GodotcordRelationship rel_ship;
+		rel_ship.set_type((GodotcordRelationship::RelationshipType)d_relationship.GetType());
+		rel_ship.set_user_id(d_relationship.GetUser().GetId());
+		Dictionary d;
+		d["status"] = (GodotcordRelationship::PresenceStatus)d_relationship.GetPresence().GetStatus();
+		d["activity"] = GodotcordActivity::from_discord_activity(d_relationship.GetPresence().GetActivity());
+
+		rel_ship.set_presence(d);
+
+		ret.push_back(&rel_ship);
+	}
+	return ret;
 }
 
 void Godotcord::removeRouteEvent() {
