@@ -47,7 +47,7 @@ void Godotcord::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
 	ADD_SIGNAL(MethodInfo("search_result", PropertyInfo(Variant::ARRAY, "result")));
 	ADD_SIGNAL(MethodInfo("profile_image", PropertyInfo(Variant::INT, "user_id"), PropertyInfo(Variant::POOL_BYTE_ARRAY, "img_data")));
-	ADD_SIGNAL(MethodInfo("relationship_update"));
+	ADD_SIGNAL(MethodInfo("relationship_update"), PropertyInfo(Variant::DICTIONARY, "relationship"));
 
 	BIND_ENUM_CONSTANT(LOCAL);
 	BIND_ENUM_CONSTANT(DEFAULT);
@@ -102,8 +102,17 @@ Error Godotcord::init(discord::ClientId clientId) {
 		_route = String(p_route);
 	});
 
-	_core->RelationshipManager().OnRefresh.Connect([this]() {
-		emit_signal("relationship_update");
+	_core->RelationshipManager().OnRelationshipUpdate.Connect([this](discord::Relationship relation_ship) {
+		GodotcordRelationship rel_ship;
+		rel_ship.set_type((GodotcordRelationship::RelationshipType)relation_ship.GetType());
+		rel_ship.set_user_id(relation_ship.GetUser().GetId());
+		Dictionary d;
+		d["status"] = (GodotcordRelationship::PresenceStatus)relation_ship.GetPresence().GetStatus();
+		d["activity"] = GodotcordActivity::from_discord_activity(relation_ship.GetPresence().GetActivity());
+
+		rel_ship.set_presence(d);
+
+		emit_signal("relationship_update", rel_ship.to_dictionary());
 	});
 
 	return OK;
@@ -153,8 +162,17 @@ void Godotcord::init_debug(discord::ClientId clientId, String id) {
 		_route = String(p_route);
 	});
 
-	_core->RelationshipManager().OnRelationshipUpdate.Connect([this](){
-		emit_signal("relationship_update");
+	_core->RelationshipManager().OnRelationshipUpdate.Connect([this](discord::Relationship relation_ship) {
+		GodotcordRelationship rel_ship;
+		rel_ship.set_type((GodotcordRelationship::RelationshipType)relation_ship.GetType());
+		rel_ship.set_user_id(relation_ship.GetUser().GetId());
+		Dictionary d;
+		d["status"] = (GodotcordRelationship::PresenceStatus)relation_ship.GetPresence().GetStatus();
+		d["activity"] = GodotcordActivity::from_discord_activity(relation_ship.GetPresence().GetActivity());
+
+		rel_ship.set_presence(d);
+
+		emit_signal("relationship_update", rel_ship.to_dictionary());
 	});
 }
 
