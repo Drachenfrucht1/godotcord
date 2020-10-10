@@ -47,7 +47,7 @@ void Godotcord::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
 	ADD_SIGNAL(MethodInfo("search_result", PropertyInfo(Variant::ARRAY, "result")));
 	ADD_SIGNAL(MethodInfo("profile_image", PropertyInfo(Variant::INT, "user_id"), PropertyInfo(Variant::POOL_BYTE_ARRAY, "img_data")));
-	ADD_SIGNAL(MethodInfo("relationship_update"), PropertyInfo(Variant::DICTIONARY, "relationship"));
+	ADD_SIGNAL(MethodInfo("relationship_update", PropertyInfo(Variant::DICTIONARY, "relationship")));
 
 	BIND_ENUM_CONSTANT(LOCAL);
 	BIND_ENUM_CONSTANT(DEFAULT);
