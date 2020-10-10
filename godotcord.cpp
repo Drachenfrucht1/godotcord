@@ -47,6 +47,7 @@ void Godotcord::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
 	ADD_SIGNAL(MethodInfo("search_result", PropertyInfo(Variant::ARRAY, "result")));
 	ADD_SIGNAL(MethodInfo("profile_image", PropertyInfo(Variant::INT, "user_id"), PropertyInfo(Variant::POOL_BYTE_ARRAY, "img_data")));
+	ADD_SIGNAL(MethodInfo("relationship_update"));
 
 	BIND_ENUM_CONSTANT(LOCAL);
 	BIND_ENUM_CONSTANT(DEFAULT);
@@ -102,7 +103,7 @@ Error Godotcord::init(discord::ClientId clientId) {
 	});
 
 	_core->RelationshipManager().OnRefresh.Connect([this]() {
-		print_line("Relationships updated");
+		emit_signal("relationship_update");
 	});
 
 	return OK;
@@ -150,6 +151,10 @@ void Godotcord::init_debug(discord::ClientId clientId, String id) {
 
 	_core->NetworkManager().OnRouteUpdate.Connect([this](const char *p_route) {
 		_route = String(p_route);
+	});
+
+	_core->RelationshipManager().OnRelationshipUpdate.Connect([this](){
+		emit_signal("relationship_update");
 	});
 }
 
