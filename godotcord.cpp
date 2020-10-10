@@ -495,7 +495,7 @@ Array Godotcord::get_relationsips() {
 
 		rel_ship.set_presence(d);
 
-		ret.push_back(&rel_ship);
+		ret.push_back(rel_ship.to_dictionary());
 	}
 	return ret;
 }

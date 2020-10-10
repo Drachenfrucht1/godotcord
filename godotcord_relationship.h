@@ -46,6 +46,7 @@ protected:
     }
 
 public:
+
     RelationshipType type = NONE;
     int64_t user_id = 0;
     Dictionary presence;
@@ -53,6 +54,16 @@ public:
     GET_SET_COMBO(type, RelationshipType);
     GET_SET_COMBO(user_id, int64_t);
     GET_SET_COMBO(presence, Dictionary);
+
+	Dictionary to_dictionary() {
+		Dictionary d;
+
+		d["type"] = type;
+		d["user_id"] = user_id;
+		d["presence"] = presence;
+
+		return d;
+	}
 };
 
 
