@@ -5,6 +5,7 @@
 #include "scene/main/viewport.h"
 #include "godotcord.h"
 #include "godotcord_activity.h"
+#include "godotcord_relationship.h"
 #include "godotcord_network_peer.h"
 
 static Godotcord *GC_ptr = NULL;
@@ -12,6 +13,7 @@ static Godotcord *GC_ptr = NULL;
 void register_godotcord_types() {
 	ClassDB::register_class<Godotcord>();
 	ClassDB::register_class<GodotcordActivity>();
+	ClassDB::register_class<GodotcordRelationship>();
 	ClassDB::register_class<NetworkedMultiplayerGodotcord>();
 
 
