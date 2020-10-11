@@ -3,6 +3,7 @@
 #include "core/io/marshalls.h"
 #include "core/os/os.h"
 #include "inttypes.h"
+#include "godotcord_lobby_manager.h"
 
 uint64_t NetworkedMultiplayerGodotcord::unique_peer_id;
 int64_t NetworkedMultiplayerGodotcord::local_user_id;
@@ -559,13 +560,13 @@ void NetworkedMultiplayerGodotcord::_bind_methods() {
 void NetworkedMultiplayerGodotcord::set_metadata(String key, String value) {
 	ERR_FAIL_COND_MSG(!_active, "The multiplayer instance is not active currently.");
 
-	Godotcord::get_singleton()->set_lobby_metadata(_lobby_id, key, value);
+	GodotcordLobbyManager::get_singleton()->set_lobby_metadata(_lobby_id, key, value);
 }
 
 String NetworkedMultiplayerGodotcord::get_metadata(String key) {
 	ERR_FAIL_COND_V_MSG(!_active, String(""), "The multiplayer instance is not active currently.");
 
-	return Godotcord::get_singleton()->get_lobby_metadata(_lobby_id, key);
+	return GodotcordLobbyManager::get_singleton()->get_lobby_metadata(_lobby_id, key);
 }
 
 int NetworkedMultiplayerGodotcord::get_lobby_id() const {
