@@ -25,7 +25,7 @@ void GodotcordImageManager::get_profile_picture(int64_t p_user_id, int p_size, O
 	Godotcord::get_singleton()->get_core()->ImageManager()
 			.Fetch(
 					handle, false, [this, p_user_id, &callback](discord::Result result, discord::ImageHandle returned_handle) {
-						ERR_FAIL_COND(result != discord::Result::Ok);
+						ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while requesting the profile picture");
 
 						discord::ImageDimensions dim;
 						Godotcord::get_singleton()->get_core()->ImageManager().GetDimensions(returned_handle, &dim);
@@ -38,12 +38,15 @@ void GodotcordImageManager::get_profile_picture(int64_t p_user_id, int p_size, O
 
 						write.release();
 
-						emit_signal("profile_image", p_user_id, data);
+						Array a;
+						a.push_back(p_user_id);
+						a.push_back(data);
+						callback.call_funcv(a);
 					});
 }
 
 GodotcordImageManager::GodotcordImageManager() {
-	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordActivityManager should exist")
+	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordImageManager should exist")
 	singleton = this;
 }
 
