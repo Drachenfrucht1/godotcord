@@ -7,6 +7,18 @@
 class GodotcordActivity : public Reference {
 	GDCLASS(GodotcordActivity, Reference)
 
+public:
+	enum ActivityRequestReply {
+		NO,
+		YES,
+		IGNORE
+	};
+
+	enum ActivityActionType {
+		JOIN = 1,
+		SPECTATE = 2
+	};
+
 protected:
 	static void _bind_methods() {
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, state, Variant::STRING)
@@ -25,6 +37,13 @@ protected:
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, end, Variant::INT)
 		
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, application_id, Variant::INT);
+
+		BIND_ENUM_CONSTANT(ActivityRequestReply::NO);
+		BIND_ENUM_CONSTANT(ActivityRequestReply::YES);
+		BIND_ENUM_CONSTANT(ActivityRequestReply::IGNORE);
+
+		BIND_ENUM_CONSTANT(ActivityActionType::JOIN);
+		BIND_ENUM_CONSTANT(ActivityActionType::SPECTATE);
 	}
 
 public:
@@ -79,5 +98,8 @@ public:
 
 	GET_SET_COMBO(application_id, int64_t);
 };
+
+VARIANT_ENUM_CAST(GodotcordActivity::ActivityRequestReply);
+VARIANT_ENUM_CAST(GodotcordActivity::ActivityActionType);
 
 #endif
