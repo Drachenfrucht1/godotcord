@@ -23,8 +23,6 @@ void Godotcord::_bind_methods() {
     ClassDB::bind_method(D_METHOD("init", "client_id"), &Godotcord::init);
 	ClassDB::bind_method(D_METHOD("init_debug", "client_id", "instance_id"), &Godotcord::init_debug);
 	ClassDB::bind_method(D_METHOD("run_callbacks"), &Godotcord::run_callbacks);
-    ClassDB::bind_method(D_METHOD("set_activity", "activity" ), &Godotcord::setActivity);
-    ClassDB::bind_method(D_METHOD("clear_activity"), &Godotcord::clearActivity);
 	ClassDB::bind_method(D_METHOD("search_lobbies", "search_parameters", "limit"), &Godotcord::search_lobbies);
 	ClassDB::bind_method(D_METHOD("get_lobbies", "limit"), &Godotcord::get_lobbies);
 
@@ -43,8 +41,6 @@ void Godotcord::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_discriminator"), "", "get_current_user_discriminator");
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_id"), "", "get_current_user_id");
 
-	ADD_SIGNAL(MethodInfo("join_request", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id")));
-	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
 	ADD_SIGNAL(MethodInfo("search_result", PropertyInfo(Variant::ARRAY, "result")));
 	ADD_SIGNAL(MethodInfo("profile_image", PropertyInfo(Variant::INT, "user_id"), PropertyInfo(Variant::POOL_BYTE_ARRAY, "img_data")));
 	ADD_SIGNAL(MethodInfo("relationship_update", PropertyInfo(Variant::DICTIONARY, "relationship")));
@@ -86,14 +82,6 @@ Error Godotcord::init(discord::ClientId clientId) {
 		}
 	});
 
-	_core->ActivityManager().OnActivityJoinRequest.Connect([this](discord::User p_user) {
-		emit_signal("join_request", p_user.GetUsername(), p_user.GetId());
-	});
-
-	_core->ActivityManager().OnActivityJoin.Connect([this](const char * p_secret) {
-		emit_signal("activity_join", String(p_secret));
-	});
-
 	_core->UserManager().OnCurrentUserUpdate.Connect([this]() {
 		print_verbose("Local Discord user updated");
 	});
@@ -114,6 +102,8 @@ Error Godotcord::init(discord::ClientId clientId) {
 
 		emit_signal("relationship_update", rel_ship.to_dictionary());
 	});
+
+	GodotcordActivityManager::get_singleton()->init();
 
 	return OK;
 }
@@ -146,14 +136,6 @@ void Godotcord::init_debug(discord::ClientId clientId, String id) {
 		}
 	});
 
-	_core->ActivityManager().OnActivityJoinRequest.Connect([this](discord::User p_user) {
-		emit_signal("join_request", p_user.GetUsername(), p_user.GetId());
-	});
-
-	_core->ActivityManager().OnActivityJoin.Connect([this](const char *p_secret) {
-		emit_signal("activity_join", String(p_secret));
-	});
-
 	_core->UserManager().OnCurrentUserUpdate.Connect([this]() {
 		print_verbose("Local Discord user updated");
 	});
@@ -174,81 +156,6 @@ void Godotcord::init_debug(discord::ClientId clientId, String id) {
 
 		emit_signal("relationship_update", rel_ship.to_dictionary());
 	});
-}
-
-void Godotcord::setActivity(Ref<GodotcordActivity> act) {
-
-    discord::Activity activity{};
-    
-	if (act->state != "") {
-		activity.SetState(act->state.utf8());
-	}
-
-	if(act->details != "") {
-		activity.SetDetails(act->details.utf8());
-	}
-
-	if (act->largeText != "") {
-        activity.GetAssets().SetLargeText(act->largeText.utf8());
-    }
-
-    if (act->largeImage != "") {
-        activity.GetAssets().SetLargeImage(act->largeImage.utf8());
-    }
-
-    if (act->smallText != "") {
-        activity.GetAssets().SetSmallText(act->smallText.utf8());
-    }
-
-    if (act->smallImage != "") {
-        activity.GetAssets().SetSmallImage(act->smallImage.utf8());
-    }
-
-    if (act->partyID != "") {
-        activity.GetParty().SetId(act->partyID.utf8());
-    }
-
-    if (act->partyMax >= 0) {
-        activity.GetParty().GetSize().SetMaxSize(act->partyMax);
-    }    
-
-    if (act->partyCurrent >= 0) {
-        activity.GetParty().GetSize().SetCurrentSize(act->partyCurrent);
-    }
-
-    if (act->matchSecret != "") {
-        activity.GetSecrets().SetMatch(act->matchSecret.utf8());
-    }    
-
-    if (act->joinSecret != "") {
-        activity.GetSecrets().SetJoin(act->joinSecret.utf8());
-    }
-
-    if (act->spectateSecret != "") {
-        activity.GetSecrets().SetSpectate(act->spectateSecret.utf8());
-    }
-
-    if (act->start != 0) {
-        activity.GetTimestamps().SetStart(act->start);
-    }
-
-    if (act->end != 0) {
-        activity.GetTimestamps().SetEnd(act->end);
-    }
-
-    _core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-        if (result != discord::Result::Ok) {
-            //error
-        }
-    });
-}
-
-void Godotcord::clearActivity() {
-    _core->ActivityManager().ClearActivity([](discord::Result result) {
-        if (result != discord::Result::Ok) {
-            //error
-        }
-    });
 }
 
 String Godotcord::get_current_username() {

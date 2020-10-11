@@ -9,6 +9,8 @@
 #include "godotcord_relationship.h"
 #include "godotcord_lobby.h"
 
+#include "godotcord_activity_manager.h"
+
 class Godotcord : public Object {
     GDCLASS(Godotcord, Object)
 
@@ -50,11 +52,6 @@ public:
 	void init_debug(discord::ClientId clientId, String id);
 
 	void run_callbacks();
-
-	//ACTIVITY
-    void setActivity(Ref<GodotcordActivity> p_act);
-
-    void clearActivity();
 
 	//USER
 	String get_current_username();
