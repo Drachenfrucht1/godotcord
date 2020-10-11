@@ -65,9 +65,6 @@ public:
 	void search_lobbies(Variant params, int limit);
 	void get_lobbies(int p_count);
 
-	//IMAGE
-	void request_profile_picture(int64_t p_user_id, uint32_t p_size);
-
 	//RELATIONSHIP
 	Array filter_relationships(Object* p_object, StringName p_func_name);
 	Array get_relationsips();

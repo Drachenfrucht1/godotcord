@@ -33,8 +33,6 @@ void Godotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_lobby_metadata", "lobby_id", "key", "value"), &Godotcord::set_lobby_metadata);
 	ClassDB::bind_method(D_METHOD("get_lobby_metadata", "lobby_id", "key"), &Godotcord::get_lobby_metadata);
 
-	ClassDB::bind_method(D_METHOD("request_profile_picture", "user_id", "size"), &Godotcord::request_profile_picture);
-
 	ClassDB::bind_method(D_METHOD("filter_relationships", "object", "function_name"), &Godotcord::filter_relationships);
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_name"), "", "get_current_username");
@@ -42,7 +40,6 @@ void Godotcord::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_id"), "", "get_current_user_id");
 
 	ADD_SIGNAL(MethodInfo("search_result", PropertyInfo(Variant::ARRAY, "result")));
-	ADD_SIGNAL(MethodInfo("profile_image", PropertyInfo(Variant::INT, "user_id"), PropertyInfo(Variant::POOL_BYTE_ARRAY, "img_data")));
 	ADD_SIGNAL(MethodInfo("relationship_update", PropertyInfo(Variant::DICTIONARY, "relationship")));
 
 	BIND_ENUM_CONSTANT(LOCAL);
@@ -353,31 +350,6 @@ void Godotcord::get_lobbies(int p_count) {
 
 		emit_signal("search_result", vec);
 	});
-}
-
-void Godotcord::request_profile_picture(int64_t p_user_id, uint32_t p_size) {
-	discord::ImageHandle handle;
-	handle.SetId(p_user_id);
-	handle.SetSize(p_size);
-	handle.SetType(discord::ImageType::User);
-		_core->ImageManager()
-			.Fetch(
-					handle, false, [this, p_user_id](discord::Result result, discord::ImageHandle returned_handle) {
-				ERR_FAIL_COND(result != discord::Result::Ok);
-
-				discord::ImageDimensions dim;
-				_core->ImageManager().GetDimensions(returned_handle, &dim);
-
-				uint32_t data_size = dim.GetWidth() * dim.GetHeight() * 4;
-				PoolByteArray data;
-				data.resize(data_size);
-				PoolByteArray::Write write = data.write();
-				_core->ImageManager().GetData(returned_handle, &write[0], data_size);
-
-				write.release();
-
-				emit_signal("profile_image", p_user_id, data);
-			});
 }
 
 Array Godotcord::filter_relationships(Object* p_object, StringName p_func_name) {
