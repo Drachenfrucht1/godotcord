@@ -19,6 +19,8 @@ private:
 	bool init_bool = false;
 	String _route;
 
+	void _init_discord();
+
 protected:
     static void _bind_methods();
 

@@ -1,4 +1,5 @@
 #include "godotcord.h"
+#include "godotcord_relationship_manager.h"
 #include "core/func_ref.h"
 
 Godotcord *Godotcord::singleton = NULL;
@@ -37,44 +38,7 @@ Error Godotcord::init(discord::ClientId clientId) {
 
 	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_CANT_CONNECT);
 
-	init_bool = true;
-
-	_core->SetLogHook(discord::LogLevel::Info, [](discord::LogLevel level, const char *msg) {
-		switch (level) {
-			case discord::LogLevel::Warn:
-				print_line(vformat("[DiscordGameSDK][Warn] %s", msg));
-				break;
-			case discord::LogLevel::Info:
-				print_line(vformat("[DiscordGameSDK][Info] %s", msg));
-				break;
-			case discord::LogLevel::Error:
-				print_error(vformat("[DiscordGameSDK][ERR] %s", msg));
-				break;
-		}
-	});
-
-	_core->UserManager().OnCurrentUserUpdate.Connect([this]() {
-		print_verbose("Local Discord user updated");
-	});
-
-	_core->NetworkManager().OnRouteUpdate.Connect([this](const char *p_route) {
-		_route = String(p_route);
-	});
-
-	_core->RelationshipManager().OnRelationshipUpdate.Connect([this](discord::Relationship relation_ship) {
-		GodotcordRelationship rel_ship;
-		rel_ship.set_type((GodotcordRelationship::RelationshipType)relation_ship.GetType());
-		rel_ship.set_user_id(relation_ship.GetUser().GetId());
-		Dictionary d;
-		d["status"] = (GodotcordRelationship::PresenceStatus)relation_ship.GetPresence().GetStatus();
-		d["activity"] = GodotcordActivity::from_discord_activity(relation_ship.GetPresence().GetActivity());
-
-		rel_ship.set_presence(d);
-
-		emit_signal("relationship_update", rel_ship.to_dictionary());
-	});
-
-	GodotcordActivityManager::get_singleton()->init();
+	_init_discord();
 
 	return OK;
 }
@@ -91,6 +55,10 @@ void Godotcord::init_debug(discord::ClientId clientId, String id) {
 
     ERR_FAIL_COND(result != discord::Result::Ok);
 
+	_init_discord();
+}
+
+void Godotcord::_init_discord() {
 	init_bool = true;
 
 	_core->SetLogHook(discord::LogLevel::Info, [](discord::LogLevel level, const char *msg) {
@@ -115,18 +83,8 @@ void Godotcord::init_debug(discord::ClientId clientId, String id) {
 		_route = String(p_route);
 	});
 
-	_core->RelationshipManager().OnRelationshipUpdate.Connect([this](discord::Relationship relation_ship) {
-		GodotcordRelationship rel_ship;
-		rel_ship.set_type((GodotcordRelationship::RelationshipType)relation_ship.GetType());
-		rel_ship.set_user_id(relation_ship.GetUser().GetId());
-		Dictionary d;
-		d["status"] = (GodotcordRelationship::PresenceStatus)relation_ship.GetPresence().GetStatus();
-		d["activity"] = GodotcordActivity::from_discord_activity(relation_ship.GetPresence().GetActivity());
-
-		rel_ship.set_presence(d);
-
-		emit_signal("relationship_update", rel_ship.to_dictionary());
-	});
+	GodotcordActivityManager::get_singleton()->init();
+	GodotcordRelationshipManager::get_singleton()->init();
 }
 
 String Godotcord::get_current_username() {
