@@ -36,10 +36,6 @@ public:
 	String get_current_user_discriminator();
 	int64_t get_current_user_id();
 
-	//RELATIONSHIP
-	Array filter_relationships(Object* p_object, StringName p_func_name);
-	Array get_relationsips();
-
 	bool is_init() const {
 		return init_bool;
 	}
