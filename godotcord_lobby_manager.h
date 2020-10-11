@@ -5,6 +5,13 @@
 
 class GodotcordLobbyManager : public Object {
 	GDCLASS(GodotcordLobbyManager, Object)
+
+public:
+	static GodotcordLobbyManager *singleton;
+	static GodotcordLobbyManager *get_singleton();
+
+	GodotcordLobbyManager();
+	~GodotcordLobbyManager();
 };
 
 #endif //GODOTCORD_LOBBY_MANAGER_H

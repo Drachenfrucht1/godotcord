@@ -5,6 +5,13 @@
 
 class GodotcordImageManager : public Object {
 	GDCLASS(GodotcordImageManager, Object)
+
+public:
+	static GodotcordImageManager *singleton;
+	static GodotcordImageManager *get_singleton();
+
+	GodotcordImageManager();
+	~GodotcordImageManager();
 };
 
 #endif //GODOTCORD_IMAGE_MANAGER_H
