@@ -9,12 +9,14 @@
 #include "godotcord_network_peer.h"
 
 #include "godotcord_activity_manager.h"
+#include "godotcord_applications_manager.h"
 #include "godotcord_image_manager.h"
 #include "godotcord_lobby_manager.h"
 #include "godotcord_relationship_manager.h"
 
 static Godotcord *GC_ptr = NULL;
 static GodotcordActivityManager *GC_ACT_ptr = NULL;
+static GodotcordApplicationsManager *GC_APP_ptr = NULL;
 static GodotcordImageManager *GC_IMG_ptr = NULL;
 static GodotcordLobbyManager *GC_LOBBY_ptr = NULL;
 static GodotcordRelationshipManager *GC_RELSHIP_ptr = NULL;
@@ -26,6 +28,7 @@ void register_godotcord_types() {
 	ClassDB::register_class<NetworkedMultiplayerGodotcord>();
 
 	ClassDB::register_class<GodotcordActivityManager>();
+	ClassDB::register_class<GodotcordApplicationsManager>();
 	ClassDB::register_class<GodotcordImageManager>();
 	ClassDB::register_class<GodotcordLobbyManager>();
 	ClassDB::register_class<GodotcordRelationshipManager>();
@@ -35,6 +38,9 @@ void register_godotcord_types() {
 
 	GC_ACT_ptr = memnew(GodotcordActivityManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordActivityManager", GodotcordActivityManager::get_singleton()));
+
+	GC_APP_ptr = memnew(GodotcordApplicationsManager);
+	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordApplicationsManager", GodotcordApplicationsManager::get_singleton()));
 
 	GC_IMG_ptr = memnew(GodotcordImageManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordImageManager", GodotcordImageManager::get_singleton()));
@@ -49,6 +55,7 @@ void register_godotcord_types() {
 void unregister_godotcord_types() {
 	memdelete(GC_ptr);
 	memdelete(GC_ACT_ptr);
+	memdelete(GC_APP_ptr);
 	memdelete(GC_IMG_ptr);
 	memdelete(GC_LOBBY_ptr);
 	memdelete(GC_RELSHIP_ptr);
