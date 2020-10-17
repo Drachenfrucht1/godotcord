@@ -11,7 +11,6 @@ GodotcordApplicationsManager* GodotcordApplicationsManager::get_singleton() {
 void GodotcordApplicationsManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_current_locale"), &GodotcordApplicationsManager::get_current_locale);
 	ClassDB::bind_method(D_METHOD("get_current_branch"), &GodotcordApplicationsManager::get_current_branch);
-	ClassDB::bind_method(D_METHOD("get_current_locale"), &GodotcordApplicationsManager::get_current_locale);
 	ClassDB::bind_method(D_METHOD("get_oauth_token", "object", "function_name"), &GodotcordApplicationsManager::get_oauth2_token);
 	ClassDB::bind_method(D_METHOD("validate_or_exit"), &GodotcordApplicationsManager::validate_or_exit);
 	ClassDB::bind_method(D_METHOD("get_ticket"), &GodotcordApplicationsManager::get_current_locale);
