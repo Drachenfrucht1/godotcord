@@ -34,9 +34,9 @@ if env["platform"] == "windows":
     env.Append(LIBPATH=['#modules/godotcord/libpath'])
 
     if env["bits"] == "64":
-        env.Append(LINKFLAGS=['discord_game_sdk.dll.lib'])
+        env.Append(LINKFLAGS=['discord_game_sdk.dll.lib', 'libsodium.lib'])
     elif env["bits"] == "32":
-        env.Append(LINKFLAGS=['discord_game_sdk.32.dll.lib'])
+        env.Append(LINKFLAGS=['discord_game_sdk.32.dll.lib','libsodium.32.lib'])
 elif(env["platform"] == "x11"):
     if env["bits"] == "64":
 
@@ -44,7 +44,7 @@ elif(env["platform"] == "x11"):
         env.Append(LIBPATH=['#modules/godotcord/libpath'])
 
         env.Append(RPATH=["."])
-        env.Append(LIBS=['discord_game_sdk'])
+        env.Append(LIBS=['discord_game_sdk', 'sodium'])
 elif(env["platform"] == "osx"):
     env.add_source_files(env.modules_sources, sources)
     env.Append(LIBPATH=['#modules/godotcord/libpath'])

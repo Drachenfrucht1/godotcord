@@ -1,6 +1,7 @@
 #include "godotcord.h"
 #include "godotcord_relationship_manager.h"
 #include "core/func_ref.h"
+#include "godotcord_utils.h"
 
 Godotcord *Godotcord::singleton = NULL;
 
@@ -28,19 +29,20 @@ void Godotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_current_username"), &Godotcord::get_current_username);
 	ClassDB::bind_method(D_METHOD("get_current_user_discriminator"), &Godotcord::get_current_user_discriminator);
 	ClassDB::bind_method(D_METHOD("get_current_user_id"), &Godotcord::get_current_user_id);
+
+	ClassDB::bind_method(D_METHOD("set_public_key", "public_key"), &Godotcord::set_public_key);
+
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_name"), "", "get_current_username");
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_discriminator"), "", "get_current_user_discriminator");
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "user_id"), "", "get_current_user_id");
 }
 
-Error Godotcord::init(discord::ClientId clientId) {
+void Godotcord::init(discord::ClientId clientId) {
 	discord::Result result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
 
-	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_CANT_CONNECT);
+	ERR_FAIL_COND(result != discord::Result::Ok);
 
 	_init_discord();
-
-	return OK;
 }
 
 void Godotcord::init_debug(discord::ClientId clientId, String id) {

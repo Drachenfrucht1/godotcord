@@ -14,3 +14,11 @@ copy dgsdk\lib\x86\discord_game_sdk.dll libpath\discord_game_sdk.32.dll
 copy dgsdk\lib\x86\discord_game_sdk.dll.lib libpath\discord_game_sdk.32.dll.lib
 del discord_game_sdk.zip
 RMDIR /S /Q dgsdk
+
+bitsadmin /transfer LibSodiumDownload /download /priority normal https://ncloud.drachenfrucht1.de/s/fP8NWK3NKsm9nHw/download %~dp0\godotcord_sdk.zip
+powershell.exe "Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('godotcord_sdk.zip', 'libs');"
+copy libs\lib libpath
+mkdir libsodium
+xcopy /E libs\include libsodium
+del godotcord_sdk.zip
+RMDIR /S /Q libs

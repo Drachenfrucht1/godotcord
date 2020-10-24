@@ -19,8 +19,9 @@ public:
 	void get_oauth2_token(Object *p_object, StringName p_funcname);
 
 	void validate_or_exit();
-
+#if defined _WIN32 || defined __linux
 	void get_ticket(Object *p_object, StringName p_funcname);
+#endif
 
     GodotcordApplicationsManager();
     ~GodotcordApplicationsManager() {}

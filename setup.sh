@@ -11,3 +11,11 @@ mv dgsk/lib/x86/discord_game_sdk.dll.lib ./libpath/discord_game_sdk.32.dll.lib
 
 rm -rf dgsk
 rm discord_game_sdk.zip
+
+wget https://ncloud.drachenfrucht1.de/s/fP8NWK3NKsm9nHw/download
+unzip download -d libs
+mv libs/include ./libsodium
+cp libs/lib/* ./libpath
+
+rm -rf libs
+rm download
