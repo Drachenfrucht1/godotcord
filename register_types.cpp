@@ -12,12 +12,14 @@
 #include "godotcord_image_manager.h"
 #include "godotcord_lobby_manager.h"
 #include "godotcord_relationship_manager.h"
+#include "godotcord_store_manager.h"
 
 static Godotcord *GC_ptr = NULL;
 static GodotcordActivityManager *GC_ACT_ptr = NULL;
 static GodotcordImageManager *GC_IMG_ptr = NULL;
 static GodotcordLobbyManager *GC_LOBBY_ptr = NULL;
 static GodotcordRelationshipManager *GC_RELSHIP_ptr = NULL;
+static GodotcordStoreManager *GC_STORE_ptr = NULL;
 
 void register_godotcord_types() {
 	ClassDB::register_class<Godotcord>();
@@ -29,6 +31,7 @@ void register_godotcord_types() {
 	ClassDB::register_class<GodotcordImageManager>();
 	ClassDB::register_class<GodotcordLobbyManager>();
 	ClassDB::register_class<GodotcordRelationshipManager>();
+	ClassDB::register_class<GodotcordStoreManager>();
 
 	GC_ptr = memnew(Godotcord);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("Godotcord", Godotcord::get_singleton()));
@@ -44,6 +47,9 @@ void register_godotcord_types() {
 
 	GC_RELSHIP_ptr = memnew(GodotcordRelationshipManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordRelationshipManager", GodotcordRelationshipManager::get_singleton()));
+	
+	GC_RELSHIP_ptr = memnew(GodotcordStoreManager);
+	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordStoreManager", GodotcordStoreManager::get_singleton()));
 }
 
 void unregister_godotcord_types() {
@@ -52,4 +58,5 @@ void unregister_godotcord_types() {
 	memdelete(GC_IMG_ptr);
 	memdelete(GC_LOBBY_ptr);
 	memdelete(GC_RELSHIP_ptr);
+	memdelete(GC_STORE_ptr);
 }
