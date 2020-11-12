@@ -7,9 +7,6 @@ class GodotcordStoreManager : public Object {
 	GDCLASS(GodotcordStoreManager, Object)
 
 public:
-	enum class {
-
-	};
 
 protected:
 	static void _bind_methods();

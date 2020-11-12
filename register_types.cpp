@@ -48,7 +48,7 @@ void register_godotcord_types() {
 	GC_RELSHIP_ptr = memnew(GodotcordRelationshipManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordRelationshipManager", GodotcordRelationshipManager::get_singleton()));
 	
-	GC_RELSHIP_ptr = memnew(GodotcordStoreManager);
+	GC_STORE_ptr = memnew(GodotcordStoreManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordStoreManager", GodotcordStoreManager::get_singleton()));
 }
 
