@@ -1,5 +1,6 @@
 #include "godotcord.h"
 #include "godotcord_relationship_manager.h"
+#include "godotcord_store_manager.h"
 #include "core/func_ref.h"
 
 Godotcord *Godotcord::singleton = NULL;
@@ -85,6 +86,7 @@ void Godotcord::_init_discord() {
 
 	GodotcordActivityManager::get_singleton()->init();
 	GodotcordRelationshipManager::get_singleton()->init();
+	GodotcordStoreManager::get_singleton()->init();
 }
 
 String Godotcord::get_current_username() {
