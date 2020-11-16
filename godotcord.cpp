@@ -11,6 +11,12 @@ Godotcord::Godotcord() {
 	singleton = this;
 }
 
+Godotcord::~Godotcord() {
+	if (this == singleton && this->is_init()) {
+		_core->~Core();
+	}
+}
+
 Godotcord* Godotcord::get_singleton() {
 	return singleton;
 }

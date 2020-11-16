@@ -49,6 +49,7 @@ public:
 	discord::Core *get_core();
 
     Godotcord();
+	~Godotcord();
 };
 
 #endif
