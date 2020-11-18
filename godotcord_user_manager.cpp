@@ -29,12 +29,12 @@ void GodotcordUserManager::_bind_methods() {
 void GodotcordUserManager::get_user(int64_t p_user_id, Object *p_object, StringName p_funcname) {
 	ERR_FAIL_NULL(p_object);
 
-	FuncRef callback;
-	callback.set_instance(p_object);
-	callback.set_function(p_funcname);
-
-	Godotcord::get_singleton()->get_core()->UserManager().GetUser(p_user_id, [this, &callback](discord::Result result, discord::User user) {
+	//declaring callback outside the lambda didn't work in this case. The object was empty in the lambda function. I don't why.
+	Godotcord::get_singleton()->get_core()->UserManager().GetUser(p_user_id, [p_object, p_funcname](discord::Result result, discord::User user) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while trying to fetch the user");
+		FuncRef callback;
+		callback.set_instance(p_object);
+		callback.set_function(p_funcname);
 
 		Dictionary d;
 
