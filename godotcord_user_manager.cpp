@@ -83,6 +83,12 @@ bool GodotcordUserManager::has_current_user_flag(GodotcordUserManager::UserFlag 
 	return b;
 }
 
+void GodotcordUserManager::init() {
+	Godotcord::get_singleton()->get_core()->UserManager().OnCurrentUserUpdate.Connect([this]() {
+		print_verbose("Local Discord user updated");
+	});
+}
+
 GodotcordUserManager::GodotcordUserManager() {
 	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordUserManager should exist");
 

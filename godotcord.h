@@ -33,11 +33,6 @@ public:
 
 	void run_callbacks();
 
-	//USER
-	String get_current_username();
-	String get_current_user_discriminator();
-	int64_t get_current_user_id();
-
 	bool is_init() const {
 		return init_bool;
 	}

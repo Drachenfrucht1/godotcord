@@ -34,7 +34,7 @@ public:
 	PremiumType get_current_user_premium_type();
 	bool has_current_user_flag(UserFlag p_flag);
 
-
+	void init();
 	GodotcordUserManager();
 };
 
