@@ -75,9 +75,8 @@ GodotcordUserManager::PremiumType GodotcordUserManager::get_current_user_premium
 }
 
 bool GodotcordUserManager::has_current_user_flag(GodotcordUserManager::UserFlag p_flag) {
-	discord::UserFlag user_flag;
 	bool b;
-	discord::Result result = Godotcord::get_singleton()->get_core()->UserManager().CurrentUserHasFlag(user_flag, &b);
+	discord::Result result = Godotcord::get_singleton()->get_core()->UserManager().CurrentUserHasFlag((discord::UserFlag)p_flag, &b);
 	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, false, "An error occured while fetching the users premium type");
 
 	return b;
