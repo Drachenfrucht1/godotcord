@@ -11,6 +11,7 @@
 #include "godotcord_activity_manager.h"
 #include "godotcord_image_manager.h"
 #include "godotcord_lobby_manager.h"
+#include "godotcord_overlay_manager.h"
 #include "godotcord_relationship_manager.h"
 #include "godotcord_store_manager.h"
 
@@ -18,6 +19,7 @@ static Godotcord *GC_ptr = NULL;
 static GodotcordActivityManager *GC_ACT_ptr = NULL;
 static GodotcordImageManager *GC_IMG_ptr = NULL;
 static GodotcordLobbyManager *GC_LOBBY_ptr = NULL;
+static GodotcordOverlayManager *GC_OVRL_ptr = NULL;
 static GodotcordRelationshipManager *GC_RELSHIP_ptr = NULL;
 static GodotcordStoreManager *GC_STORE_ptr = NULL;
 
@@ -45,6 +47,9 @@ void register_godotcord_types() {
 	GC_LOBBY_ptr = memnew(GodotcordLobbyManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordLobbyManager", GodotcordLobbyManager::get_singleton()));
 
+	GC_OVRL_ptr = memnew(GodotcordOverlayManager);
+	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordOverlayManager", GodotcordOverlayManager::get_singleton()));
+
 	GC_RELSHIP_ptr = memnew(GodotcordRelationshipManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordRelationshipManager", GodotcordRelationshipManager::get_singleton()));
 	
@@ -57,6 +62,7 @@ void unregister_godotcord_types() {
 	memdelete(GC_ACT_ptr);
 	memdelete(GC_IMG_ptr);
 	memdelete(GC_LOBBY_ptr);
+	memdelete(GC_OVRL_ptr);
 	memdelete(GC_RELSHIP_ptr);
 	memdelete(GC_STORE_ptr);
 }
