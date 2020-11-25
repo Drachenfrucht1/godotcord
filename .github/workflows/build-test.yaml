@@ -7,7 +7,7 @@ jobs:
         runs-on: ${{matrix.os}}
         strategy:
             matrix:
-                os: [macos-10.15, ubuntu-18.04, windows-2019]
+                os: [macos-latest, ubuntu-latest, windows-latest]
                 include:
                 - os: macos-latest
                   SETUP: ./setup.sh
@@ -15,7 +15,7 @@ jobs:
                   PLATFORM: osx
                 - os: ubuntu-latest
                   SETUP: ./setup.sh
-                  DOWNLOAD: sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
+                  DOWNLOAD: sudo apt update && sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
                   PLATFORM: x11
                 - os: windows-latest
                   SETUP: .\setup.bat
