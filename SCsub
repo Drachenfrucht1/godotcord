@@ -9,6 +9,7 @@ sources = [
     "godotcord_activity_manager.cpp",
     "godotcord_lobby_manager.cpp",
     "godotcord_image_manager.cpp",
+    "godotcord_overlay_manager.cpp",
     "godotcord_relationship_manager.cpp",
     "godotcord_store_manager.cpp",
     "godotcord_user_manager.cpp",

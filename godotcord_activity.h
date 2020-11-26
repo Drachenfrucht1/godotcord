@@ -38,12 +38,12 @@ protected:
 		
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, application_id, Variant::INT);
 
-		BIND_ENUM_CONSTANT(ActivityRequestReply::NO);
-		BIND_ENUM_CONSTANT(ActivityRequestReply::YES);
-		BIND_ENUM_CONSTANT(ActivityRequestReply::IGNORE);
+		BIND_ENUM_CONSTANT(NO);
+		BIND_ENUM_CONSTANT(YES);
+		BIND_ENUM_CONSTANT(IGNORE);
 
-		BIND_ENUM_CONSTANT(ActivityActionType::JOIN);
-		BIND_ENUM_CONSTANT(ActivityActionType::SPECTATE);
+		BIND_ENUM_CONSTANT(JOIN);
+		BIND_ENUM_CONSTANT(SPECTATE);
 	}
 
 public:
