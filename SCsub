@@ -6,6 +6,7 @@ sources = [
     "register_types.cpp",
     "godotcord.cpp",
     "godotcord_network_peer.cpp",
+    "godotcord_achievement_manager.cpp",
     "godotcord_activity_manager.cpp",
     "godotcord_lobby_manager.cpp",
     "godotcord_image_manager.cpp",

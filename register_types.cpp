@@ -8,6 +8,7 @@
 #include "godotcord_relationship.h"
 #include "godotcord_network_peer.h"
 
+#include "godotcord_achievement_manager.h"
 #include "godotcord_activity_manager.h"
 #include "godotcord_image_manager.h"
 #include "godotcord_lobby_manager.h"
@@ -17,6 +18,7 @@
 #include "godotcord_user_manager.h"
 
 static Godotcord *GC_ptr = NULL;
+static GodotcordAchievementManager *GC_ACH_ptr = NULL;
 static GodotcordActivityManager *GC_ACT_ptr = NULL;
 static GodotcordImageManager *GC_IMG_ptr = NULL;
 static GodotcordLobbyManager *GC_LOBBY_ptr = NULL;
@@ -31,6 +33,7 @@ void register_godotcord_types() {
 	ClassDB::register_class<GodotcordRelationship>();
 	ClassDB::register_class<NetworkedMultiplayerGodotcord>();
 
+	ClassDB::register_class<GodotcordAchievementManager>();
 	ClassDB::register_class<GodotcordActivityManager>();
 	ClassDB::register_class<GodotcordImageManager>();
 	ClassDB::register_class<GodotcordLobbyManager>();
@@ -40,6 +43,9 @@ void register_godotcord_types() {
 
 	GC_ptr = memnew(Godotcord);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("Godotcord", Godotcord::get_singleton()));
+
+	GC_ACH_ptr = memnew(GodotcordAchievementManager);
+	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordAchievementManager", GodotcordAchievementManager::get_singleton()));
 
 	GC_ACT_ptr = memnew(GodotcordActivityManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordActivityManager", GodotcordActivityManager::get_singleton()));
@@ -65,6 +71,7 @@ void register_godotcord_types() {
 
 void unregister_godotcord_types() {
 	memdelete(GC_ptr);
+	memdelete(GC_ACH_ptr);
 	memdelete(GC_ACT_ptr);
 	memdelete(GC_IMG_ptr);
 	memdelete(GC_LOBBY_ptr);
