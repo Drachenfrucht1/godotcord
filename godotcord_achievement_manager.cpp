@@ -23,17 +23,14 @@ void GodotcordAchievementManager::set_user_achievement(int64_t p_achievement_id,
 
 void GodotcordAchievementManager::fetch_user_achievements(Object *p_object, StringName p_funcname) {
 	ERR_FAIL_NULL(p_object);
-	FuncRef callback;
-	callback.set_instance(p_object);
-	callback.set_function(p_funcname);
 
-	Godotcord::get_singleton()->get_core()->AchievementManager().FetchUserAchievements([this, &callback](discord::Result result) {
+	Godotcord::get_singleton()->get_core()->AchievementManager().FetchUserAchievements([this, p_object, p_funcname](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching the local users achievements");
-
-		Array achievements = get_user_achievements();
+		FuncRef callback;
+		callback.set_instance(p_object);
+		callback.set_function(p_funcname);
 
 		Array r;
-		r.push_back(achievements);
 
 		callback.call_funcv(r);
 	});
