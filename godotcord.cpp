@@ -1,4 +1,5 @@
 #include "godotcord.h"
+#include "godotcord_achievement_manager.h"
 #include "godotcord_relationship_manager.h"
 #include "godotcord_store_manager.h"
 #include "godotcord_user_manager.h"
@@ -80,6 +81,7 @@ void Godotcord::_init_discord() {
 		_route = String(p_route);
 	});
 
+	GodotcordAchievementManager::get_singleton()->init();
 	GodotcordActivityManager::get_singleton()->init();
 	GodotcordRelationshipManager::get_singleton()->init();
 	GodotcordStoreManager::get_singleton()->init();
