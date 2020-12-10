@@ -14,6 +14,7 @@ sources = [
     "godotcord_relationship_manager.cpp",
     "godotcord_store_manager.cpp",
     "godotcord_user_manager.cpp",
+    "godotcord_voice_manager.cpp",
     "discord-files/achievement_manager.cpp",
     "discord-files/activity_manager.cpp",
     "discord-files/application_manager.cpp",
