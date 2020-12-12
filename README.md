@@ -21,7 +21,7 @@ If you want to do the setup on your own, here are the steps:
 - Rename the x86 dlls to discord_game_sdk.32.dll and discord_game_sdk.32.dll.lib
 - Copy the all dll's and libs into a folder called libpath in the godotcord directory
   
-The final step is to [recompile Godot](https://docs.godotengine.org/en/stable/development/compiling/index.html).
+The second last step is to [recompile Godot](https://docs.godotengine.org/en/stable/development/compiling/index.html).
 
 The final step is to copy the shared libraries into the bin directory.
 On Windows copy the .dll files into the bin directory.
