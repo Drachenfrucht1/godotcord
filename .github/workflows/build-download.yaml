@@ -18,16 +18,19 @@ jobs:
                   DOWNLOAD: brew install scons
                   PLATFORM: osx
                   EXTENSION: 64
+                  AFTER_COMP_CMD: install_name_tool -add_rpath @executable_path bin/godot.osx.opt.tools.64
                 - os: ubuntu-latest
                   SETUP: ./setup.sh
                   DOWNLOAD: sudo apt update && sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
                   PLATFORM: x11
                   EXTENSION: 64
+                  AFTER_COMP_CMD: echo "Nothing to do"
                 - os: windows-latest
                   SETUP: .\setup.bat
                   DOWNLOAD: python -m pip install scons
                   PLATFORM: windows
                   EXTENSION: 64.exe
+                  AFTER_COMP_CMD: echo "Nothing to do"
         steps:
         - uses: actions/checkout@v2
           with: 
@@ -47,8 +50,11 @@ jobs:
         - name: Compile
           run: scons bits=64 target=release_debug -j2
 
+        - name: Modify binary after compilation
+          run: ${{matrix.AFTER_COMP_CMD}}
+
         - name: Upload binary
           uses: actions/upload-artifact@v2
           with:
-            name: godotcord-binary-${{matrix.os}}.${{matrix.EXTENSION}}
+            name: godotcord-binary-${{matrix.os}}
             path: bin/godot.${{matrix.PLATFORM}}.opt.tools.${{matrix.EXTENSION}}
