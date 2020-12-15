@@ -1,6 +1,10 @@
-name: Compile
+name: Compile for Download
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+      - upload-artifact
 
 jobs:
     build:
@@ -13,14 +17,20 @@ jobs:
                   SETUP: ./setup.sh
                   DOWNLOAD: brew install scons
                   PLATFORM: osx
+                  EXTENSION: 64
+                  AFTER_COMP_CMD: install_name_tool -add_rpath @executable_path bin/godot.osx.opt.tools.64
                 - os: ubuntu-latest
                   SETUP: ./setup.sh
                   DOWNLOAD: sudo apt update && sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
                   PLATFORM: x11
+                  EXTENSION: 64
+                  AFTER_COMP_CMD: echo "Nothing to do"
                 - os: windows-latest
                   SETUP: .\setup.bat
                   DOWNLOAD: python -m pip install scons
                   PLATFORM: windows
+                  EXTENSION: 64.exe
+                  AFTER_COMP_CMD: echo "Nothing to do"
         steps:
         - uses: actions/checkout@v2
           with: 
@@ -38,4 +48,13 @@ jobs:
         - run: ${{matrix.DOWNLOAD}}
 
         - name: Compile
-          run: scons bits=64 target=debug tools=no disable_3d=yes disable_advanced_gui=yes module_arkit_enabled=no module_bullet_enabled=no module_hdr_enabled=no module_camera_enabled=no module_enet_enabled=no module_mobile_vr_enabled=no module_websocket_enabled=no module_webrtc_enabled=no module_gdnative_enabled=no module_visual_script_enabled=no module_dds_enabled=no module_webp_enabled=no module_webm_enabled=no module_upnp_enabled=no -j2
+          run: scons bits=64 target=release_debug -j2
+
+        - name: Modify binary after compilation
+          run: ${{matrix.AFTER_COMP_CMD}}
+
+        - name: Upload binary
+          uses: actions/upload-artifact@v2
+          with:
+            name: godotcord-binary-${{matrix.os}}
+            path: bin/godot.${{matrix.PLATFORM}}.opt.tools.${{matrix.EXTENSION}}
