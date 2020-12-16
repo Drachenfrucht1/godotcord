@@ -3,8 +3,7 @@ name: Compile for Download
 on:
   push:
     branches:
-      - main
-      - upload-artifact
+      - master
 
 jobs:
     build:
