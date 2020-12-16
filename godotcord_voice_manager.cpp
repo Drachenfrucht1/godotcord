@@ -8,6 +8,18 @@ GodotcordVoiceManager* GodotcordVoiceManager::get_singleton() {
 }
 
 void GodotcordVoiceManager::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_input_mode"), &GodotcordVoiceManager::get_input_mode);
+	ClassDB::bind_method(D_METHOD("set_voice_activity"), &GodotcordVoiceManager::set_voice_activity);
+	ClassDB::bind_method(D_METHOD("set_push_to_talk", "hotkey"), &GodotcordVoiceManager::set_push_to_talk);
+	ClassDB::bind_method(D_METHOD("is_self_mute"), &GodotcordVoiceManager::is_self_mute);
+	ClassDB::bind_method(D_METHOD("set_self_mute", "boolean"), &GodotcordVoiceManager::set_self_mute);
+	ClassDB::bind_method(D_METHOD("is_self_deaf"), &GodotcordVoiceManager::is_self_deaf);
+	ClassDB::bind_method(D_METHOD("set_self_deaf", "boolean"), &GodotcordVoiceManager::set_self_deaf);
+	ClassDB::bind_method(D_METHOD("is_local_mute", "user_id"), &GodotcordVoiceManager::is_local_mute);
+	ClassDB::bind_method(D_METHOD("set_local_mute", "user_id", "boolean"), &GodotcordVoiceManager::set_local_mute);
+	ClassDB::bind_method(D_METHOD("get_local_volume", "user_id"), &GodotcordVoiceManager::get_local_volume);
+	ClassDB::bind_method(D_METHOD("set_local_volume", "user_id", "value"), &GodotcordVoiceManager::set_local_volume);
+
 	BIND_ENUM_CONSTANT(VOICE_ACVTIVITY);
 	BIND_ENUM_CONSTANT(PUSH_TO_TALK);
 }
