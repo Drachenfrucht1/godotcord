@@ -32,7 +32,8 @@ on Mac copy the .dylib file into the bin directory and rename it to discord_game
 
 - You can find precompiled versions as artifacts of the github actions.
   These versions are compile with target release_debug and all modules (and the editor) enabled.
-  You will most likely get a warning from windows and macos because the executables are not signed.
+  You will most likely get a warning from windows and macos because the executables are not signed.<br>
+  **I can not include the shared libraries in the downloads. You have to download the [Discord Game SDK](https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip) yourself and copy the required shared library into the same directory as the executable.**
 
 - On Mac the shared library will not be found automatically.
   Execute `install_name_tool -add_rpath @executable_path GODOT_EXECUTABLE_NAME` in the bin directory to fix this issue.
