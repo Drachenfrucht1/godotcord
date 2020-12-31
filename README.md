@@ -13,7 +13,7 @@ Godotcord currently compiles for Windows, Linux and Mac.
 - Checkout out at the 3.2.1-stable tag
 - Clone the godotcord repository into the modules folder
   
-The following steps can all be done by running the setup.bat in the godotcord directory.<br>
+The following steps can all be done by running setup.bat (Windows) or setup.sh (Linux/Mac) in the godotcord directory.<br>
 If you want to do the setup on your own, here are the steps:
 - [Download version 2.5.6 of the Discord Game SDK](https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip)
 - Unzip the file
