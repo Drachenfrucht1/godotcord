@@ -42,11 +42,11 @@ if env["platform"] == "windows":
         env.Append(LINKFLAGS=['discord_game_sdk.32.dll.lib'])
 elif(env["platform"] == "x11"):
     if env["bits"] == "64":
-
         env.add_source_files(env.modules_sources, sources)
         env.Append(LIBPATH=['#modules/godotcord/libpath'])
 
-        env.Append(RPATH=["."])
+        env.Append(RPATH=[Literal("\$$ORIGIN:.")])
+
         env.Append(LIBS=['discord_game_sdk'])
 elif(env["platform"] == "osx"):
     env.add_source_files(env.modules_sources, sources)
