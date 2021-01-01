@@ -28,8 +28,8 @@ public:
 	static Godotcord *singleton;
 	static Godotcord *get_singleton();
 
-    Error init(discord::ClientId clientId, EDiscordCreateFlags createFlags);
-	void init_debug(discord::ClientId clientId, String id, EDiscordCreateFlags createFlags);
+    Error init(discord::ClientId clientId, int createFlags);
+	void init_debug(discord::ClientId clientId, String id, int createFlags);
 
 	void run_callbacks();
 
