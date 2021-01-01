@@ -22,14 +22,14 @@ private:
 	void _init_discord();
 
 protected:
-    static void _bind_methods();
+	static void _bind_methods();
 
 public:
 	static Godotcord *singleton;
 	static Godotcord *get_singleton();
 
-    Error init(discord::ClientId clientId);
-	void init_debug(discord::ClientId clientId, String id);
+    Error init(discord::ClientId clientId, EDiscordCreateFlags createFlags);
+	void init_debug(discord::ClientId clientId, String id, EDiscordCreateFlags createFlags);
 
 	void run_callbacks();
 

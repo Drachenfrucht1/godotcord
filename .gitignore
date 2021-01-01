@@ -5,3 +5,4 @@ __pycache__
 *.obj
 *.o
 build.txt
+docs
