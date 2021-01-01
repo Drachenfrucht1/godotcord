@@ -23,10 +23,11 @@ If you want to do the setup on your own, here are the steps:
   
 The second last step is to [recompile Godot](https://docs.godotengine.org/en/stable/development/compiling/index.html).
 
-The final step is to copy the shared libraries into the bin directory.
-On Windows copy the .dll files into the bin directory.
-On Linux copy the .so file into the bin directory.
-on Mac copy the .dylib file into the bin directory and rename it to discord_game_sdk.dylib.
+The final step is to copy the following libraries into the same folder as the executable you compiled:
+- On Windows: Copy the .dll files
+- On Linux: Copy the .so file
+- On Mac: Copy the .dylib file and rename it to discord_game_sdk.dylib
+These files should be in `/path/to/godot/modules/godotcord/libpath` if setup correctly.
 
 # Notes
 
