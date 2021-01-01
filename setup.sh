@@ -11,3 +11,6 @@ mv dgsk/lib/x86/discord_game_sdk.dll.lib ./libpath/discord_game_sdk.32.dll.lib
 
 rm -rf dgsk
 rm discord_game_sdk.zip
+cd discord-files
+sed -i '2s/.*/#include <cstdint>/' types.h
+cd ..
