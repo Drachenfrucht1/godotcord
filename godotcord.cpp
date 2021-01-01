@@ -30,13 +30,13 @@ void Godotcord::run_callbacks() {
 }
 
 void Godotcord::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("init", "client_id"), &Godotcord::init);
-	ClassDB::bind_method(D_METHOD("init_debug", "client_id", "instance_id"), &Godotcord::init_debug);
+    ClassDB::bind_method(D_METHOD("init", "client_id", "createFlags"), &Godotcord::init);
+	ClassDB::bind_method(D_METHOD("init_debug", "client_id", "instance_id", "createFlags"), &Godotcord::init_debug);
 	ClassDB::bind_method(D_METHOD("run_callbacks"), &Godotcord::run_callbacks);
 }
-
-Error Godotcord::init(discord::ClientId clientId) {
-	discord::Result result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
+	
+Error Godotcord::init(discord::ClientId clientId, int createFlags = DiscordCreateFlags_Default) {
+	discord::Result result = discord::Core::Create(clientId, createFlags, &_core);
 
 	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_CANT_CONNECT);
 
@@ -45,7 +45,7 @@ Error Godotcord::init(discord::ClientId clientId) {
 	return OK;
 }
 
-void Godotcord::init_debug(discord::ClientId clientId, String id) {
+void Godotcord::init_debug(discord::ClientId clientId, String id, int createFlags = DiscordCreateFlags_Default) {
 #ifdef _WIN32
 	_putenv_s("DISCORD_INSTANCE_ID", id.utf8());
 #else
@@ -53,7 +53,7 @@ void Godotcord::init_debug(discord::ClientId clientId, String id) {
 #endif
 	print_line(vformat("Set DISCORD_INSTANCE_ID to %s", id));
 	print_line(vformat("Read DISCORD_INSTANCE_ID is %s", getenv("DISCORD_INSTANCE_ID")));
-    discord::Result result = discord::Core::Create(clientId, DiscordCreateFlags_Default, &_core);
+	discord::Result result = discord::Core::Create(clientId, createFlags, &_core);
 
     ERR_FAIL_COND(result != discord::Result::Ok);
 
