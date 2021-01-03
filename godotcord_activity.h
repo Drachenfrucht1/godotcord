@@ -51,13 +51,13 @@ public:
 		Dictionary ret;
 		ret["state"] = p_act.GetState();
 		ret["details"] = p_act.GetDetails();
-		ret["partyID"] = p_act.GetParty().GetId();
-		ret["partyCurrent"] = p_act.GetParty().GetSize().GetCurrentSize();
-		ret["partyMax"] = p_act.GetParty().GetSize().GetMaxSize();
+		ret["party_id"] = p_act.GetParty().GetId();
+		ret["party_Current"] = p_act.GetParty().GetSize().GetCurrentSize();
+		ret["party_max"] = p_act.GetParty().GetSize().GetMaxSize();
 		ret["application_id"] = p_act.GetApplicationId();
-		ret["matchSecret"] = p_act.GetSecrets().GetMatch();
-		ret["joinSecret"] = p_act.GetSecrets().GetJoin();
-		ret["spectateSecret"] = p_act.GetSecrets().GetSpectate();
+		ret["match_secret"] = p_act.GetSecrets().GetMatch();
+		ret["join_secret"] = p_act.GetSecrets().GetJoin();
+		ret["spectate_secret"] = p_act.GetSecrets().GetSpectate();
 		ret["start"] = p_act.GetTimestamps().GetStart();
 		ret["end"] = p_act.GetTimestamps().GetEnd();
 
@@ -66,16 +66,16 @@ public:
 
 	String state = "";
 	String details = "";
-	String largeImage = "";
-	String largeText = "";
-	String smallImage = "";
-	String smallText = "";
-	String partyID = "";
-	int partyMax = -1;
-	int partyCurrent = -1;
-	String matchSecret = "";
-	String joinSecret = "";
-	String spectateSecret = "";
+	String large_image = "";
+	String large_text = "";
+	String small_image = "";
+	String small_text = "";
+	String party_id = "";
+	int party_max = -1;
+	int party_current = -1;
+	String match_secret = "";
+	String join_secret = "";
+	String spectate_secret = "";
 	int start = 0;
 	int end = 0;
 
