@@ -52,7 +52,7 @@ public:
 		ret["state"] = p_act.GetState();
 		ret["details"] = p_act.GetDetails();
 		ret["party_id"] = p_act.GetParty().GetId();
-		ret["party_Current"] = p_act.GetParty().GetSize().GetCurrentSize();
+		ret["party_current"] = p_act.GetParty().GetSize().GetCurrentSize();
 		ret["party_max"] = p_act.GetParty().GetSize().GetMaxSize();
 		ret["application_id"] = p_act.GetApplicationId();
 		ret["match_secret"] = p_act.GetSecrets().GetMatch();
