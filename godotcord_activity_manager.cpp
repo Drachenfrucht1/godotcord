@@ -30,44 +30,44 @@ void GodotcordActivityManager::set_activity(Ref<GodotcordActivity> p_activity) {
 		activity.SetDetails(p_activity->details.utf8());
 	}
 
-	if (p_activity->largeText != "") {
-		activity.GetAssets().SetLargeText(p_activity->largeText.utf8());
+	if (p_activity->large_text != "") {
+		activity.GetAssets().SetLargeText(p_activity->large_text.utf8());
 	}
 
-	if (p_activity->largeImage != "") {
-		activity.GetAssets().SetLargeImage(p_activity->largeImage.utf8());
+	if (p_activity->large_image != "") {
+		activity.GetAssets().SetLargeImage(p_activity->large_image.utf8());
 	}
 
-	if (p_activity->smallText != "") {
-		activity.GetAssets().SetSmallText(p_activity->smallText.utf8());
+	if (p_activity->small_text != "") {
+		activity.GetAssets().SetSmallText(p_activity->small_text.utf8());
 	}
 
-	if (p_activity->smallImage != "") {
-		activity.GetAssets().SetSmallImage(p_activity->smallImage.utf8());
+	if (p_activity->small_image != "") {
+		activity.GetAssets().SetSmallImage(p_activity->small_image.utf8());
 	}
 
-	if (p_activity->partyID != "") {
-		activity.GetParty().SetId(p_activity->partyID.utf8());
+	if (p_activity->party_id != "") {
+		activity.GetParty().SetId(p_activity->party_id.utf8());
 	}
 
-	if (p_activity->partyMax >= 0) {
-		activity.GetParty().GetSize().SetMaxSize(p_activity->partyMax);
+	if (p_activity->party_max >= 0) {
+		activity.GetParty().GetSize().SetMaxSize(p_activity->party_max);
 	}
 
-	if (p_activity->partyCurrent >= 0) {
-		activity.GetParty().GetSize().SetCurrentSize(p_activity->partyCurrent);
+	if (p_activity->party_current >= 0) {
+		activity.GetParty().GetSize().SetCurrentSize(p_activity->party_current);
 	}
 
-	if (p_activity->matchSecret != "") {
-		activity.GetSecrets().SetMatch(p_activity->matchSecret.utf8());
+	if (p_activity->match_secret != "") {
+		activity.GetSecrets().SetMatch(p_activity->match_secret.utf8());
 	}
 
-	if (p_activity->joinSecret != "") {
-		activity.GetSecrets().SetJoin(p_activity->joinSecret.utf8());
+	if (p_activity->join_secret != "") {
+		activity.GetSecrets().SetJoin(p_activity->join_secret.utf8());
 	}
 
-	if (p_activity->spectateSecret != "") {
-		activity.GetSecrets().SetSpectate(p_activity->spectateSecret.utf8());
+	if (p_activity->spectate_secret != "") {
+		activity.GetSecrets().SetSpectate(p_activity->spectate_secret.utf8());
 	}
 
 	if (p_activity->start != 0) {
