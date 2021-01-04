@@ -33,6 +33,10 @@ on Mac copy the .dylib file into the bin directory and rename it to discord_game
 On Mac the shared library will not be found automatically.
 Execute `install_name_tool -add_rpath @executable_path GODOT_EXECUTABLE_NAME` in the bin directory to fix this issue.
 
+# Contribution
+If you encounter any problems, feel free to open an issue or join the [discord server](https://discord.gg/KVYWM8shqu).
+You are also welcome to open PRs with improvements.
+
 # Documentation
 
 The documentation can be found in the [wiki](https://github.com/Drachenfrucht1/godotcord/wiki)
