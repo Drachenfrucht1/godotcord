@@ -9,7 +9,16 @@ The GodotcordActivityManager class is provided as a singleton named `GodotcordAc
 `clear_activity()`
 - clears the users activity
 
-`send_request_reply(int user_id, RequestReply request_reply)`
+`register_command(String command)`
+- Used to register a command that will allow Discord to launch your game when needed (for example when someone wants to join a person's game)
+- The command can either be a protocol (`my-godot-game://`) or a path to your game's executable.
+- The command also supports launch parameters: `path/to/my/game/godotgame.exe --fullscreen --fixed-fps 60`
+- More info on the [Game SDK docs](https://discord.com/developers/docs/game-sdk/activities#registercommand)
+
+`register_steam(int steam_id)`
+- used to register game that has been distributed using Steam. Check [discord](https://discord.com/developers/docs/game-sdk/activities#registersteam)'s docs for more info. 
+
+`send_request_reply(int user_id,egisters a command by which Discord can launch your game. RequestReply request_reply)`
 - used to answer a join request
 - possible values for `request_reply` are `YES`, `NO` and `IGNORE`
 
