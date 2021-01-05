@@ -22,7 +22,7 @@ public:
 	void send_invite(int64_t p_user_id, GodotcordActivity::ActivityActionType p_type, String p_message);
 	void accept_invite(int64_t p_user_id);
 	void register_steam(uint32_t p_steam_id);
-	void register_command(char16_t* p_command);
+	void register_command(String p_command);
 
 	GodotcordActivityManager();
 	~GodotcordActivityManager();
