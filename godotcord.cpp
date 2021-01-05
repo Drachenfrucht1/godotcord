@@ -34,8 +34,8 @@ void Godotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("init_debug", "client_id", "instance_id", "createFlags"), &Godotcord::init_debug);
 	ClassDB::bind_method(D_METHOD("run_callbacks"), &Godotcord::run_callbacks);
 
-	BIND_ENUM_CONSTANT(DEFAULT);
-	BIND_ENUM_CONSTANT(NO_REQUIRE_DISCORD);
+	BIND_ENUM_CONSTANT(Create_DEFAULT);
+	BIND_ENUM_CONSTANT(Create_NO_REQUIRE_DISCORD);
 
 }
 	
