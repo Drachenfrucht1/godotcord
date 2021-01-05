@@ -10,7 +10,7 @@ The Godotcord class is provided as a singleton named `Godotcord`. I recommend to
 - `CreateFlags_DEFAULT`
 - `CreateFlags_NO_REQUIRE_DISCORD`
 
-`init_debug(int clientId, string instance_id, int createFlags)`
+`init_debug(int clientId, string instance_id, CreateFlags createFlags)`
 - used for testing with two clients locally
 - read (discord docs)[https://discord.com/developers/docs/game-sdk/sdk-starter-guide#testing-locally-with-two-clients] for usage
 
