@@ -3,8 +3,12 @@ The Godotcord class is provided as a singleton named `Godotcord`. I recommend to
 
 ## GDScript Methods/Properties
 
-`init(int clientId, int createFlags)`
+`init(int clientId, CreateFlags createFlags)`
 - inits the Discord Game SDK
+- Example syntax: `Godotcord.init(ClientID, Godotcord.CreateFlags_DEFAULT);`
+- CreateFlags are:
+- `CreateFlags_DEFAULT`
+- `CreateFlags_NO_REQUIRE_DISCORD`
 
 `init_debug(int clientId, string instance_id, int createFlags)`
 - used for testing with two clients locally
