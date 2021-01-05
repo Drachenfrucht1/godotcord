@@ -39,7 +39,7 @@ void Godotcord::_bind_methods() {
 
 }
 	
-Error Godotcord::init(discord::ClientId clientId, CreateFlags createFlags = CreateFlags::DEFAULT) {
+Error Godotcord::init(discord::ClientId clientId, CreateFlags createFlags = CreateFlags::Create_DEFAULT) {
 	discord::Result result = discord::Core::Create(clientId, createFlags, &_core);
 
 	ERR_FAIL_COND_V(result != discord::Result::Ok, ERR_CANT_CONNECT);
@@ -49,7 +49,7 @@ Error Godotcord::init(discord::ClientId clientId, CreateFlags createFlags = Crea
 	return OK;
 }
 
-void Godotcord::init_debug(discord::ClientId clientId, String id, CreateFlags createFlags = CreateFlags::DEFAULT) {
+void Godotcord::init_debug(discord::ClientId clientId, String id, CreateFlags createFlags = CreateFlags::Create_DEFAULT) {
 #ifdef _WIN32
 	_putenv_s("DISCORD_INSTANCE_ID", id.utf8());
 #else
