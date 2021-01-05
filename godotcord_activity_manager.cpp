@@ -12,6 +12,8 @@ void GodotcordActivityManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("send_request_reply", "user_id", "reply"), &GodotcordActivityManager::send_request_reply);
 	ClassDB::bind_method(D_METHOD("send_invite", "user_id", "action_type", "message"), &GodotcordActivityManager::send_invite);
 	ClassDB::bind_method(D_METHOD("accept_invite", "user_id"), &GodotcordActivityManager::accept_invite);
+	ClassDB::bind_method(D_METHOD("register_command", "command"), &GodotcordActivityManager::register_command);
+	ClassDB::bind_method(D_METHOD("register_steam", "steam_id"), &GodotcordActivityManager::register_steam);
 
 	ADD_SIGNAL(MethodInfo("activity_join_request", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id")));
 	ADD_SIGNAL(MethodInfo("activity_invite", PropertyInfo(Variant::INT, "type"), PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id"), PropertyInfo(Variant::DICTIONARY, "activity")));
@@ -132,4 +134,14 @@ GodotcordActivityManager::GodotcordActivityManager() {
 
 GodotcordActivityManager::~GodotcordActivityManager() {
 
+}
+
+void GodotcordActivityManager::register_steam(uint32_t p_steam_id) {
+    discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterSteam(steam_id);
+    ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering steam id.")
+}
+
+void GodotcordActivityManager::register_command(const char* p_command) {
+    discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterCommand(command);
+    ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering command.")
 }
