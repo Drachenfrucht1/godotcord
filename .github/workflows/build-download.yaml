@@ -46,7 +46,7 @@ jobs:
 
         - run: ${{matrix.DOWNLOAD}}
 
-        - name: Compile
+        - name: Compile with target=release_debug
           run: scons bits=64 target=release_debug -j2
 
         - name: Modify binary after compilation
@@ -57,3 +57,15 @@ jobs:
           with:
             name: godotcord-binary-${{matrix.os}}
             path: bin/godot.${{matrix.PLATFORM}}.opt.tools.${{matrix.EXTENSION}}
+
+        - name: Compile with target=debug
+          run: scons bits=64 target=debug -j2
+
+        - name: Modify binary after compilation
+          run: ${{matrix.AFTER_COMP_CMD}}
+
+        - name: Upload binary
+          uses: actions/upload-artifact@v2
+          with:
+            name: godotcord-binary-${{matrix.os}}-debug
+            path: bin/godot.${{matrix.PLATFORM}}.tools.${{matrix.EXTENSION}}
