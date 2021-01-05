@@ -29,8 +29,8 @@ public:
 	static Godotcord *get_singleton();
 
 	enum CreateFlags {
-		DEFAULT = 0,
-		NO_REQUIRE_DISCORD = 1,
+		Create_DEFAULT = 0,
+		Create_NO_REQUIRE_DISCORD = 1,
 	};
 
     Error init(discord::ClientId clientId, CreateFlags createFlags);
