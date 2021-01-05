@@ -68,4 +68,4 @@ jobs:
           uses: actions/upload-artifact@v2
           with:
             name: godotcord-binary-${{matrix.os}}-debug
-            path: bin/godot.${{matrix.PLATFORM}}.debug.tools.${{matrix.EXTENSION}}
+            path: bin/godot.${{matrix.PLATFORM}}.tools.${{matrix.EXTENSION}}
