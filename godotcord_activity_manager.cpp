@@ -137,11 +137,11 @@ GodotcordActivityManager::~GodotcordActivityManager() {
 }
 
 void GodotcordActivityManager::register_steam(uint32_t p_steam_id) {
-    discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterSteam(steam_id);
+    discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterSteam(p_steam_id);
     ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering steam id.")
 }
 
-void GodotcordActivityManager::register_command(const char* p_command) {
-    discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterCommand(command);
+void GodotcordActivityManager::register_command(char16_t* p_command) {
+    discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterCommand((char const*)p_command);
     ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering command.")
 }
