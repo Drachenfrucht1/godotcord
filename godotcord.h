@@ -28,8 +28,13 @@ public:
 	static Godotcord *singleton;
 	static Godotcord *get_singleton();
 
-    Error init(discord::ClientId clientId, int createFlags);
-	void init_debug(discord::ClientId clientId, String id, int createFlags);
+	enum CreateFlags {
+		DEFAULT = 0,
+		NO_REQUIRE_DISCORD = 1,
+	};
+
+    Error init(discord::ClientId clientId, CreateFlags createFlags);
+	void init_debug(discord::ClientId clientId, String id, CreateFlags createFlags);
 
 	void run_callbacks();
 
@@ -46,5 +51,7 @@ public:
     Godotcord();
 	~Godotcord();
 };
+
+VARIANT_ENUM_CAST(Godotcord::CreateFlags);
 
 #endif
