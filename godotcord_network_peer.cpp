@@ -28,7 +28,7 @@ int NetworkedMultiplayerGodotcord::get_packet_peer() const {
 	return _incomming_packets.front()->get().from;
 }
 
-GodotcordPeer * get_connected_peers() {
+NetworkedMultiplayerGodotcord::GodotcordPeer * get_connected_peers() {
 	static int arr[_peers.size()];
 	return arr;
 }
