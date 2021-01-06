@@ -86,6 +86,8 @@ public:
 	Error join_lobby(int64_t id, String secret);
 	Error join_lobby_activity(String activitySecret);
 
+	GodotcordPeer * get_connected_peers();
+	
 	void close_connection();
 
 	void disconnect_peer(int p_peer);
