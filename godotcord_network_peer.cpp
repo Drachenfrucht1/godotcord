@@ -28,6 +28,11 @@ int NetworkedMultiplayerGodotcord::get_packet_peer() const {
 	return _incomming_packets.front()->get().from;
 }
 
+GodotcordPeer * get_connected_peers() {
+	static int arr[_peers.size()];
+	return arr;
+}
+
 Error NetworkedMultiplayerGodotcord::create_lobby(int size, bool pub) {
 	ERR_FAIL_COND_V_MSG(_active, ERR_ALREADY_IN_USE, "The multiplayer instance is already active.");
 	ERR_FAIL_COND_V_MSG(size < 1, ERR_INVALID_PARAMETER, "Size must be >= 1.");
