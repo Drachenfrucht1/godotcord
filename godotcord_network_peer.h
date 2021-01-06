@@ -36,21 +36,6 @@ private:
 		int channel;
 	};
 
-	struct GodotcordPeer {
-		int64_t discord_id = 0;					///< discord user id
-		uint64_t discord_peer_id = 0;
-		int target_id = 0;						///< godot peer id
-		bool confirmed = false;
-
-
-		//needed in order for list (and set?) to work
-		bool operator==(const GodotcordPeer& p2) {
-			bool r;
-			(this->discord_id == p2.discord_id && this->discord_peer_id == p2.discord_peer_id && this->target_id == p2.target_id) ? r = true : r = false;
-			return r;
-		}
-	};
-
 	List<Packet> _incomming_packets;
 	List<Packet> _defered_packets;
 	List<Packet> _service_packets;
@@ -76,6 +61,22 @@ protected:
 	static void _bind_methods();
 
 public:
+	
+	struct GodotcordPeer {
+		int64_t discord_id = 0;					///< discord user id
+		uint64_t discord_peer_id = 0;
+		int target_id = 0;						///< godot peer id
+		bool confirmed = false;
+
+
+		//needed in order for list (and set?) to work
+		bool operator==(const GodotcordPeer& p2) {
+			bool r;
+			(this->discord_id == p2.discord_id && this->discord_peer_id == p2.discord_peer_id && this->target_id == p2.target_id) ? r = true : r = false;
+			return r;
+		}
+	};
+	
 	virtual void set_transfer_mode(TransferMode p_mode);
 	virtual TransferMode get_transfer_mode() const;
 	virtual void set_target_peer(int p_peer);
