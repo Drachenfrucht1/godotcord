@@ -14,6 +14,7 @@
 #include "godotcord_lobby_manager.h"
 #include "godotcord_overlay_manager.h"
 #include "godotcord_relationship_manager.h"
+#include "godotcord_storage_manager.h"
 #include "godotcord_store_manager.h"
 #include "godotcord_user_manager.h"
 
@@ -24,6 +25,7 @@ static GodotcordImageManager *GC_IMG_ptr = NULL;
 static GodotcordLobbyManager *GC_LOBBY_ptr = NULL;
 static GodotcordOverlayManager *GC_OVRL_ptr = NULL;
 static GodotcordRelationshipManager *GC_RELSHIP_ptr = NULL;
+static GodotcordStorageManager *GC_STORGE_ptr = NULL;
 static GodotcordStoreManager *GC_STORE_ptr = NULL;
 static GodotcordUserManager *GC_USR_ptr = NULL;
 
@@ -38,6 +40,7 @@ void register_godotcord_types() {
 	ClassDB::register_class<GodotcordImageManager>();
 	ClassDB::register_class<GodotcordLobbyManager>();
 	ClassDB::register_class<GodotcordRelationshipManager>();
+	ClassDB::register_class<GodotcordStorageManager>();
 	ClassDB::register_class<GodotcordStoreManager>();
 	ClassDB::register_class<GodotcordUserManager>();
 
@@ -61,7 +64,10 @@ void register_godotcord_types() {
 
 	GC_RELSHIP_ptr = memnew(GodotcordRelationshipManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordRelationshipManager", GodotcordRelationshipManager::get_singleton()));
-	
+
+	GC_STORGE_ptr = memnew(GodotcordStorageManager);
+	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordStorageManager", GodotcordStorageManager::get_singleton()));
+
 	GC_STORE_ptr = memnew(GodotcordStoreManager);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordStoreManager", GodotcordStoreManager::get_singleton()));
 
@@ -77,6 +83,7 @@ void unregister_godotcord_types() {
 	memdelete(GC_LOBBY_ptr);
 	memdelete(GC_OVRL_ptr);
 	memdelete(GC_RELSHIP_ptr);
+    memdelete(GC_STORGE_ptr);
 	memdelete(GC_STORE_ptr);
 	memdelete(GC_USR_ptr);
 }
