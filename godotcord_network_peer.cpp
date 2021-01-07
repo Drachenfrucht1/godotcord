@@ -554,6 +554,8 @@ void NetworkedMultiplayerGodotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_metadata", "key", "value"), &NetworkedMultiplayerGodotcord::set_metadata);
 	ClassDB::bind_method(D_METHOD("get_metadata", "key"), &NetworkedMultiplayerGodotcord::get_metadata);
 
+	ClassDB::bind_method(D_METHOD("get_connected_peers"), &NetworkedMultiplayerGodotcord::get_connected_peers);
+
 	ADD_SIGNAL(MethodInfo("created_lobby"));
 }
 
@@ -762,4 +764,19 @@ NetworkedMultiplayerGodotcord::~NetworkedMultiplayerGodotcord() {
 	if (_active) {
 		close_connection();
 	}
+}
+
+Array NetworkedMultiplayerGodotcord::get_connected_peers() {
+    Array connected_peers{};
+    for( unsigned int a = 0; a < _peers.size(); a = a + 1 ) {
+
+        Dictionary peer;
+        peer["discord_id"] = _peers[a].discord_id;
+        peer["discord_peer_id"] = _peers[a].discord_peer_id;
+        peer["target_id"] = _peers[a].target_id;
+        peer["confirmed"] = _peers[a].confirmed;
+
+        connected_peers.push_back(peer);
+    }
+    return connected_peers;
 }
