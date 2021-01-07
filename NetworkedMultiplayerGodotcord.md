@@ -38,6 +38,16 @@
 
 The server_connected signal is, too, fired after `network_peer_connected` has been called for **every player (including the local one)**
 
+`Array get_connected_peers()`
+- returns an array of currently connected peers (The current members of the lobby). Each value in the Array is a Dictionary representation of the GodotcordPeer struct:
+- Each dictionary follows the following layout:
+```{
+"discord_id": int (The peer's Discord user ID),
+"discord_peer_id": int,
+"target_id: int (Godot's peer ID),
+"confirmed": bool
+}```
+
 ## Usage
 
 First you have to create a lobby. This is done by creating a new NetworkedMultiplayerGodotcord and calling `create_server(max_players, public)`. You set a NetworkedMultiplayerGodotcord as the network peer of your root node the same way your would with an enet peer.
