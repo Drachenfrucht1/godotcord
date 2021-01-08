@@ -1,3 +1,5 @@
+![GitHub branch checks state](https://img.shields.io/github/checks-status/drachenfrucht1/godotcord/master) ![GitHub repo size](https://img.shields.io/github/repo-size/drachenfrucht1/godotcord)
+
 # Godotcord
 A Godot module to integrate the Discord GameSDK into the engine
 
