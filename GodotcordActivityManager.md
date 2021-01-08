@@ -21,7 +21,7 @@ The GodotcordActivityManager class is provided as a singleton named `GodotcordAc
 
 `register_steam(int steam_id)`
 
-- used to register game that has been distributed using Steam. Check [discord](https://discord.com/developers/docs/game-sdk/activities#registersteam)'s docs for more info. 
+- used to register game that has been distributed using Steam. Check [discord](https://discord.com/developers/docs/game-sdk/activities#registersteam)'s docs for more info.
 
 `send_request_reply(int user_id,egisters a command by which Discord can launch your game. RequestReply request_reply)`
 
