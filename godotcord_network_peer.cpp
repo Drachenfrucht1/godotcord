@@ -1,3 +1,4 @@
+#include "core/print_string.h"
 #include "godotcord_network_peer.h"
 #include "discord-files/discord.h"
 #include "core/io/marshalls.h"
@@ -658,6 +659,7 @@ NetworkedMultiplayerGodotcord::NetworkedMultiplayerGodotcord() {
 		discord::User user{};
 		discord::Result result = Godotcord::get_singleton()->get_core()->UserManager().GetCurrentUser(&user);
 		ERR_FAIL_COND(result != discord::Result::Ok);
+        print_line(vformat("Result: %s", static_cast<int>(result)));
 		NetworkedMultiplayerGodotcord::local_user_id = user.GetId();
 
 		_network_manager->GetPeerId(&NetworkedMultiplayerGodotcord::unique_peer_id);
