@@ -16,11 +16,11 @@ public:
 	String get_current_locale();
 	String get_current_branch();
 
-	void get_oauth2_token(Object *p_object, StringName p_funcname);
+	void get_oauth2_token();
 
 	void validate_or_exit();
 #if defined _WIN32 || defined __linux
-	void get_ticket(Object *p_object, StringName p_funcname);
+	void get_ticket();
 #endif
 
     GodotcordApplicationsManager();

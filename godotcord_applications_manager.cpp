@@ -27,6 +27,10 @@ void GodotcordApplicationsManager::_bind_methods() {
 #if defined _WIN32 || defined __linux
 	ClassDB::bind_method(D_METHOD("get_ticket", "object", "function_name"), &GodotcordApplicationsManager::get_ticket);
 #endif
+
+	ADD_SIGNAL(MethodInfo("oauth_token_return", PropertyInfo(Variant::DICTIONARY, "oauth_token")));
+	ADD_SIGNAL(MethodInfo("exit"));
+	ADD_SIGNAL(MethodInfo("ticket_return", PropertyInfo(Variant::STRING, "ticket")));
 }
 
 String GodotcordApplicationsManager::get_current_locale() {
@@ -43,38 +47,27 @@ String GodotcordApplicationsManager::get_current_branch() {
 	return String(ret);
 }
 
-void GodotcordApplicationsManager::get_oauth2_token(Object* p_object, StringName p_funcname) {
-	ERR_FAIL_NULL(p_object);
-	FuncRef callback;
-	callback.set_instance(p_object);
-	callback.set_function(p_funcname);
+void GodotcordApplicationsManager::get_oauth2_token() {
 
-	Godotcord::get_singleton()->get_core()->ApplicationManager().GetOAuth2Token([this, &callback](discord::Result result, discord::OAuth2Token token) {
+	Godotcord::get_singleton()->get_core()->ApplicationManager().GetOAuth2Token([this](discord::Result result, discord::OAuth2Token token) {
 		Dictionary d;
 		d["token"] = token.GetAccessToken();
 		d["scopes"] = token.GetScopes();
 		d["expires"] = token.GetExpires();
 
-		Array a;
-		a.push_back(d);
-		callback.call_funcv(a);
+		this->emit_signal("oauth_token_return", d);
 	});
 }
 
 void GodotcordApplicationsManager::validate_or_exit() {
-	Godotcord::get_singleton()->get_core()->ApplicationManager().ValidateOrExit([](discord::Result result) {
-		CRASH_COND_MSG(result != discord::Result::Ok, "Something went wrong, aborting...");
+	Godotcord::get_singleton()->get_core()->ApplicationManager().ValidateOrExit([this](discord::Result result) {
+		this->emit_signal("exit");
 	});
 }
 
 #if defined _WIN32 || defined __linux
-void GodotcordApplicationsManager::get_ticket(Object* p_object, StringName p_funcname) {
-	ERR_FAIL_NULL(p_object);
-	FuncRef callback;
-	callback.set_instance(p_object);
-	callback.set_function(p_funcname);
-
-	Godotcord::get_singleton()->get_core()->ApplicationManager().GetTicket([&callback](discord::Result result, const char * ticket) {
+void GodotcordApplicationsManager::get_ticket() {
+	Godotcord::get_singleton()->get_core()->ApplicationManager().GetTicket([this](discord::Result result, const char * ticket) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while getting the ticket");
 
 		String a(ticket);
@@ -93,6 +86,7 @@ void GodotcordApplicationsManager::get_ticket(Object* p_object, StringName p_fun
 		int line;
 		JSON::parse(raw, ret, err, line);
 
+		this->emit_signal("get_ticket_return", ret);
  });
 }
 #endif
