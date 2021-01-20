@@ -54,12 +54,14 @@ The server_connected signal is, too, fired after `network_peer_connected` has be
 - returns an array of currently connected peers (The current members of the lobby). Each value in the Array is a Dictionary representation of the GodotcordPeer struct:
 - Each dictionary follows the following layout:
 
-```{
+```
+{
 "discord_id": int (The peer's Discord user ID),
 "discord_peer_id": int,
 "target_id: int (Godot's peer ID),
 "confirmed": bool
-}```
+}
+```
 
 ## Usage
 
