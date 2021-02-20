@@ -13,7 +13,7 @@ public:
 	static GodotcordImageManager *singleton;
 	static GodotcordImageManager *get_singleton();
 
-	void get_profile_picture(int64_t p_user_id, int p_size, Object *p_object, StringName p_funcname);
+	void get_profile_picture(int64_t p_user_id, int p_size);
 
 	GodotcordImageManager();
 	~GodotcordImageManager();

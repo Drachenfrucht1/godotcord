@@ -31,9 +31,9 @@ public:
 	static GodotcordStoreManager *singleton;
     static GodotcordStoreManager *get_singleton();
 
-	void fetch_skus(Object *p_object, StringName p_funcname);
+	void fetch_skus();
 	Array get_skus();
-	void fetch_entitlements(Object *p_objects, StringName p_funcname);
+	void fetch_entitlements();
 	Array get_entitlements();
 	bool has_sku_entitlement(int64_t p_sku_id);
 	void start_purchase(int64_t p_sku_id);
