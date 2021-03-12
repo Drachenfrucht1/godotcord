@@ -8,7 +8,7 @@ GodotcordImageManager *GodotcordImageManager::get_singleton() {
 }
 
 void GodotcordImageManager::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("get_profile_picture", "user_id", "size", "object", "function_name"), &GodotcordImageManager::get_profile_picture);
+	ClassDB::bind_method(D_METHOD("get_profile_picture", "user_id", "size"), &GodotcordImageManager::get_profile_picture);
 
 	ADD_SIGNAL(MethodInfo("profile_picture_callback", PropertyInfo(Variant::INT, "user_id"), PropertyInfo(Variant::POOL_BYTE_ARRAY, "image_data")));
 }

@@ -8,9 +8,9 @@ GodotcordStoreManager *GodotcordStoreManager::get_singleton() {
 }
 
 void GodotcordStoreManager::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("fetch_skus", "object", "funcname"), &GodotcordStoreManager::fetch_skus);
+	ClassDB::bind_method(D_METHOD("fetch_skus"), &GodotcordStoreManager::fetch_skus);
 	ClassDB::bind_method(D_METHOD("get_skus"), &GodotcordStoreManager::get_skus);
-	ClassDB::bind_method(D_METHOD("fetch_entitlements", "object", "funcname"), &GodotcordStoreManager::fetch_entitlements);
+	ClassDB::bind_method(D_METHOD("fetch_entitlements"), &GodotcordStoreManager::fetch_entitlements);
 	ClassDB::bind_method(D_METHOD("get_entitlements"), &GodotcordStoreManager::get_entitlements);
 	ClassDB::bind_method(D_METHOD("has_sku_entitlement", "sku_id"), &GodotcordStoreManager::has_sku_entitlement);
 	ClassDB::bind_method(D_METHOD("start_purchase", "sku_id"), &GodotcordStoreManager::start_purchase);

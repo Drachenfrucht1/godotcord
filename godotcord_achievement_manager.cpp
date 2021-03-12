@@ -9,7 +9,7 @@ GodotcordAchievementManager* GodotcordAchievementManager::get_singleton() {
 
 void GodotcordAchievementManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_user_achievement", "achievement_id", "percent_complete"), &GodotcordAchievementManager::set_user_achievement);
-	ClassDB::bind_method(D_METHOD("fetch_user_achievements", "object", "function_name"), &GodotcordAchievementManager::fetch_user_achievements);
+	ClassDB::bind_method(D_METHOD("fetch_user_achievements"), &GodotcordAchievementManager::fetch_user_achievements);
 	ClassDB::bind_method(D_METHOD("get_user_achievements"), &GodotcordAchievementManager::get_user_achievements);
 
 	ADD_SIGNAL(MethodInfo("fetch_user_achievements"));

@@ -10,7 +10,7 @@ GodotcordLobbyManager *GodotcordLobbyManager::get_singleton() {
 void GodotcordLobbyManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_lobby_metadata", "lobby_id", "key", "value"), &GodotcordLobbyManager::set_lobby_metadata);
 	ClassDB::bind_method(D_METHOD("get_lobby_metadata", "lobby_id", "key"), &GodotcordLobbyManager::get_lobby_metadata);
-	ClassDB::bind_method(D_METHOD("search_lobbies", "parameters, limit", "object", "function_name"), &GodotcordLobbyManager::search_lobbies);
+	ClassDB::bind_method(D_METHOD("search_lobbies", "parameters, limit"), &GodotcordLobbyManager::search_lobbies);
 
 	ADD_SIGNAL(MethodInfo("search_lobbies_callback", PropertyInfo(Variant::OBJECT, "lobbies")));
 

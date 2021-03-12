@@ -8,7 +8,7 @@ GodotcordUserManager* GodotcordUserManager::get_singleton() {
 }
 
 void GodotcordUserManager::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("get_user", "user_id", "object", "funcname"), &GodotcordUserManager::get_user);
+	ClassDB::bind_method(D_METHOD("get_user", "user_id"), &GodotcordUserManager::get_user);
 	ClassDB::bind_method(D_METHOD("get_current_user"), &GodotcordUserManager::get_current_user);
 	ClassDB::bind_method(D_METHOD("get_current_user_premium_type"), &GodotcordUserManager::get_current_user_premium_type);
 	ClassDB::bind_method(D_METHOD("has_current_user_flag", "user_flag"), &GodotcordUserManager::has_current_user_flag);
