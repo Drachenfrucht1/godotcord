@@ -1,6 +1,5 @@
 #include "godotcord_lobby_manager.h"
 #include "godotcord.h"
-#include "core/func_ref.h"
 
 GodotcordLobbyManager *GodotcordLobbyManager::singleton = NULL;
 
@@ -11,7 +10,9 @@ GodotcordLobbyManager *GodotcordLobbyManager::get_singleton() {
 void GodotcordLobbyManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_lobby_metadata", "lobby_id", "key", "value"), &GodotcordLobbyManager::set_lobby_metadata);
 	ClassDB::bind_method(D_METHOD("get_lobby_metadata", "lobby_id", "key"), &GodotcordLobbyManager::get_lobby_metadata);
-	ClassDB::bind_method(D_METHOD("search_lobbies", "parameters, limit", "object", "function_name"), &GodotcordLobbyManager::search_lobbies);
+	ClassDB::bind_method(D_METHOD("search_lobbies", "parameters, limit"), &GodotcordLobbyManager::search_lobbies);
+
+	ADD_SIGNAL(MethodInfo("search_lobbies_callback", PropertyInfo(Variant::OBJECT, "lobbies")));
 
 	BIND_ENUM_CONSTANT(LOCAL);
 	BIND_ENUM_CONSTANT(DEFAULT);
@@ -50,13 +51,8 @@ String GodotcordLobbyManager::get_lobby_metadata(int64_t p_lobby_id, String p_ke
 	return String(value);
 }
 
-void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit, Object *p_object, StringName p_funcname) {
+void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit) {
 	ERR_FAIL_COND_MSG(!p_params.is_array(), "The search_parameters has to be an array");
-
-	ERR_FAIL_NULL(p_object);
-	FuncRef callback;
-	callback.set_instance(p_object);
-	callback.set_function(p_funcname);
 
 	Array params = p_params;
 	discord::LobbySearchQuery query;
@@ -142,7 +138,7 @@ void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit, Object
 		}
 	}
 
-	Godotcord::get_singleton()->get_core()->LobbyManager().Search(query, [this, &callback](discord::Result result) {
+	Godotcord::get_singleton()->get_core()->LobbyManager().Search(query, [this](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while filtering the lobbies");
 
 		Vector<Variant> vec;
@@ -165,9 +161,7 @@ void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit, Object
 			vec.push_back(GodotcordLobby::get_dictionary(&gd_lobby));
 		}
 
-		Array a;
-		a.push_back(vec);
-		callback.call_funcv(a);
+		emit_signal("search_lobbies_callback", vec);
 	});
 }
 

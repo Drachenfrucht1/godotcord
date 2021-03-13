@@ -1,8 +1,6 @@
 #include "godotcord_achievement_manager.h"
 #include "godotcord.h"
 
-#include "core/func_ref.h"
-
 GodotcordAchievementManager *GodotcordAchievementManager::singleton = NULL;
 
 GodotcordAchievementManager* GodotcordAchievementManager::get_singleton() {
@@ -11,8 +9,10 @@ GodotcordAchievementManager* GodotcordAchievementManager::get_singleton() {
 
 void GodotcordAchievementManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_user_achievement", "achievement_id", "percent_complete"), &GodotcordAchievementManager::set_user_achievement);
-	ClassDB::bind_method(D_METHOD("fetch_user_achievements", "object", "function_name"), &GodotcordAchievementManager::fetch_user_achievements);
+	ClassDB::bind_method(D_METHOD("fetch_user_achievements"), &GodotcordAchievementManager::fetch_user_achievements);
 	ClassDB::bind_method(D_METHOD("get_user_achievements"), &GodotcordAchievementManager::get_user_achievements);
+
+	ADD_SIGNAL(MethodInfo("fetch_user_achievements"));
 }
 
 void GodotcordAchievementManager::set_user_achievement(int64_t p_achievement_id, int8_t p_percent) {
@@ -21,18 +21,10 @@ void GodotcordAchievementManager::set_user_achievement(int64_t p_achievement_id,
 	});
 }
 
-void GodotcordAchievementManager::fetch_user_achievements(Object *p_object, StringName p_funcname) {
-	ERR_FAIL_NULL(p_object);
-
-	Godotcord::get_singleton()->get_core()->AchievementManager().FetchUserAchievements([this, p_object, p_funcname](discord::Result result) {
+void GodotcordAchievementManager::fetch_user_achievements() {
+	Godotcord::get_singleton()->get_core()->AchievementManager().FetchUserAchievements([this](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching the local users achievements");
-		FuncRef callback;
-		callback.set_instance(p_object);
-		callback.set_function(p_funcname);
-
-		Array r;
-
-		callback.call_funcv(r);
+		emit_signal("fetch_user_achievements");
 	});
 }
 
