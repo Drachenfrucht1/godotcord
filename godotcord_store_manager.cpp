@@ -1,6 +1,5 @@
 #include "godotcord_store_manager.h"
 #include "godotcord.h"
-#include "core/func_ref.h"
 
 GodotcordStoreManager *GodotcordStoreManager::singleton = NULL;
 
@@ -9,12 +8,15 @@ GodotcordStoreManager *GodotcordStoreManager::get_singleton() {
 }
 
 void GodotcordStoreManager::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("fetch_skus", "object", "funcname"), &GodotcordStoreManager::fetch_skus);
+	ClassDB::bind_method(D_METHOD("fetch_skus"), &GodotcordStoreManager::fetch_skus);
 	ClassDB::bind_method(D_METHOD("get_skus"), &GodotcordStoreManager::get_skus);
-	ClassDB::bind_method(D_METHOD("fetch_entitlements", "object", "funcname"), &GodotcordStoreManager::fetch_entitlements);
+	ClassDB::bind_method(D_METHOD("fetch_entitlements"), &GodotcordStoreManager::fetch_entitlements);
 	ClassDB::bind_method(D_METHOD("get_entitlements"), &GodotcordStoreManager::get_entitlements);
 	ClassDB::bind_method(D_METHOD("has_sku_entitlement", "sku_id"), &GodotcordStoreManager::has_sku_entitlement);
 	ClassDB::bind_method(D_METHOD("start_purchase", "sku_id"), &GodotcordStoreManager::start_purchase);
+
+	ADD_SIGNAL(MethodInfo("fetch_skus_callback", PropertyInfo(Variant::ARRAY, "skus")));
+	ADD_SIGNAL(MethodInfo("fetch_entitlements_callback", PropertyInfo(Variant::ARRAY, "entitlements")));
 
 	BIND_ENUM_CONSTANT(APP);
 	BIND_ENUM_CONSTANT(DLC);
@@ -30,21 +32,11 @@ void GodotcordStoreManager::_bind_methods() {
 	BIND_ENUM_CONSTANT(PREMIUM_PURCHASE);
 }
 
-void GodotcordStoreManager::fetch_skus(Object* p_object, StringName p_funcname) {
-	ERR_FAIL_NULL(p_object);
-
-	FuncRef callback;
-	callback.set_instance(p_object);
-	callback.set_function(p_funcname);
-
-	Godotcord::get_singleton()->get_core()->StoreManager().FetchSkus([this, &callback](discord::Result result) {
+void GodotcordStoreManager::fetch_skus() {
+	Godotcord::get_singleton()->get_core()->StoreManager().FetchSkus([this](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements");
 
-		Array a;
-
-		a.push_back(this->get_skus());
-
-		callback.call_funcv(a);
+		emit_signal("fetch_skus_callback", this->get_skus());
 	});
 }
 
@@ -76,21 +68,11 @@ Array GodotcordStoreManager::get_skus() {
 	return ret;
 }
 
-void GodotcordStoreManager::fetch_entitlements(Object* p_object, StringName p_funcname) {
-	ERR_FAIL_NULL(p_object);
-
-	FuncRef callback;
-	callback.set_instance(p_object);
-	callback.set_function(p_funcname);
-
-	Godotcord::get_singleton()->get_core()->StoreManager().FetchEntitlements([this, &callback](discord::Result result) {
+void GodotcordStoreManager::fetch_entitlements() {
+	Godotcord::get_singleton()->get_core()->StoreManager().FetchEntitlements([this](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements");
 
-		Array a;
-
-		a.push_back(this->get_skus());
-
-		callback.call_funcv(a);
+		emit_signal("fetch_entitlements_callback", this->get_entitlements());
 	});
 }
 

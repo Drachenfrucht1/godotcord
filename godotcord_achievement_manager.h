@@ -14,7 +14,7 @@ public:
 	static GodotcordAchievementManager *get_singleton();
 
 	void set_user_achievement(int64_t p_achievement_id, int8_t p_percent);
-	void fetch_user_achievements(Object *p_object, StringName p_funcname);
+	void fetch_user_achievements();
 	Array get_user_achievements();
 
 

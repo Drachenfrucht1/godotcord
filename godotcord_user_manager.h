@@ -29,7 +29,7 @@ public:
 	static GodotcordUserManager *singleton;
 	static GodotcordUserManager *get_singleton();
 
-	void get_user(int64_t p_user_id, Object *p_object, StringName p_funcname);
+	void get_user(int64_t p_user_id);
 	Dictionary get_current_user();
 	PremiumType get_current_user_premium_type();
 	bool has_current_user_flag(UserFlag p_flag);

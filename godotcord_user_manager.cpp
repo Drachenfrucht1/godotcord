@@ -1,6 +1,5 @@
 #include "godotcord_user_manager.h"
 #include "godotcord.h"
-#include "core/func_ref.h"
 
 GodotcordUserManager *GodotcordUserManager::singleton = NULL;
 
@@ -9,10 +8,12 @@ GodotcordUserManager* GodotcordUserManager::get_singleton() {
 }
 
 void GodotcordUserManager::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("get_user", "user_id", "object", "funcname"), &GodotcordUserManager::get_user);
+	ClassDB::bind_method(D_METHOD("get_user", "user_id"), &GodotcordUserManager::get_user);
 	ClassDB::bind_method(D_METHOD("get_current_user"), &GodotcordUserManager::get_current_user);
 	ClassDB::bind_method(D_METHOD("get_current_user_premium_type"), &GodotcordUserManager::get_current_user_premium_type);
 	ClassDB::bind_method(D_METHOD("has_current_user_flag", "user_flag"), &GodotcordUserManager::has_current_user_flag);
+
+	ADD_SIGNAL(MethodInfo("get_user_callback", PropertyInfo(Variant::DICTIONARY, "user")));
 
 	BIND_ENUM_CONSTANT(PARTNER);
 	BIND_ENUM_CONSTANT(HYPE_SQUAD_EVENTS);
@@ -26,16 +27,9 @@ void GodotcordUserManager::_bind_methods() {
 	BIND_ENUM_CONSTANT(TIER_2);
 }
 
-void GodotcordUserManager::get_user(int64_t p_user_id, Object *p_object, StringName p_funcname) {
-	ERR_FAIL_NULL(p_object);
-
-	//declaring callback outside the lambda didn't work in this case. The object was empty in the lambda function. I don't why.
-	Godotcord::get_singleton()->get_core()->UserManager().GetUser(p_user_id, [p_object, p_funcname](discord::Result result, discord::User user) {
+void GodotcordUserManager::get_user(int64_t p_user_id) {
+	Godotcord::get_singleton()->get_core()->UserManager().GetUser(p_user_id, [this](discord::Result result, discord::User user) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while trying to fetch the user");
-		FuncRef callback;
-		callback.set_instance(p_object);
-		callback.set_function(p_funcname);
-
 		Dictionary d;
 
 		d["id"] = user.GetId();
@@ -44,9 +38,7 @@ void GodotcordUserManager::get_user(int64_t p_user_id, Object *p_object, StringN
 		d["avatar"] = user.GetAvatar();
 		d["bot"] = user.GetBot();
 
-		Array a;
-		a.push_back(d);
-		callback.call_funcv(a);
+		emit_signal("get_user_callback", d);
 	});
 }
 
