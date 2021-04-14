@@ -15,7 +15,7 @@ public:
 	void init();
 
 	Array filter_relationships(Object *p_object, StringName p_func_name);
-	Array get_relationsips();
+	Array get_relationships();
 
 	GodotcordRelationshipManager();
 	~GodotcordRelationshipManager();
