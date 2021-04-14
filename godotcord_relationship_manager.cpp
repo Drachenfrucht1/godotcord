@@ -40,7 +40,7 @@ Array GodotcordRelationshipManager::filter_relationships(Object *p_object, Strin
 		return filter_func.call_funcv(a);
 	});
 
-	return get_relationsips();
+	return get_relationships();
 }
 
 Array GodotcordRelationshipManager::get_relationships() {
