@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="NetworkedMultiplayerGodotcord" inherits="NetworkedMultiplayerPeer" version="0.1">
+    <brief_description>
+        A multiplayer peer that uses the Discord Network
+    </brief_description>
+    <description>
+        A multiplayer peer that uses the Discord Network...
+    </description>
+    <methods>
+        <method name="create_lobby">
+            <argument index="0" name="max_users" type="int">
+            </argument>
+            <argument index="1" name="public" type="boolean" default="false">
+            </argument>
+            <description>
+                Creates a new lobby with [code]max_users[/code] slots.
+                The creator will automatically set as the owner and joins the lobby himself.
+
+                ...public
+            </description>
+        </method>
+        <method name="join_lobby">
+            <argument index="0" name="lobby_id" type="int">
+            </argument> 
+            <argument index="1" name="secret" type="string">
+            </argument>
+            <description>
+                Joins the lobby with the id [code]lobby_id[/code] using the id and secret.
+            </description>
+        </method>
+        <method name="join_lobby_activity">
+            <argument index="0" name="activity_secret" type="string">
+            </argument>
+            <description>
+                Joins the lobby encoded in [code]activity_secret[/code]
+            </description>
+        </method>
+        <method name="close_connection">
+            <description>
+                Disconnect from the current lobby.
+                Should only be called when the user is currently in a lobby.
+            </description>
+        </method>
+        <method name="disconnect_peer">
+            <argument index="0" name="id" type="int">
+            </argument>
+            <description>
+                Removes the user with the id [code]id[/code] from the lobby.
+                Will only be executed when the local user is the owner of the lobby.
+            </description>
+        </method>
+    </methods>
+</class>
