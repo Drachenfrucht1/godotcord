@@ -18,18 +18,6 @@ void GodotcordStoreManager::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("fetch_skus_callback", PropertyInfo(Variant::ARRAY, "skus")));
 	ADD_SIGNAL(MethodInfo("fetch_entitlements_callback", PropertyInfo(Variant::ARRAY, "entitlements")));
 
-	BIND_ENUM_CONSTANT(APP);
-	BIND_ENUM_CONSTANT(DLC);
-	BIND_ENUM_CONSTANT(CONSUMABLE);
-	BIND_ENUM_CONSTANT(BUNDLE);
-
-	BIND_ENUM_CONSTANT(PURCHASE);
-	BIND_ENUM_CONSTANT(PREMIUM_SUBSCRIPTION);
-	BIND_ENUM_CONSTANT(DEVELOPER_GIFT);
-	BIND_ENUM_CONSTANT(TEST_MODE_PURCHASE);
-	BIND_ENUM_CONSTANT(FREE_PURCHASE);
-	BIND_ENUM_CONSTANT(USER_GIFT);
-	BIND_ENUM_CONSTANT(PREMIUM_PURCHASE);
 }
 
 void GodotcordStoreManager::fetch_skus() {
@@ -46,23 +34,26 @@ Array GodotcordStoreManager::get_skus() {
 	Godotcord::get_singleton()->get_core()->StoreManager().CountSkus(&sku_count);
 
 	for (int i = 0; i < sku_count; i++) {
-		discord::Sku sku;
-		Dictionary d;
+		discord::Sku sku{};
+		Ref<GodotcordSKU> godotcordSKU;
+		godotcordSKU.instance();
 		discord::Result result = Godotcord::get_singleton()->get_core()->StoreManager().GetSkuAt(i, &sku);
 		ERR_CONTINUE(result != discord::Result::Ok);
 
-		d["id"] = sku.GetId();
-		d["type"] = (SkuType)sku.GetType();
-		d["name"] = sku.GetName();
+		godotcordSKU->id = sku.GetId();
+		godotcordSKU->type = (GodotcordSKU::SkuType)sku.GetType();
+		godotcordSKU->name = sku.GetName();
 
-		Dictionary price;
-		price["amount"] = sku.GetPrice().GetAmount();
-		price["currency"] = sku.GetPrice().GetCurrency();
+		Ref<GodotcordSKUPrice> price;
+		price.instance();
+		price->amount = sku.GetPrice().GetAmount();
+		price->currency = sku.GetPrice().GetCurrency();
 
-		d["price"] = price;
+		godotcordSKU->price = price;
 
 
-		ret.push_back(d);
+		ret.push_back(godotcordSKU);
+
 	}
 
 	return ret;
@@ -82,16 +73,17 @@ Array GodotcordStoreManager::get_entitlements() {
 	Godotcord::get_singleton()->get_core()->StoreManager().CountEntitlements(&sku_count);
 
 	for (int i = 0; i < sku_count; i++) {
-		discord::Entitlement entitlement;
-		Dictionary d;
+		discord::Entitlement entitlement{};
+		Ref<GodotcordEntitlement> godotcordEntitlement;
+		godotcordEntitlement.instance();
 		discord::Result result = Godotcord::get_singleton()->get_core()->StoreManager().GetEntitlementAt(i, &entitlement);
 		ERR_CONTINUE(result != discord::Result::Ok);
 
-		d["id"] = entitlement.GetId();
-		d["type"] = (EntitlementType)entitlement.GetType();
-		d["sku_id"] = entitlement.GetSkuId();
+		godotcordEntitlement->id = entitlement.GetId();
+		godotcordEntitlement->type = (GodotcordEntitlement::EntitlementType)entitlement.GetType();
+		godotcordEntitlement->sku_id = entitlement.GetSkuId();
 
-		ret.push_back(d);
+		ret.push_back(godotcordEntitlement);
 	}
 
 	return ret;

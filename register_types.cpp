@@ -23,6 +23,7 @@
 #include "godotcord_search_parameter.h"
 #include "godotcord_achievement.h"
 #include "godotcord_user.h"
+#include "godotcord_store_data.h"
 
 static Godotcord *GC_ptr = NULL;
 static GodotcordAchievementManager *GC_ACH_ptr = NULL;
@@ -41,12 +42,17 @@ void register_godotcord_types() {
 	ClassDB::register_class<Godotcord>();
 	ClassDB::register_class<GodotcordActivity>();
 	ClassDB::register_class<GodotcordRelationship>();
+	ClassDB::register_class<GodotcordPresence>();
 	ClassDB::register_class<NetworkedMultiplayerGodotcord>();
 	ClassDB::register_class<GodotcordLobby>();
 	ClassDB::register_class<GodotcordSearchParameter>();
 	ClassDB::register_class<GodotcordAchievement>();
 	ClassDB::register_class<GodotcordUser>();
 	ClassDB::register_class<GodotcordFileStat>();
+	ClassDB::register_class<GodotcordPeer>();
+	ClassDB::register_class<GodotcordEntitlement>();
+	ClassDB::register_class<GodotcordSKU>();
+	ClassDB::register_class<GodotcordSKUPrice>();
 
 	ClassDB::register_class<GodotcordAchievementManager>();
 	ClassDB::register_class<GodotcordActivityManager>();

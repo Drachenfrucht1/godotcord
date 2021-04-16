@@ -47,19 +47,20 @@ protected:
 	}
 
 public:
-	static Dictionary from_discord_activity(discord::Activity p_act) {
-		Dictionary ret;
-		ret["state"] = p_act.GetState();
-		ret["details"] = p_act.GetDetails();
-		ret["party_id"] = p_act.GetParty().GetId();
-		ret["party_current"] = p_act.GetParty().GetSize().GetCurrentSize();
-		ret["party_max"] = p_act.GetParty().GetSize().GetMaxSize();
-		ret["application_id"] = p_act.GetApplicationId();
-		ret["match_secret"] = p_act.GetSecrets().GetMatch();
-		ret["join_secret"] = p_act.GetSecrets().GetJoin();
-		ret["spectate_secret"] = p_act.GetSecrets().GetSpectate();
-		ret["start"] = p_act.GetTimestamps().GetStart();
-		ret["end"] = p_act.GetTimestamps().GetEnd();
+	static Ref<GodotcordActivity> from_discord_activity(discord::Activity p_act) {
+		Ref<GodotcordActivity> ret;
+		ret.instance();
+		ret->state = p_act.GetState();
+		ret->details = p_act.GetDetails();
+		ret->party_id = p_act.GetParty().GetId();
+		ret->party_current = p_act.GetParty().GetSize().GetCurrentSize();
+		ret->party_max = p_act.GetParty().GetSize().GetMaxSize();
+		ret->application_id = p_act.GetApplicationId();
+		ret->match_secret = p_act.GetSecrets().GetMatch();
+		ret->join_secret = p_act.GetSecrets().GetJoin();
+		ret->spectate_secret = p_act.GetSecrets().GetSpectate();
+		ret->start = p_act.GetTimestamps().GetStart();
+		ret->end = p_act.GetTimestamps().GetEnd();
 
 		return ret;
 	}
