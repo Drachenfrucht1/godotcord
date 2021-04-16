@@ -38,7 +38,7 @@ public:
 	void set_lobby_metadata(int64_t lobby_id, String key, String value);
 	String get_lobby_metadata(int64_t lobby_id, String key);
 
-	void search_lobbies(Variant params, int limit);
+	void search_lobbies(Array params, int limit);
 
 	GodotcordLobbyManager();
 	~GodotcordLobbyManager();

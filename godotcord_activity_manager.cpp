@@ -16,7 +16,7 @@ void GodotcordActivityManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("register_steam", "steam_id"), &GodotcordActivityManager::register_steam);
 
 	ADD_SIGNAL(MethodInfo("activity_join_request", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id")));
-	ADD_SIGNAL(MethodInfo("activity_invite", PropertyInfo(Variant::INT, "type"), PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id"), PropertyInfo(Variant::DICTIONARY, "activity")));
+	ADD_SIGNAL(MethodInfo("activity_invite", PropertyInfo(Variant::INT, "type"), PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::INT, "id"), PropertyInfo(Variant::OBJECT, "activity")));
 	ADD_SIGNAL(MethodInfo("activity_join", PropertyInfo(Variant::STRING, "secret")));
 	ADD_SIGNAL(MethodInfo("activity_spectate", PropertyInfo(Variant::STRING, "secret")));
 }

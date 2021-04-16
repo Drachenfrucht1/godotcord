@@ -19,6 +19,10 @@
 #include "godotcord_user_manager.h"
 #include "godotcord_voice_manager.h"
 
+#include "godotcord_lobby.h"
+#include "godotcord_search_parameter.h"
+#include "godotcord_achievement.h"
+
 static Godotcord *GC_ptr = NULL;
 static GodotcordAchievementManager *GC_ACH_ptr = NULL;
 static GodotcordActivityManager *GC_ACT_ptr = NULL;
@@ -36,7 +40,11 @@ void register_godotcord_types() {
 	ClassDB::register_class<Godotcord>();
 	ClassDB::register_class<GodotcordActivity>();
 	ClassDB::register_class<GodotcordRelationship>();
+	ClassDB::register_class<GodotcordPresence>();
 	ClassDB::register_class<NetworkedMultiplayerGodotcord>();
+	ClassDB::register_class<GodotcordLobby>();
+	ClassDB::register_class<GodotcordSearchParameter>();
+	ClassDB::register_class<GodotcordAchievement>();
 
 	ClassDB::register_class<GodotcordAchievementManager>();
 	ClassDB::register_class<GodotcordActivityManager>();
