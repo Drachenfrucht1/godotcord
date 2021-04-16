@@ -10,7 +10,7 @@ GodotcordRelationshipManager *GodotcordRelationshipManager::get_singleton() {
 
 void GodotcordRelationshipManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("filter_relationships", "object", "filter_func"), &GodotcordRelationshipManager::filter_relationships);
-	ClassDB::bind_method(D_METHOD("get_relationships"), &GodotcordRelationshipManager::get_relationsips);
+	ClassDB::bind_method(D_METHOD("get_relationships"), &GodotcordRelationshipManager::get_relationships);
 
 	ADD_SIGNAL(MethodInfo("relationship_update", PropertyInfo(Variant::DICTIONARY, "relationship")));
 }
@@ -40,10 +40,10 @@ Array GodotcordRelationshipManager::filter_relationships(Object *p_object, Strin
 		return filter_func.call_funcv(a);
 	});
 
-	return get_relationsips();
+	return get_relationships();
 }
 
-Array GodotcordRelationshipManager::get_relationsips() {
+Array GodotcordRelationshipManager::get_relationships() {
 	Array ret;
 	int count;
 	Godotcord::get_singleton()->get_core()->RelationshipManager().Count(&count);
