@@ -55,7 +55,7 @@ void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit) {
 	ERR_FAIL_COND_MSG(!p_params.is_array(), "The search_parameters has to be an array");
 
 	Array params = p_params;
-	discord::LobbySearchQuery query;
+	discord::LobbySearchQuery query{};
 	discord::Result result = Godotcord::get_singleton()->get_core()->LobbyManager().GetSearchQuery(&query);
 	ERR_FAIL_COND(result != discord::Result::Ok);
 
@@ -143,7 +143,7 @@ void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit) {
 
 		Vector<Variant> vec;
 		int64_t lobby_id;
-		discord::Lobby lobby;
+		discord::Lobby lobby{};
 		int32_t lobby_count;
 		Godotcord::get_singleton()->get_core()->LobbyManager().LobbyCount(&lobby_count);
 
