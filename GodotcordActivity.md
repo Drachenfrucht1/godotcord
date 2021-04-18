@@ -31,11 +31,11 @@
 
 `int party_max`
 
-- the max size of the party the user is in
+- The max size of the party the user is in
 
 `int party_current`
 
-- the current size of the party the user is in
+- The current size of the party the user is in
 
 `String match_secret`  
 
