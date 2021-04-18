@@ -4,52 +4,58 @@
 
 `String state`  
 
-- state of the activity if any
+- State of the activity if any.
 `String details`  
 
-- details of the activity if any
+- Details of the activity if any.
 
-`String largeImage`  
+`String large_image`  
 
-- name of the image in the art assets to use as a large image
+- Name of the image in the art assets of your application in Discord Developer Portal to use as a large image if any.
 
-`String largeText`
+`String large_text`
 
-- tooltip for the large image
+- Tooltip of the large image, only applicable if you provide large_image
 
-`String smallImage`
+`String small_image`
 
-- name of the image in the art assets to use as a small image
+- Name of the image in the art assets of your application in Discord Developer Portal to use as a small image if any.
 
-`String smallText`
+`String small_text`
 
-- tooltip for the small image
+- Tooltip for the small image, only applicable if you provide small_image
 
-`String partyID`
+`String party_id`
 
-- the id of the lobby the user is in
+- The id of the lobby the user is in
 
-`int partyMax`
+`int party_max`
 
 - the max size of the party the user is in
 
-`int partyCurrent`
+`int party_current`
 
 - the current size of the party the user is in
 
-`String matchSecret`  
-`String joinSecret`
+`String match_secret`  
 
-- secret used for chat invitations and ask to join
+- Secret used for joining matches.
+
+`String join_secret`
+
+- Secret used for chat invitations and ask to join
   
-`String spectateSecret`  
+`String spectate_secret`  
+
+- Secret used for spectating matches.
+
 `int start`
 
-- unix starttime of the users activity
+- Unix starttime of the users activity
 
 `int end`
 
-- unix endtime of the users activity
+- Unix endtime of the users activity
 
 ## Usage
 
