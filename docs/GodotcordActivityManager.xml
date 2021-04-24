@@ -91,7 +91,7 @@
                 Emitted when a chat invite has been pressed or a join request has been accepted.
             </description>
         </signal>
-        <signal>
+        <signal name="activity_spectate">
             <argument index="0" name="activity_secret" type="string">
             </argument>
             <description>
