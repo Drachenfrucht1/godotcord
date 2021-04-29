@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordLobbyManager" inherits="Object" version="0.1">
+    <brief_description>
+        A wrapper of the Discord Game SDK Achievement Manager.
+    </brief_description>
+    <description>
+        A wrapper of the Discord Game SDK Activity Manager. This class is used to search lobbies and manipulate their metadata.
+    </description>
+    <methods>
+        <method name="set_lobby_metadata">
+            <argument index="0" name="lobby_id" type="int">
+            </argument>
+            <argument index="1" name="key" type="string">
+            </argument>
+            <argument index="2" name="value" type="string" ></argument>
+            <description>
+                Sets the key/value pair as metadata of the lobby [code]lobby_id[/code]. 
+                The local user has be the owner of the lobby. Otherwise nothing will happen.
+                Overwrites the value if the key already exists(?).
+            </description>
+        </method>
+        <method name="get_lobby_metadata" >
+            <argument index="0" name="lobby_id" type="int">
+            </argument>
+            <argument index="1" name="key" type="string">
+            </argument>
+            <returns type="string">
+            </returns>
+            <description>
+                Returns the value associated with the key.
+            </description>
+        </method>
+        <method name="search_lobbies">
+            <argument index="0" name="parameters" type="Variant">
+            </argument>
+            <argument index="1" name="limit" type="int">
+            </argument>
+            <description>
+                Searches all lobbies for ones that match the provided parameters.
+                Returns at most [code]limit[/code] lobbies via the Signal [code]search_lobbies_callback[/code].
+            </description>
+        </method>
+    </methods>
+    <signals>
+        <signal name="search_lobbies_callback">
+            <argument index="0" name="lobbies" type="Array">
+            </argument>
+            <description>
+                Emitted after a lobby search has been completed.
+            </description>
+        </signal>
+    </signals>
+</class>
