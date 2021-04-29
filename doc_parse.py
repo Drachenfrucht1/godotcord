@@ -41,6 +41,11 @@ class GDClass:
             for sig in self.signals:
                 s += sig.print()
 
+        if len(self.enums) > 0:
+            s += "### Enumerations\n\n"
+            for k in self.enums:
+                s += self.enums[k].print()
+
         if len([m for m in self.members if not(m.description is None)]) > 0:
             s += "### Property Descriptions\n\n"
             for m in self.members:
@@ -55,8 +60,6 @@ class GDClass:
         s = s.replace("[/code]", "`")
 
         return s
-
-
 
 class GDMethod:
     def __init__(self, name):
@@ -85,8 +88,7 @@ class GDMethod:
         s = "".join(s.rsplit(", ", 1))
         s += ")\n\n"
         s += self.description.strip() + "\n\n"
-        s += "----"
-        s+= "\n"
+        s += "----\n"
 
         return s
 
@@ -112,10 +114,21 @@ class GDSignal:
         return s
 
 class GDEnum:
-
     def __init__(self, name):
         self.name = name
         self.members = {}
+
+    def add_value(self, name, value, desc):
+        self.members[value] = [name, desc]
+
+    def print(self):
+        s = "enum **" + self.name + "**\n\n"
+        for k in sorted(self.members):
+            s += "* **" + self.members[k][0] + "**=**" + k + "** --- " + self.members[k][1].strip() + "\n"
+        s+= "----\n"
+
+        return s
+
 
 class GDProperty:
     def __init__(self, name, t, setter, getter, default, description):
@@ -148,6 +161,15 @@ class GDProperty:
         s += "----\n"
 
         return s
+
+def get_constants(gdclass, constants):
+    for child in constants:
+        if child.attrib["enum"] in gdclass.enums:
+            gdclass.enums[child.attrib["enum"]].add_value(child.attrib["name"], child.attrib["value"], child.text)
+        else:
+            enum = GDEnum(child.attrib["enum"])
+            enum.add_value(child.attrib["name"], child.attrib["value"], child.text)
+            gdclass.enums[child.attrib["enum"]] = enum
 
 
 def get_method(gdclass, method):
@@ -220,4 +242,6 @@ for f in files:
         elif child.tag == "members":
             for member in child:
                 get_member(gdclass, member)
+        elif child.tag == "constants":
+            get_constants(gdclass, child)
     print_class(f, gdclass)
