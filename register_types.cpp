@@ -24,7 +24,6 @@
 #include "godotcord_achievement.h"
 #include "godotcord_user.h"
 #include "godotcord_store_data.h"
-
 static Godotcord *GC_ptr = NULL;
 static GodotcordAchievementManager *GC_ACH_ptr = NULL;
 static GodotcordActivityManager *GC_ACT_ptr = NULL;
