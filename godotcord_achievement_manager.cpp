@@ -35,7 +35,7 @@ Array GodotcordAchievementManager::get_user_achievements() {
 	Godotcord::get_singleton()->get_core()->AchievementManager().CountUserAchievements(&count);
 
 	for (int i = 0; i < count; i++) {
-		discord::UserAchievement achievement;
+		discord::UserAchievement achievement{};
 		discord::Result result = Godotcord::get_singleton()->get_core()->AchievementManager().GetUserAchievementAt(i, &achievement);
 		ERR_CONTINUE(result != discord::Result::Ok);
 

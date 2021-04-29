@@ -55,7 +55,7 @@ String GodotcordLobbyManager::get_lobby_metadata(int64_t p_lobby_id, String p_ke
 void GodotcordLobbyManager::search_lobbies(Array p_params, int p_limit) {
 
 	Array params = p_params;
-	discord::LobbySearchQuery query;
+	discord::LobbySearchQuery query{};
 	discord::Result result = Godotcord::get_singleton()->get_core()->LobbyManager().GetSearchQuery(&query);
 	ERR_FAIL_COND(result != discord::Result::Ok);
 
@@ -132,7 +132,7 @@ void GodotcordLobbyManager::search_lobbies(Array p_params, int p_limit) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while filtering the lobbies");
 
 		int64_t lobby_id;
-		discord::Lobby lobby;
+		discord::Lobby lobby{};
 		int32_t lobby_count;
 		Godotcord::get_singleton()->get_core()->LobbyManager().LobbyCount(&lobby_count);
 

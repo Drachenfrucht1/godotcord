@@ -103,19 +103,19 @@ void GodotcordActivityManager::register_command(String p_command) {
 
 void GodotcordActivityManager::send_request_reply(int64_t p_user_id, GodotcordActivity::ActivityRequestReply p_reply) {
 	Godotcord::get_singleton()->get_core()->ActivityManager().SendRequestReply(p_user_id, (discord::ActivityJoinRequestReply)p_reply, [this](discord::Result result) {
-		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Seomthing went wrong while replying to the request");
+		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while replying to the request");
 	});
 }
 
 void GodotcordActivityManager::send_invite(int64_t p_user_id, GodotcordActivity::ActivityActionType p_type, String p_message) {
 	Godotcord::get_singleton()->get_core()->ActivityManager().SendInvite(p_user_id, (discord::ActivityActionType)p_type, p_message.utf8(), [this](discord::Result result) {
-		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Seomthing went wrong while sending the invite");
+		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while sending the invite");
 	});
 }
 
 void GodotcordActivityManager::accept_invite(int64_t p_user_id) {
 	Godotcord::get_singleton()->get_core()->ActivityManager().AcceptInvite(p_user_id, [this](discord::Result result) {
-		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Seomthing went wrong while accepting the invite");
+		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while accepting the invite");
 	});
 }
 
