@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordImageManager" inherits="Object" version="0.1">
+    <brief_description>
+        A wrapper of the Discord Game SDK Achievement Manager.
+    </brief_description>
+    <description>
+        A wrapper of the Discord Game SDK Activity Manager. This class is used to fetch the profile image of users.
+    </description>
+    <methods>
+        <method name="get_profile_picture">
+            <argument index="0" name="user_id" type="int">
+            </argument>
+            <argument index="1" name="size" type="int">
+            </argument>
+            <description>
+                Fetches the profile picture of user [code]user_id[/code].
+                Emitts the signal [code]profile_picture_callback[/code] with the image data cropped to [code]size*size[/code] pixels.
+            </description>
+        </method>
+    </methods>
+    <signals>
+        <signal name="profile_picture_callback">
+            <argument index="0" name="user_id" type="int">
+            </argument>
+            <argument index="1" name="image_data" type="PoolByteArray">
+            </argument>
+            <description>
+                Emitted when a profile picture has been fetched. The image data is returned as a byte array in [code]image_data[/code].
+                See the example on how to convert the raw image data into a texture to use it in Godot.
+            </description>
+        </signal>
+    </signals>
+</class>
