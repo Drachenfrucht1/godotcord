@@ -418,7 +418,7 @@ Error NetworkedMultiplayerGodotcord::put_packet(const uint8_t *p_buffer, int p_b
 	uint8_t *data = (uint8_t*)memalloc(discord_size);
 	data[0] = 'i';
 	encode_uint32(p_buffer_size, &data[1]);
-	copymem(&data[5], p_buffer, p_buffer_size);
+	memcpy(&data[5], p_buffer, p_buffer_size);
 
 	if (_transfer_mode == TRANSFER_MODE_UNRELIABLE) {
 		channel = 1;
