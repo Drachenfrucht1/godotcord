@@ -12,7 +12,7 @@ The Godotcord class is provided as a singleton named `Godotcord`. I recommend to
 
 `init_debug(int clientId, string instance_id, CreateFlags createFlags)`
 - used for testing with two clients locally
-- read (discord docs)[https://discord.com/developers/docs/game-sdk/sdk-starter-guide#testing-locally-with-two-clients] for usage
+- read [discord docs](https://discord.com/developers/docs/game-sdk/sdk-starter-guide#testing-locally-with-two-clients) for usage
 
 `run_callbacks()`
 - calls all callbacks of the Discord Game SDK
