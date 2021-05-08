@@ -421,7 +421,7 @@ Error NetworkedMultiplayerGodotcord::put_packet(const uint8_t *p_buffer, int p_b
 	uint8_t *data = (uint8_t*)memalloc(discord_size);
 	data[0] = 'i';
 	encode_uint32(p_buffer_size, &data[1]);
-	copymem(&data[5], p_buffer, p_buffer_size);
+	memcpy(&data[5], p_buffer, p_buffer_size);
 
 	if (_transfer_mode == TRANSFER_MODE_UNRELIABLE) {
 		channel = 1;
@@ -539,7 +539,7 @@ void NetworkedMultiplayerGodotcord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("join_lobby", "id", "secret"), &NetworkedMultiplayerGodotcord::join_lobby);
 	ClassDB::bind_method(D_METHOD("join_server_activity", "secret"), &NetworkedMultiplayerGodotcord::join_lobby_activity);
 	ClassDB::bind_method(D_METHOD("close_connection"), &NetworkedMultiplayerGodotcord::close_connection);
-	ClassDB::bind_method(D_METHOD("disconnect_perr", "id"), &NetworkedMultiplayerGodotcord::disconnect_peer);
+	ClassDB::bind_method(D_METHOD("disconnect_peer", "id"), &NetworkedMultiplayerGodotcord::disconnect_peer);
 
 	ClassDB::bind_method(D_METHOD("get_lobby_id"), &NetworkedMultiplayerGodotcord::get_lobby_id);
 	ClassDB::bind_method(D_METHOD("get_lobby_secret"), &NetworkedMultiplayerGodotcord::get_lobby_secret);

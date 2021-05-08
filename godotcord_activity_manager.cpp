@@ -24,31 +24,31 @@ void GodotcordActivityManager::_bind_methods() {
 void GodotcordActivityManager::set_activity(Ref<GodotcordActivity> p_activity) {
 	discord::Activity activity{};
 
-	if (p_activity->state != "") {
+	if (!p_activity->state.empty()) {
 		activity.SetState(p_activity->state.utf8());
 	}
 
-	if (p_activity->details != "") {
+	if (!p_activity->details.empty()) {
 		activity.SetDetails(p_activity->details.utf8());
 	}
 
-	if (p_activity->large_text != "") {
+	if (!p_activity->large_text.empty()) {
 		activity.GetAssets().SetLargeText(p_activity->large_text.utf8());
 	}
 
-	if (p_activity->large_image != "") {
+	if (!p_activity->large_image.empty()) {
 		activity.GetAssets().SetLargeImage(p_activity->large_image.utf8());
 	}
 
-	if (p_activity->small_text != "") {
+	if (!p_activity->small_text.empty()) {
 		activity.GetAssets().SetSmallText(p_activity->small_text.utf8());
 	}
 
-	if (p_activity->small_image != "") {
+	if (!p_activity->small_image.empty()) {
 		activity.GetAssets().SetSmallImage(p_activity->small_image.utf8());
 	}
 
-	if (p_activity->party_id != "") {
+	if (!p_activity->party_id.empty()) {
 		activity.GetParty().SetId(p_activity->party_id.utf8());
 	}
 
@@ -60,15 +60,15 @@ void GodotcordActivityManager::set_activity(Ref<GodotcordActivity> p_activity) {
 		activity.GetParty().GetSize().SetCurrentSize(p_activity->party_current);
 	}
 
-	if (p_activity->match_secret != "") {
+	if (!p_activity->match_secret.empty()) {
 		activity.GetSecrets().SetMatch(p_activity->match_secret.utf8());
 	}
 
-	if (p_activity->join_secret != "") {
+	if (!p_activity->join_secret.empty()) {
 		activity.GetSecrets().SetJoin(p_activity->join_secret.utf8());
 	}
 
-	if (p_activity->spectate_secret != "") {
+	if (!p_activity->spectate_secret.empty()) {
 		activity.GetSecrets().SetSpectate(p_activity->spectate_secret.utf8());
 	}
 
@@ -81,7 +81,7 @@ void GodotcordActivityManager::set_activity(Ref<GodotcordActivity> p_activity) {
 	}
 
 	Godotcord::get_singleton()->get_core()->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while settings the activity");
+	  	ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while setting the activity");
 	});
 }
 
