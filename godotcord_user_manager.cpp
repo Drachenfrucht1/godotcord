@@ -14,6 +14,7 @@ void GodotcordUserManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("has_current_user_flag", "user_flag"), &GodotcordUserManager::has_current_user_flag);
 
 	ADD_SIGNAL(MethodInfo("get_user_callback", PropertyInfo(Variant::DICTIONARY, "user")));
+	ADD_SIGNAL(MethodInfo("local_user_updated"));
 
 	BIND_ENUM_CONSTANT(PARTNER);
 	BIND_ENUM_CONSTANT(HYPE_SQUAD_EVENTS);
@@ -77,6 +78,8 @@ bool GodotcordUserManager::has_current_user_flag(GodotcordUserManager::UserFlag 
 void GodotcordUserManager::init() {
 	Godotcord::get_singleton()->get_core()->UserManager().OnCurrentUserUpdate.Connect([this]() {
 		print_verbose("Local Discord user updated");
+
+		emit_signal("local_user_updated");
 	});
 }
 
