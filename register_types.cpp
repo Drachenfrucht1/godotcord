@@ -52,6 +52,7 @@ void register_godotcord_types() {
 	ClassDB::register_class<GodotcordEntitlement>();
 	ClassDB::register_class<GodotcordSKU>();
 	ClassDB::register_class<GodotcordSKUPrice>();
+	ClassDB::register_class<GodotcordInputmode>();
 
 	ClassDB::register_class<GodotcordAchievementManager>();
 	ClassDB::register_class<GodotcordActivityManager>();
