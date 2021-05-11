@@ -2,9 +2,11 @@
 #define GODOTCORD_VOICE_MANAGER
 
 #include "core/object.h"
+#include "core/reference.h"
+#include "godotcord_utils.h"
 
-class GodotcordVoiceManager : public Object {
-    GDCLASS(GodotcordVoiceManager, Object);
+class GodotcordInputmode : public Reference {
+	GDCLASS(GodotcordInputmode, Reference);
 
 public:
 	enum InputModeType {
@@ -13,13 +15,33 @@ public:
 	};
 
 protected:
+	static void _bind_methods() {
+		ADD_GODOTCORD_PROPERTY(GodotcordInputmode, type, Variant::INT);
+		ADD_GODOTCORD_PROPERTY(GodotcordInputmode, shortcut, Variant::STRING);
+
+		BIND_ENUM_CONSTANT(VOICE_ACVTIVITY);
+		BIND_ENUM_CONSTANT(PUSH_TO_TALK);
+	};
+
+public:
+	InputModeType type;
+	String shortcut;
+
+	GET_SET_COMBO(type, InputModeType);
+	GET_SET_COMBO(shortcut, String);
+};
+
+class GodotcordVoiceManager : public Object {
+    GDCLASS(GodotcordVoiceManager, Object);	
+
+protected:
     static void _bind_methods();
 
 public:
 	static GodotcordVoiceManager *singleton;
 	static GodotcordVoiceManager *get_singleton();
 
-	Dictionary get_input_mode();
+	Ref<GodotcordInputmode> get_input_mode();
 	void set_voice_activity();
 	void set_push_to_talk(String p_hotkey);
 
@@ -39,6 +61,6 @@ public:
 	~GodotcordVoiceManager() {}
 };
 
-VARIANT_ENUM_CAST(GodotcordVoiceManager::InputModeType);
+VARIANT_ENUM_CAST(GodotcordInputmode::InputModeType);
 
 #endif //GODOTCORD_VOICE_MANAGER

@@ -4,19 +4,32 @@
 #include "core/object.h"
 #include "godotcord.h"
 
+class GodotcordFileStat : public Reference {
+    GDCLASS(GodotcordFileStat, Reference)
+protected:
+	static void _bind_methods() {
+		ADD_GODOTCORD_PROPERTY(GodotcordFileStat, file_name, Variant::STRING)
+		ADD_GODOTCORD_PROPERTY(GodotcordFileStat, last_modified, Variant::INT)
+		ADD_GODOTCORD_PROPERTY(GodotcordFileStat, size, Variant::INT)
+
+	}
+public:
+	String file_name = "";
+	uint64_t last_modified = 0;
+	uint64_t size = 0;
+
+	GET_SET_COMBO(file_name, String)
+	GET_SET_COMBO(last_modified, uint64_t)
+	GET_SET_COMBO(size, uint64_t)
+
+};
+
 class GodotcordStorageManager : public Object {
     GDCLASS(GodotcordStorageManager, Object)
 protected:
     static void _bind_methods();
 
 public:
-    static Dictionary _file_stat(discord::FileStat fileStat) {
-        Dictionary p_stat;
-        p_stat["file_name"] = fileStat.GetFilename();
-        p_stat["last_modified"] = fileStat.GetLastModified();
-        p_stat["size"] = fileStat.GetSize();
-        return p_stat;
-    }
     static GodotcordStorageManager *singleton;
     static GodotcordStorageManager *get_singleton();
 
@@ -28,11 +41,12 @@ public:
     void write_async(String p_name, PoolByteArray p_data);
     void destroy(String p_name);
     bool exists(String p_name);
-    Dictionary stat(String p_name);
+    Ref<GodotcordFileStat> stat(String p_name);
     uint32_t count();
-    Dictionary stat_at(int32_t p_index);
+    Ref<GodotcordFileStat> stat_at(int32_t p_index);
 
     GodotcordStorageManager();
+    ~GodotcordStorageManager();
 };
 
 #endif //GODOTCORD_STORAGE_MANAGER_H

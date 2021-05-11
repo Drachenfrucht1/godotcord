@@ -2,27 +2,13 @@
 #define GODOTCORD_STORE_MANAGER_H
 
 #include "core/object.h"
+#include "core/reference.h"
+#include "godotcord_utils.h"
+
+#include "godotcord_store_data.h"
 
 class GodotcordStoreManager : public Object {
 	GDCLASS(GodotcordStoreManager, Object)
-
-public:
-	enum SkuType {
-		APP = 1,
-		DLC,
-		CONSUMABLE,
-		BUNDLE
-	};
-
-	enum EntitlementType {
-		PURCHASE = 1,
-		PREMIUM_SUBSCRIPTION,
-		DEVELOPER_GIFT,
-		TEST_MODE_PURCHASE,
-		FREE_PURCHASE,
-		USER_GIFT,
-		PREMIUM_PURCHASE,
-	};
 
 protected:
 	static void _bind_methods();
@@ -43,8 +29,4 @@ public:
 	void init();
     GodotcordStoreManager();
 };
-
-VARIANT_ENUM_CAST(GodotcordStoreManager::SkuType);
-VARIANT_ENUM_CAST(GodotcordStoreManager::EntitlementType);
-
-#endif
+#endif // GODOTCORD_STORE_MANAGER_H

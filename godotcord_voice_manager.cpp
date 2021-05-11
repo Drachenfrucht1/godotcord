@@ -19,21 +19,19 @@ void GodotcordVoiceManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_local_mute", "user_id", "boolean"), &GodotcordVoiceManager::set_local_mute);
 	ClassDB::bind_method(D_METHOD("get_local_volume", "user_id"), &GodotcordVoiceManager::get_local_volume);
 	ClassDB::bind_method(D_METHOD("set_local_volume", "user_id", "value"), &GodotcordVoiceManager::set_local_volume);
-
-	BIND_ENUM_CONSTANT(VOICE_ACVTIVITY);
-	BIND_ENUM_CONSTANT(PUSH_TO_TALK);
 }
 
-Dictionary GodotcordVoiceManager::get_input_mode() {
-	Dictionary d;
+Ref<GodotcordInputmode> GodotcordVoiceManager::get_input_mode() {
+	Ref<GodotcordInputmode> gd_inputmode;
+    gd_inputmode.instance();
 	discord::InputMode d_input_mode;
 	discord::Result result = Godotcord::get_singleton()->get_core()->VoiceManager().GetInputMode(&d_input_mode);
-	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, d, "An error occured while fetching the voice input mode");
+	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, gd_inputmode, "An error occured while fetching the voice input mode");
 
-	d["type"] = (GodotcordVoiceManager::InputModeType) d_input_mode.GetType();
-	d["hotkey"] = d_input_mode.GetShortcut();
+	gd_inputmode->type = (GodotcordInputmode::InputModeType) d_input_mode.GetType();
+	gd_inputmode->shortcut = d_input_mode.GetShortcut();
 
-	return d;
+	return gd_inputmode;
 }
 
 void GodotcordVoiceManager::set_voice_activity() {

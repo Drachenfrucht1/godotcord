@@ -1,5 +1,6 @@
 #include "godotcord_lobby_manager.h"
 #include "godotcord.h"
+#include "godotcord_search_parameter.h"
 
 GodotcordLobbyManager *GodotcordLobbyManager::singleton = NULL;
 
@@ -12,7 +13,7 @@ void GodotcordLobbyManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_lobby_metadata", "lobby_id", "key"), &GodotcordLobbyManager::get_lobby_metadata);
 	ClassDB::bind_method(D_METHOD("search_lobbies", "parameters, limit"), &GodotcordLobbyManager::search_lobbies);
 
-	ADD_SIGNAL(MethodInfo("search_lobbies_callback", PropertyInfo(Variant::OBJECT, "lobbies")));
+	ADD_SIGNAL(MethodInfo("search_lobbies_callback", PropertyInfo(Variant::ARRAY, "lobbies")));
 
 	BIND_ENUM_CONSTANT(LOCAL);
 	BIND_ENUM_CONSTANT(DEFAULT);
@@ -51,30 +52,19 @@ String GodotcordLobbyManager::get_lobby_metadata(int64_t p_lobby_id, String p_ke
 	return String(value);
 }
 
-void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit) {
-	ERR_FAIL_COND_MSG(!p_params.is_array(), "The search_parameters has to be an array");
+void GodotcordLobbyManager::search_lobbies(Array p_params, int p_limit) {
 
 	Array params = p_params;
-	discord::LobbySearchQuery query;
+	discord::LobbySearchQuery query{};
 	discord::Result result = Godotcord::get_singleton()->get_core()->LobbyManager().GetSearchQuery(&query);
 	ERR_FAIL_COND(result != discord::Result::Ok);
 
 	for (int i = 0; i < params.size(); i++) {
-		Variant element = params[i];
-		ERR_CONTINUE(element.get_type() != Variant::DICTIONARY);
-		Dictionary d = element;
+		GodotcordSearchParameter* element = dynamic_cast<GodotcordSearchParameter*>(params[i].operator Object*());
 
-		String property = d.get("property", "");
-		int comparison = d.get("comparison", -1);
-		int cast = d.get("cast", -1);
-		Variant value = d.get("value", "");
-
-		query.Limit(p_limit);
-
-		if (property == "distance") {
-			ERR_CONTINUE(value.get_type() != Variant::INT);
+		if (element->property == "distance") {
 			discord::LobbySearchDistance distance;
-			int i_value = value;
+			int i_value = element->value.to_int64();
 			switch (i_value) {
 				case LOCAL:
 					distance = discord::LobbySearchDistance::Local;
@@ -94,13 +84,11 @@ void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit) {
 
 			query.Distance(distance);
 		} else {
-			ERR_CONTINUE(property == "" || comparison == -1 || cast == -1 || value.get_type() != Variant::STRING);
-			String s_value = value;
 
 			discord::LobbySearchCast d_cast;
 			discord::LobbySearchComparison d_comp;
 
-			switch (cast) {
+			switch (element->cast) {
 				case STRING:
 					d_cast = discord::LobbySearchCast::String;
 					break;
@@ -111,7 +99,7 @@ void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit) {
 					continue;
 			}
 
-			switch (comparison) {
+			switch (element->comparison) {
 				case LESS_THAN_OR_EQUAL:
 					d_comp = discord::LobbySearchComparison::LessThanOrEqual;
 					break;
@@ -134,34 +122,38 @@ void GodotcordLobbyManager::search_lobbies(Variant p_params, int p_limit) {
 					continue;
 			}
 
-			query.Filter(property.utf8(), d_comp, d_cast, s_value.utf8());
+			query.Filter(element->property.utf8(), d_comp, d_cast, element->value.utf8());
 		}
 	}
+
+	query.Limit(p_limit);
 
 	Godotcord::get_singleton()->get_core()->LobbyManager().Search(query, [this](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while filtering the lobbies");
 
-		Vector<Variant> vec;
 		int64_t lobby_id;
-		discord::Lobby lobby;
+		discord::Lobby lobby{};
 		int32_t lobby_count;
 		Godotcord::get_singleton()->get_core()->LobbyManager().LobbyCount(&lobby_count);
+
+		Array ret;
 
 		for (int32_t i = 0; i < lobby_count; i++) {
 			Godotcord::get_singleton()->get_core()->LobbyManager().GetLobbyId(i, &lobby_id);
 			Godotcord::get_singleton()->get_core()->LobbyManager().GetLobby(lobby_id, &lobby);
 
-			GodotcordLobby gd_lobby;
-			gd_lobby.id = lobby.GetId();
-			gd_lobby.secret = lobby.GetSecret();
-			gd_lobby.max_users = lobby.GetCapacity();
-			gd_lobby.owner_id = lobby.GetOwnerId();
-			Godotcord::get_singleton()->get_core()->LobbyManager().MemberCount(lobby_id, &(gd_lobby.current_users));
+			Ref<GodotcordLobby> gd_lobby;
+			gd_lobby.instance();
+			gd_lobby->id = lobby.GetId();
+			gd_lobby->secret = lobby.GetSecret();
+			gd_lobby->max_users = lobby.GetCapacity();
+			gd_lobby->owner_id = lobby.GetOwnerId();
+			Godotcord::get_singleton()->get_core()->LobbyManager().MemberCount(lobby_id, &(gd_lobby->current_users));
 
-			vec.push_back(GodotcordLobby::get_dictionary(&gd_lobby));
+			ret.push_back(gd_lobby);
 		}
 
-		emit_signal("search_lobbies_callback", vec);
+		emit_signal("search_lobbies_callback", ret);
 	});
 }
 

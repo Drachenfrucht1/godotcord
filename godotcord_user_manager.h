@@ -1,6 +1,7 @@
 #ifndef GODOTCORD_USER_MANAGER_H
 #define GODOTCORD_USER_MANAGER_H
 
+#include "godotcord_user.h"
 #include "core/object.h"
 
 class GodotcordUserManager : public Object {
@@ -30,7 +31,7 @@ public:
 	static GodotcordUserManager *get_singleton();
 
 	void get_user(int64_t p_user_id);
-	Dictionary get_current_user();
+	Ref<GodotcordUser> get_current_user();
 	PremiumType get_current_user_premium_type();
 	bool has_current_user_flag(UserFlag p_flag);
 
