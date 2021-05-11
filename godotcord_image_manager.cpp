@@ -14,7 +14,7 @@ void GodotcordImageManager::_bind_methods() {
 }
 
 void GodotcordImageManager::get_profile_picture(int64_t p_user_id, int p_size) {
-	discord::ImageHandle handle;
+	discord::ImageHandle handle{};
 	handle.SetId(p_user_id);
 	handle.SetSize(p_size);
 	handle.SetType(discord::ImageType::User);
@@ -23,7 +23,7 @@ void GodotcordImageManager::get_profile_picture(int64_t p_user_id, int p_size) {
 					handle, false, [this, p_user_id](discord::Result result, discord::ImageHandle returned_handle) {
 						ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while requesting the profile picture");
 
-						discord::ImageDimensions dim;
+						discord::ImageDimensions dim{};
 						Godotcord::get_singleton()->get_core()->ImageManager().GetDimensions(returned_handle, &dim);
 
 						uint32_t data_size = dim.GetWidth() * dim.GetHeight() * 4;

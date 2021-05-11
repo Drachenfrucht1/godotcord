@@ -1,10 +1,21 @@
 #ifndef GODOTCORD_LOBBY_H
 #define GODOTCORD_LOBBY_H
 
-#include "core/dictionary.h"
+#include "core/reference.h"
 
-class GodotcordLobby {
+#include "godotcord_utils.h"
 
+class GodotcordLobby : public Reference {
+	GDCLASS(GodotcordLobby, Reference);
+
+protected:
+	static void _bind_methods() {
+		ADD_GODOTCORD_PROPERTY(GodotcordLobby, secret, Variant::STRING);
+		ADD_GODOTCORD_PROPERTY(GodotcordLobby, id, Variant::INT);
+		ADD_GODOTCORD_PROPERTY(GodotcordLobby, owner_id, Variant::INT);
+		ADD_GODOTCORD_PROPERTY(GodotcordLobby, max_users, Variant::INT);
+		ADD_GODOTCORD_PROPERTY(GodotcordLobby, current_users, Variant::INT);
+	}
 public:
 	String secret;
 	//String activity_secret;
@@ -13,18 +24,11 @@ public:
 	int max_users;
 	int32_t current_users;
 
-
-    static Dictionary get_dictionary(GodotcordLobby *l) {
-        Dictionary d;
-
-        d["id"] = l->id;
-		d["secret"] = l->secret;
-		d["max_users"] = l->max_users;
-		d["current_users"] = l->current_users;
-		d["owner_id"] = l->owner_id;
-
-        return d;
-    }
+	GET_SET_COMBO(secret, String);
+	GET_SET_COMBO(id, int64_t);
+	GET_SET_COMBO(owner_id, uint64_t);
+	GET_SET_COMBO(max_users, int);
+	GET_SET_COMBO(current_users, int32_t);
 };
 
 #endif

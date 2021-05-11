@@ -1,5 +1,6 @@
 #include "godotcord_achievement_manager.h"
 #include "godotcord.h"
+#include "godotcord_achievement.h"
 
 GodotcordAchievementManager *GodotcordAchievementManager::singleton = NULL;
 
@@ -34,17 +35,18 @@ Array GodotcordAchievementManager::get_user_achievements() {
 	Godotcord::get_singleton()->get_core()->AchievementManager().CountUserAchievements(&count);
 
 	for (int i = 0; i < count; i++) {
-		discord::UserAchievement achievement;
+		discord::UserAchievement achievement{};
 		discord::Result result = Godotcord::get_singleton()->get_core()->AchievementManager().GetUserAchievementAt(i, &achievement);
 		ERR_CONTINUE(result != discord::Result::Ok);
 
-		Dictionary d;
-		d["user_id"] = achievement.GetUserId();
-		d["achievement_id"] = achievement.GetAchievementId();
-		d["percent_complete"] = achievement.GetPercentComplete();
-		d["unlocked_at"] = achievement.GetUnlockedAt();
+		Ref<GodotcordAchievement> gd_achievement;
+		gd_achievement.instance();
+		gd_achievement->user_id = achievement.GetUserId();
+		gd_achievement->achievement_id = achievement.GetAchievementId();
+		gd_achievement->percent_complete = achievement.GetPercentComplete();
+		gd_achievement->unlocked_at = achievement.GetUnlockedAt();
 
-		ret_value.push_back(d);
+		ret_value.push_back(gd_achievement);
 	}
 
 	return ret_value;

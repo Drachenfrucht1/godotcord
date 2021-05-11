@@ -34,7 +34,7 @@ String GodotcordStorageManager::get_path() {
 }
 
 PoolByteArray GodotcordStorageManager::read(String p_name) {
-    uint64_t data_length = stat(p_name).get("size", Variant::NIL);
+    uint64_t data_length = stat(p_name)->size;
     uint8_t* data = (uint8_t*)memalloc(data_length);
     uint32_t read = 0;
     discord::Result result = Godotcord::get_singleton()->get_core()->StorageManager().Read(p_name.utf8(), data, data_length, &read);
@@ -92,10 +92,15 @@ bool GodotcordStorageManager::exists(String p_name) {
     return p_exists;
 }
 
-Dictionary GodotcordStorageManager::stat(String p_name) {
+Ref<GodotcordFileStat> GodotcordStorageManager::stat(String p_name) {
     discord::FileStat discordFileStat{};
+	Ref<GodotcordFileStat> godotcordFileStat;
+	godotcordFileStat.instance();
     Godotcord::get_singleton()->get_core()->StorageManager().Stat(p_name.utf8(), &discordFileStat);
-    return _file_stat(discordFileStat);
+	godotcordFileStat->file_name = discordFileStat.GetFilename();
+	godotcordFileStat->size = discordFileStat.GetSize();
+	godotcordFileStat->last_modified = discordFileStat.GetLastModified();
+	return godotcordFileStat;
 }
 
 uint32_t GodotcordStorageManager::count() {
@@ -104,14 +109,22 @@ uint32_t GodotcordStorageManager::count() {
     return count;
 }
 
-Dictionary GodotcordStorageManager::stat_at(int32_t p_index) {
+Ref<GodotcordFileStat> GodotcordStorageManager::stat_at(int32_t p_index) {
     discord::FileStat discordFileStat{};
+	Ref<GodotcordFileStat> godotcordFileStat;
+	godotcordFileStat.instance();
     Godotcord::get_singleton()->get_core()->StorageManager().StatAt(p_index, &discordFileStat);
-    return _file_stat(discordFileStat);
+    godotcordFileStat->file_name = discordFileStat.GetFilename();
+    godotcordFileStat->size = discordFileStat.GetSize();
+	godotcordFileStat->last_modified = discordFileStat.GetLastModified();
+	return godotcordFileStat;
 }
 
 GodotcordStorageManager::GodotcordStorageManager() {
     ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordStorageManager can be created.");
 
     singleton = this;
+}
+
+GodotcordStorageManager::~GodotcordStorageManager() {
 }

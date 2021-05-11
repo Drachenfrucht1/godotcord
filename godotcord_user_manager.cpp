@@ -13,7 +13,7 @@ void GodotcordUserManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_current_user_premium_type"), &GodotcordUserManager::get_current_user_premium_type);
 	ClassDB::bind_method(D_METHOD("has_current_user_flag", "user_flag"), &GodotcordUserManager::has_current_user_flag);
 
-	ADD_SIGNAL(MethodInfo("get_user_callback", PropertyInfo(Variant::DICTIONARY, "user")));
+	ADD_SIGNAL(MethodInfo("get_user_callback", PropertyInfo(Variant::OBJECT, "user")));
 	ADD_SIGNAL(MethodInfo("local_user_updated"));
 
 	BIND_ENUM_CONSTANT(PARTNER);
@@ -31,32 +31,39 @@ void GodotcordUserManager::_bind_methods() {
 void GodotcordUserManager::get_user(int64_t p_user_id) {
 	Godotcord::get_singleton()->get_core()->UserManager().GetUser(p_user_id, [this](discord::Result result, discord::User user) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while trying to fetch the user");
-		Dictionary d;
+		Ref<GodotcordUser> godotcordUser;
+                godotcordUser.instance();
 
-		d["id"] = user.GetId();
-		d["name"] = user.GetUsername();
-		d["discriminator"] = user.GetDiscriminator();
-		d["avatar"] = user.GetAvatar();
-		d["bot"] = user.GetBot();
+		godotcordUser->id = user.GetId();
+	        godotcordUser->name = user.GetUsername();
+		godotcordUser->discriminator = user.GetDiscriminator();
+		godotcordUser->avatar = user.GetAvatar();
+		godotcordUser->bot = user.GetBot();
 
-		emit_signal("get_user_callback", d);
+		emit_signal("get_user_callback", godotcordUser);
 	});
 }
 
 
-Dictionary GodotcordUserManager::get_current_user() {
-	discord::User user;
-	Dictionary ret;
+Ref<GodotcordUser> GodotcordUserManager::get_current_user() {
+	discord::User user{};
+	Ref<GodotcordUser> godotcordUser;
+        godotcordUser.instance();
 	discord::Result result = Godotcord::get_singleton()->get_core()->UserManager().GetCurrentUser(&user);
-	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, ret, "An error occured while trying to fetch the user");
+	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, godotcordUser, "An error occured while trying to fetch the user");
 
-	ret["id"] = user.GetId();
-	ret["name"] = user.GetUsername();
-	ret["discriminator"] = user.GetDiscriminator();
-	ret["avatar"] = user.GetAvatar();
-	ret["bot"] = user.GetBot();
+//	ret["id"] = user.GetId();
+//	ret["name"] = user.GetUsername();
+//	ret["discriminator"] = user.GetDiscriminator();
+//	ret["avatar"] = user.GetAvatar();
+//	ret["bot"] = user.GetBot();
+	godotcordUser->id = user.GetId();
+	godotcordUser->name = user.GetUsername();
+	godotcordUser->discriminator = user.GetDiscriminator();
+	godotcordUser->avatar = user.GetAvatar();
+	godotcordUser->bot = user.GetBot();
 
-	return ret;
+	return godotcordUser;
 }
 
 GodotcordUserManager::PremiumType GodotcordUserManager::get_current_user_premium_type() {
