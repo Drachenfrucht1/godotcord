@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordOverlayManager" inherits="Object" version="0.1">
+    <brief_description>
+        A wrapper of the Discord Game SDK Overlay Manager.
+    </brief_description>
+    <description>
+        A wrapper of the Discord Game SDK Activity Manager. This class is used to interface with the ingame discord overlay.
+    </description>
+    <methods>
+        <method name="is_enabled">
+            <returns type="boolean">
+            </returns>
+            <description>
+                Returns whether the overlay is enabled
+            </description>
+        </method>
+        <method name="is_locked">
+            <returns type="boolean">
+            </returns>
+            <description>
+                Returns whether the overlay is locked
+            </description>
+        </method>
+        <method name="set_locked">
+            <argument id="0" name="locked" type="boolean"></argument>
+            <description>
+                The the locking status to [code]locked[/code].
+            </description>
+        </method>
+        <method name="open_voice_settings">
+            <description>
+                Signals the overlay to open the voice settings.
+            </description>
+        </method>
+        <method name="open_activity_invite">
+            <argument id="0" name="type" type="ActivityActionType">
+            </argument>
+            <description>
+                Opens a dialog to send activity invites to user, channels, groups, ...
+            </description>
+        </method>
+        <method name="open_build_invite">
+            <argument id="0" name="invite_code" type="string">
+            </argument>
+            <description>
+                Opens the "Join a guild" dialog with the specified invite code.
+            </description>
+        </method>
+    </methods>
+    <signals>
+        <signal name="profile_picture_callback">
+            <argument index="0" name="user_id" type="int">
+            </argument>
+            <argument index="1" name="image_data" type="PoolByteArray">
+            </argument>
+            <description>
+                Emitted when a profile picture has been fetched. The image data is returned as a byte array in [code]image_data[/code].
+                See the example on how to convert the raw image data into a texture to use it in Godot.
+            </description>
+        </signal>
+    </signals>
+</class>
