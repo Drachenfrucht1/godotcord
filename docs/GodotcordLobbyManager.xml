@@ -50,4 +50,37 @@
             </description>
         </signal>
     </signals>
+    <constants>
+        <constant name="LOCAL" value="0" enum="LobbyDistance">
+            Lobbies in the same region
+        </constant>
+        <constant name="DEFAULT" value="1" enum="LobbyDistance">
+            Lobbies in adjacent regions.
+        </constant>
+        <constant name="Extended" value="2" enum="LobbyDistance">
+            Lobbies in regions far apart, e.g. Europe and the US
+        </constant>
+        <constant name="GLOBAL" value="3" enum="LobbyDistance">
+            Lobbies from all around the world.
+        </constant>
+
+        <constant name="LESS_THAN_OR_EQUAL" value="0" enum="LobbyComparison">
+            <=
+        </constant>
+        <constant name="LESS_THAN" value="1" enum="LobbyComparison">
+            <
+        </constant>
+        <constant name="EQUAL" value="2" enum="LobbyComparison">
+            ==
+        </constant>
+        <constant name="GREATER_THAN" value="3" enum="LobbyComparison">
+            >
+        </constant>
+        <constant name="GREATER_THAN_OR_EQUAL" value="4" enum="LobbyComparison">
+            <=
+        </constant>
+        <constant name="NOT_EQUAL" value="6" enum="LobbyComparison">
+            !=
+        </constant>
+    </constants>
 </class>
