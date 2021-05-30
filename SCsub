@@ -63,7 +63,7 @@ def set_linker_vars():
         env.add_source_files(env.modules_sources, sources)
         env.Append(LIBPATH=['#modules/godotcord/libpath'])
         env.Append(LIBS=['discord_game_sdk'])
-        env.Append(RPATH=["."])
+        env.Append(LINKFLAGS=["-Wl,-rpath,@executable_path"])
 
 
 if env["platform"] != "server":
