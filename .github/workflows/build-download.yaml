@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
     build:
@@ -30,6 +31,7 @@ jobs:
                   PLATFORM: windows
                   EXTENSION: 64.exe
                   AFTER_COMP_CMD: echo "Nothing to do"
+            fail-fast: false
         steps:
         - uses: actions/checkout@v2
           with: 
