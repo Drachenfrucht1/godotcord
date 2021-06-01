@@ -18,19 +18,19 @@ jobs:
                   DOWNLOAD: brew install scons
                   PLATFORM: osx
                   EXTENSION: 64
-                  AFTER_COMP_CMD: install_name_tool -add_rpath @executable_path
+                  SCONS_OPTIONS: arch=x86_64 -j3
                 - os: ubuntu-latest
                   SETUP: ./setup.sh
                   DOWNLOAD: sudo apt update && sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
                   PLATFORM: x11
                   EXTENSION: 64
-                  AFTER_COMP_CMD: echo "Nothing to do"
+                  SCONS_OPTIONS: -j2
                 - os: windows-latest
                   SETUP: .\setup.bat
                   DOWNLOAD: python -m pip install scons
                   PLATFORM: windows
                   EXTENSION: 64.exe
-                  AFTER_COMP_CMD: echo "Nothing to do"
+                  SCONS_OPTIONS: -j2
             fail-fast: false
         steps:
         - uses: actions/checkout@v2
@@ -49,10 +49,7 @@ jobs:
         - run: ${{matrix.DOWNLOAD}}
 
         - name: Compile with target=release_debug
-          run: scons bits=64 target=release_debug -j2
-
-        - name: Modify binary after compilation
-          run: ${{matrix.AFTER_COMP_CMD}} bin/godot.${{matrix.PLATFORM}}.opt.tools.${{matrix.EXTENSION}}
+          run: scons bits=64 target=release_debug ${{matrix.SCONS_OPTIONS}}
 
         - name: Upload binary
           uses: actions/upload-artifact@v2
@@ -61,10 +58,7 @@ jobs:
             path: bin/godot.${{matrix.PLATFORM}}.opt.tools.${{matrix.EXTENSION}}
 
         - name: Compile with target=debug
-          run: scons bits=64 target=debug -j2
-
-        - name: Modify binary after compilation
-          run: ${{matrix.AFTER_COMP_CMD}} bin/godot.${{matrix.PLATFORM}}.tools.${{matrix.EXTENSION}}
+          run: scons bits=64 target=debug ${{matrix.SCONS_OPTIONS}}
 
         - name: Upload binary
           uses: actions/upload-artifact@v2
