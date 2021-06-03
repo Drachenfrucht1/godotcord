@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
     build:
@@ -30,6 +31,7 @@ jobs:
                   PLATFORM: windows
                   EXTENSION: 64.exe
                   SCONS_OPTIONS: -j2
+            fail-fast: false
         steps:
         - uses: actions/checkout@v2
           with: 
