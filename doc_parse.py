@@ -3,6 +3,10 @@ from os import listdir
 from os.path import isfile, join, basename, splitext
 files = [f for f in listdir("docs") if isfile(join("docs", f))]
 
+navigation = "- title: Home\n"
+navigation += "  url: /\n"
+navigation += "- title: Classes\n"
+navigation += "  subfolderitems:\n"
 
 class GDClass:
     def __init__(self, name):
@@ -20,7 +24,7 @@ class GDClass:
         s += "\n"
         s += "### Description\n\n"
         s += self.description.strip()
-        s += "\n"
+        s += "\n\n"
 
         if len(self.members) > 0:
             s += "| | |\n"
@@ -125,10 +129,9 @@ class GDEnum:
         s = "enum **" + self.name + "**\n\n"
         for k in sorted(self.members):
             s += "* **" + self.members[k][0] + "**=**" + k + "** --- " + self.members[k][1].strip() + "\n"
-        s+= "----\n"
+        s+= "\n----\n"
 
         return s
-
 
 class GDProperty:
     def __init__(self, name, t, setter, getter, default, description):
@@ -170,7 +173,6 @@ def get_constants(gdclass, constants):
             enum = GDEnum(child.attrib["enum"])
             enum.add_value(child.attrib["name"], child.attrib["value"], child.text)
             gdclass.enums[child.attrib["enum"]] = enum
-
 
 def get_method(gdclass, method):
     m = GDMethod(method.attrib["name"])
@@ -245,3 +247,10 @@ for f in files:
         elif child.tag == "constants":
             get_constants(gdclass, child)
     print_class(f, gdclass)
+
+    navigation += "    - page: " + gdclass.name + "\n"
+    navigation += "      url: " + gdclass.name + ".html\n"
+
+f = open(join("docs", "navigation.yml"), "w")
+f.write(navigation)
+f.close()
