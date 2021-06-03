@@ -65,19 +65,19 @@
         </constant>
 
         <constant name="LESS_THAN_OR_EQUAL" value="0" enum="LobbyComparison">
-            <=
+            
         </constant>
         <constant name="LESS_THAN" value="1" enum="LobbyComparison">
-            <
+            
         </constant>
         <constant name="EQUAL" value="2" enum="LobbyComparison">
             ==
         </constant>
         <constant name="GREATER_THAN" value="3" enum="LobbyComparison">
-            >
+            
         </constant>
         <constant name="GREATER_THAN_OR_EQUAL" value="4" enum="LobbyComparison">
-            <=
+            
         </constant>
         <constant name="NOT_EQUAL" value="6" enum="LobbyComparison">
             !=

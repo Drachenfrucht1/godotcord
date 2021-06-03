@@ -22,7 +22,8 @@
             </description>
         </method>
         <method name="set_locked">
-            <argument id="0" name="locked" type="boolean"></argument>
+            <argument index="0" name="locked" type="boolean">
+            </argument>
             <description>
                 The the locking status to [code]locked[/code].
             </description>
@@ -33,14 +34,14 @@
             </description>
         </method>
         <method name="open_activity_invite">
-            <argument id="0" name="type" type="ActivityActionType">
+            <argument index="0" name="type" type="ActivityActionType">
             </argument>
             <description>
                 Opens a dialog to send activity invites to user, channels, groups, ...
             </description>
         </method>
         <method name="open_build_invite">
-            <argument id="0" name="invite_code" type="string">
+            <argument index="0" name="invite_code" type="string">
             </argument>
             <description>
                 Opens the "Join a guild" dialog with the specified invite code.
