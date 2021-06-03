@@ -1,26 +1,26 @@
 # GodotcordImageManager
 
-The GodotcordImageManager class is provided as a singleton named `GodotcordImageManager`. I recommend to use this instance and not create a new one.
+A wrapper of the Discord Game SDK Achievement Manager.
+### Description
 
-## GDScript methods/properties
+A wrapper of the Discord Game SDK Activity Manager. This class is used to fetch the profile image of users.
+| | |
+----|----
+void|[get_profile_picture](#get_profile_picture)(user_id : int, size : int)
 
-`get_profile_picture(int user_id, int size, Object object, String funcname)`
+### Signals
 
-- requests the profile picture of the user `user_id` in the size `size`
-- the user_id and the image data are returned to the callback function `funcname`
+* profile_picture_callback(user_id : int, image_data : PoolByteArray)
 
-## Usage
+Emitted when a profile picture has been fetched. The image data is returned as a byte array in `image_data`.
+                See the example on how to convert the raw image data into a texture to use it in Godot.
 
-`GodotcordImageManager.request_profile_picture(user_id, size, object, callback)` only returns image data as bytes via the `profile_image` Signal.
-An example on how to convert the image data into a texture is below.
+----
+### Method Descriptions
 
-```GDScript
-func _profile_image_callback(user_id, img_data):
-    var img = Image.new();
-    img.create_from_data(SIZE, SIZE, false, Image.FORMAT_RGBA8, img_data);
+* <a name="get_profile_picture"></a> void get_profile_picture(user_id : int, size : int)
 
-    var texture = ImageTexture.new();
-    texture.create_from_image(img);
+Fetches the profile picture of user `user_id`.
+                Emitts the signal `profile_picture_callback` with the image data cropped to `size*size` pixels.
 
-    # add texture to sprite
-```
+----

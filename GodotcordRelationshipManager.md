@@ -1,42 +1,25 @@
 # GodotcordRelationshipManager
 
-The GodotcordRelationshipManager class is provided as a singleton named `GodotcordRelationshipManager`. I recommend to use this instance and not create a new one.
+A wrapper of the Discord Game SDK Relationship Manager.
+### Description
 
-## GDScript methods/properties
+A wrapper of the Discord Game SDK Relationship Manager. This class is used to fetch the users relationships.
+| | |
+----|----
+Array|[filter_relationships](#filter_relationships)(object : Object, function_name : string)
+Array|[get_relationships](#get_relationships)()
 
-`Array filter_relationships(Object o, String function_name)`
+### Method Descriptions
 
-- filters the user's relationships using the callback `function_name` of Object `o`
-- the callback should have a GodotcordRelationship as a parameter
-- the callback should return `true` if the relationship should be included in the list and false if not
-- the returned array contains all matching relationships as dictionaries
+* <a name="filter_relationships"></a> Array filter_relationships(object : Object, function_name : string)
 
-`Array get_relationships()`
+Fetches the users relationships and filters them using the provided function of the provided object. 
+                The function has to a GodotcordRelationship as parameter and must return a boolean. The boolean indicates whether the relationship should be included in the list or not.
+                Returns an array containing all filtered relationships.
 
-- should only be called after the relationships have been filtered (see above)
-- returns all filtered relationships as dictionaries
+----
+* <a name="get_relationships"></a> Array get_relationships()
 
-## Usage
+Returns an array containing all relationships using the last filter.
 
-Before accessing the relationships of the user you have to filter them.
-This is done using the `GodotcordRealtionshipManager.filter_realtionships(Object o, String function_name)`.
-
-Object `o` has to have a function called `function_name`. This function will be called for every relationship and will determine if it is filtered or not.
-
-`function_name` will take one parameter of type dictionary and will return a boolean.
-
-The dictionary will have the same fields as the [Relationship struct](https://discord.com/developers/docs/game-sdk/relationships#data-models-relationship-struct) of the Game SDK.
-
-The relationship will be added to the filtered list if `function_name` returns true and not if false is returned.
-
-## Example
-
-```GDScript
-var friends = GodotcordRelationshipManager.filter_relationships(self, "_filter_func");
-
-func _filter_func(relationship):
-    if relationship["type"] == FRIEND:
-        return true;
-    else:
-        return false;
-```
+----

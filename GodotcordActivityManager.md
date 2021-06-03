@@ -1,77 +1,76 @@
 # GodotcordActivityManager
 
-The GodotcordActivityManager class is provided as a singleton named `GodotcordActivityManager`. I recommend to use this instance and not create a new one.
+A wrapper of the Discord Game SDK Activity Manager.
+### Description
 
-## GDScript methods/properties
+A wrapper of the Discord Game SDK Activity Manager. This class is used to manage the rich presence of the user and to receive and send game invites via Discord.
+        It is provided as a singleton named GodotcordActivityManger
+| | |
+----|----
+void|[set_activity](#set_activity)(activity : GodotcordActivity)
+void|[clear_activity](#clear_activity)()
+void|[register_steam](#register_steam)(steam_id : int)
+void|[register_command](#register_command)(command : string)
+void|[send_request_reply](#send_request_reply)(user_id : int, reply : GodotcordActivity.ActivityRequestReply)
+void|[send_invite](#send_invite)(user_id : int, type : GodotcordActivity.ActivityActionType, message : string)
+void|[accept_invite](#accept_invite)(user_id : int)
 
-`set_activity(GodotcordActivity activity)`
+### Signals
 
-- sets the rich presence of the current discord user
+* activity_join_request(name : string, user_id : int)
 
-`clear_activity()`
+Emitted when a join request has been send by the user with the name `name` and user id `user_id`
 
-- clears the users activity
+----
+* activity_invite(type : GodotcordActivity.ActivityActionType, name : string, user_id : int, activity : Dictionary)
 
-`register_command(String command)`
+Emitted when a join/spectate request is received.
 
-- Used to register a command that will allow Discord to launch your game when needed (for example when someone wants to join a person's game)
-- The command can either be a protocol (`my-godot-game://`) or a path to your game's executable.
-- The command also supports launch parameters: `path/to/my/game/godotgame.exe --fullscreen --fixed-fps 60`
-- More info on the [Game SDK docs](https://discord.com/developers/docs/game-sdk/activities#registercommand)
+----
+* acvitiy_join(activity_secret : string)
 
-`register_steam(int steam_id)`
+Emitted when a chat invite has been pressed or a join request has been accepted.
 
-- used to register game that has been distributed using Steam. Check [discord](https://discord.com/developers/docs/game-sdk/activities#registersteam)'s docs for more info.
+----
+* activity_spectate(activity_secret : string)
 
-`send_request_reply(int user_id,egisters a command by which Discord can launch your game. RequestReply request_reply)`
+Emmitted when a spectate request has been accepted.
 
-- used to answer a join request
-- possible values for `request_reply` are `YES`, `NO` and `IGNORE`
+----
+### Method Descriptions
 
-`send_invite(int user_id, ActionType action_type, String message)`
+* <a name="set_activity"></a> void set_activity(activity : GodotcordActivity)
 
-- invites someone to your lobby
-- possible values for `action_type` are `JOIN` and `SPECTATE`
+Set the game activity to the provided activity.
 
-`accept_invite(int user_id)`
+----
+* <a name="clear_activity"></a> void clear_activity()
 
-- accepts a game invite by another user
+Removes the current game activity.
 
-`Signal activity_join(String secret)`
+----
+* <a name="register_steam"></a> void register_steam(steam_id : int)
 
-- called when a user joins a chat party invite or a personal invite is accepted
-- secret is the joinMatchSecret of the other person's activity
+Register the steam id of the game. Used by Discord to launch the game when pressing on an invite.
 
-`Signal activity_spectate(String secret)`
+----
+* <a name="register_command"></a> void register_command(command : string)
 
-- called when a personal spectate invite is accepted
-- secret is the spectateMatchSecret of the other person's activity
+Register a command that launches the game. Used by Discord to launch the game when pressing on an invite.
 
-`Signal activity_invite(ActionType action_type, String user_name, int user_id, Dictionary activity)`
+----
+* <a name="send_request_reply"></a> void send_request_reply(user_id : int, reply : GodotcordActivity.ActivityRequestReply)
 
-- emitted when the local user receives an invite from someone
+Answers the request received by `user_id` with the provided reply.
 
-`Signal activity_join_request(String name, int id)`
+----
+* <a name="send_invite"></a> void send_invite(user_id : int, type : GodotcordActivity.ActivityActionType, message : string)
 
-- called when a user wants to join the local user's lobby.
-- name and id are both from the asking user
+Sends an invite of type `type` to `user_id` with the message `message`
 
-## Usage
+----
+* <a name="accept_invite"></a> void accept_invite(user_id : int)
 
-This class is used to set the Game Activity of the user. This is done with the `set_activity(GodotActivity act)` method.
+Accepts the invite received by `user_id`
 
-```GDScript
-var act = GodotcordActivity.new();
-act.details = "Details";
-act.state = "Testing";
-GodotcordActivityManager.set_activity(act);
-```
-
-This result is the following:  
-![Example picture](https://cdn.discordapp.com/attachments/618818228508164127/722742670157676544/example.png)
-
-GodotcordActivity has many properties depending on their combination show different Activity designs. For more information check out the Rich Presence Visualizer in the Discord Developer Portal and [this](https://discord.com/developers/docs/game-sdk/activities#activity-action-field-requirements-requirements) table in the documentation.
-
-When another player tries to join the local player's lobby via their profile card the Signal `activity_join_request(name, user_id)` is emitted.
-When a player joins a lobby via a chat invite or a personal invite is accepted the Signal `activity_join(String activity_secret)` is emitted.
-A join_request can be answered using the `send_request_reply(id, request_reply)` method.
+----

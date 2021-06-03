@@ -1,59 +1,57 @@
 # GodotcordLobbyManager
 
-The GodotcordLobbyManager class is provided as a singleton named `GodotcordLobbyManager`. I recommend to use this instance and not create a new one.
+A wrapper of the Discord Game SDK Achievement Manager.
+### Description
 
-## GDScript methods/properties
+A wrapper of the Discord Game SDK Activity Manager. This class is used to search lobbies and manipulate their metadata.
+| | |
+----|----
+void|[set_lobby_metadata](#set_lobby_metadata)(lobby_id : int, key : string, value : string)
+string|[get_lobby_metadata](#get_lobby_metadata)(lobby_id : int, key : string)
+void|[search_lobbies](#search_lobbies)(parameters : Variant, limit : int)
 
-`search_lobbies(Array search_parameters, int limit)`
+### Signals
 
-- searches for a lobby that matches the parameters
+* search_lobbies_callback(lobbies : Array)
 
-`set_lobby_metadata(int lobby_id, String key, String value)`
+Emitted after a lobby search has been completed.
 
-- only callable as owner/creator of the lobby
-- set a key-value pair that can be read by the other peers
+----
+### Enumerations
 
-`String get_lobby_metadata(int lobby_id, String key)`
+enum **LobbyDistance**
 
-- returns the value for the given key
-- returns an empty string when an error occurs
+* **LOCAL**=**0** --- Lobbies in the same region
+* **DEFAULT**=**1** --- Lobbies in adjacent regions.
+* **Extended**=**2** --- Lobbies in regions far apart, e.g. Europe and the US
+* **GLOBAL**=**3** --- Lobbies from all around the world.
+----
+enum **LobbyComparison**
 
-## Usage
+* **LESS_THAN_OR_EQUAL**=**0** --- 
+* **LESS_THAN**=**1** --- 
+* **EQUAL**=**2** --- ==
+* **GREATER_THAN**=**3** --- 
+* **GREATER_THAN_OR_EQUAL**=**4** --- 
+* **NOT_EQUAL**=**6** --- !=
+----
+### Method Descriptions
 
-You have to setup a parameter array before searching for a lobby.
-The array is made up of up dictionaries with up to 4 fields.
+* <a name="set_lobby_metadata"></a> void set_lobby_metadata(lobby_id : int, key : string, value : string)
 
-The 4 fields are:
+Sets the key/value pair as metadata of the lobby `lobby_id`. 
+                The local user has be the owner of the lobby. Otherwise nothing will happen.
+                Overwrites the value if the key already exists(?).
 
-- property: The property that should be compared. One of `owner_id`,  `capacity`, `slots`, or `metadata.custom_data`
-- comparison: The way the property is compares. One of `LESS_THAN_OR_EQUAL`, `LESS_THAN`, `EQUAL`, `GREATER_THAN`, `GREATER_THAN_OR_EQUAL`, or `NOT_EQUAL`.
-- cast: All values can only be passed using strings. This determines if the values should be casted to any other type. One of `STRING` or `INT`
-- value: The value to filter against. Has to be a **string**.
+----
+* <a name="get_lobby_metadata"></a> string get_lobby_metadata(lobby_id : int, key : string)
 
-A special filter is the property `distance`. It only requires a proeprty and value field. Value can be one of `LOCAL`, `DEFAULT`, `EXTENDED`, or `GLOBAL`.
+Returns the value associated with the key.
 
-To learn more about searching lobbies head over to the [Discord docs](https://discord.com/developers/docs/game-sdk/lobbies#lobbysearchqueryfilter) on this topic.
+----
+* <a name="search_lobbies"></a> void search_lobbies(parameters : Variant, limit : int)
 
-## Example
+Searches all lobbies for ones that match the provided parameters.
+                Returns at most `limit` lobbies via the Signal `search_lobbies_callback`.
 
----------
-A lobby search could look like this.
-
-```gdscript
-func search_lobby():
-    #filter by custom metadata elo
-    var elo = {};
-    elo["property"] = "metadata.elo";
-    elo["comparison"] = Godotcord.GREATER_THAN_OR_EQUAL;
-    elo["cast"] = Godotcord.INT;
-    elo["value"] = "10"; #has to be string
-
-    #filter by location
-    var distance = {};
-    distance["property"] = "distance";
-    distance["value"] = Godotcord.GLOBAL;
-
-    var params = [elo, distance];
-
-   Godotcord.search_lobbies(params, 10, self, "_callback_func");
-```
+----

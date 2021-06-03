@@ -1,0 +1,28 @@
+- title Home
+  url: /
+- title: Classes
+  subfolderitems:
+    - page: GodotcordImageManager
+      url: GodotcordImageManager.html
+    - page: GodotcordLobby
+      url: GodotcordLobby.html
+    - page: GodotcordAchievementManager
+      url: GodotcordAchievementManager.html
+    - page: GodotcordLobby
+      url: GodotcordLobby.html
+    - page: GodotcordRelationshipManager
+      url: GodotcordRelationshipManager.html
+    - page: GodotcordPresence
+      url: GodotcordPresence.html
+    - page: NetworkedMultiplayerGodotcord
+      url: NetworkedMultiplayerGodotcord.html
+    - page: GodotcordOverlayManager
+      url: GodotcordOverlayManager.html
+    - page: GodotcordLobbyManager
+      url: GodotcordLobbyManager.html
+    - page: GodotcordActivityManager
+      url: GodotcordActivityManager.html
+    - page: GodotcordRelationship
+      url: GodotcordRelationship.html
+    - page: GodotcordActivity
+      url: GodotcordActivity.html

@@ -1,92 +1,137 @@
 # NetworkedMultiplayerGodotcord
 
-## GDScript methods/properties
+A multiplayer peer that uses the Discord Network
+### Description
 
-`create_lobby(int size, bool public = false)`
+A multiplayer peer that uses the Discord Network.
+        There are multiple id's connected with multiplayer. The first on is the peer id.
+        It is used to identify a user in a lobby. It can however not be used to retrieve other data of a user (e.g. profile picture).
+        The peer id will be set as the sender if of rcp calls.
+        The other one is the user id. It can be used to retrieve additional information about a user.
+        You can convert from one to the other using `get_user_id_by_peer` and `get_peer_id_by_user`
+| | |
+----|----
+void|[create_lobby](#create_lobby)(max_users : int, public : boolean = false)
+void|[join_lobby](#join_lobby)(lobby_id : int, secret : string)
+void|[join_lobby_activity](#join_lobby_activity)(activity_secret : string)
+void|[close_connection](#close_connection)()
+void|[disconnect_peer](#disconnect_peer)(id : int)
+int|[get_lobby_id](#get_lobby_id)()
+string|[get_lobby_secret](#get_lobby_secret)()
+string|[get_lobby_activity_secret](#get_lobby_activity_secret)()
+int|[get_current_members](#get_current_members)()
+int|[get_max_members](#get_max_members)()
+void|[set_public](#set_public)(public : boolean)
+void|[set_size](#set_size)(size : int)
+void|[set_metadata](#set_metadata)(key : string, value : string)
+string|[get_metadata](#get_metadata)(key : string)
+Array|[get_connected_peers](#get_connected_peers)()
+void|[get_user_id_by_peer](#get_user_id_by_peer)(peer_id : int)
+void|[get_peer_id_by_user](#get_peer_id_by_user)(user_id : int)
 
-- create a discord lobby and joins it
+### Signals
 
-`join_lobby(int id, String secret)`
+* created_lobby()
 
-- join the given lobby with the given secret
+Emitted when a new lobby has been creates successfully.
 
-`join_lobby_secret(String activitySecret)`
+----
+### Method Descriptions
 
-- joins the lobby with the given activity secret
+* <a name="create_lobby"></a> void create_lobby(max_users : int, public : boolean = false)
 
-`int get_lobby_id()`
+Creates a new lobby with `max_users` slots.
+                The creator will automatically set as the owner and joins the lobby himself.
 
-- returns the lobby id of the lobby the player is currently in
+                ...public
 
-`String get_lobby_secret()`
+----
+* <a name="join_lobby"></a> void join_lobby(lobby_id : int, secret : string)
 
-- returns the lobby secret of the lobby the player is currently in
+Joins the lobby with the id `lobby_id` using the id and secret.
 
-`String get_lobby_activity_secret()`
+----
+* <a name="join_lobby_activity"></a> void join_lobby_activity(activity_secret : string)
 
-- returns the activity secret of the lobby the player is currently in
-- used for chat invites and ask to join
-  
-`int get_current_members()`
+Joins the lobby encoded in `activity_secret`
 
-- returns the numbers of members currently in the lobby
+----
+* <a name="close_connection"></a> void close_connection()
 
-`int get_max_members()`
+Disconnect from the current lobby.
+                Should only be called when the user is currently in a lobby.
 
-- returns the maximum amount of players of the lobby
+----
+* <a name="disconnect_peer"></a> void disconnect_peer(id : int)
 
-`int get_user_id_by_peer(int peer_id)`
+Removes the user with the id `id` from the lobby.
+                Will only be executed when the local user is the owner of the lobby.
 
-- returns the peer id for the given discord user id
+----
+* <a name="get_lobby_id"></a> int get_lobby_id()
 
-`int get_peer_id_user(int user_id)`
+Returns the lobby id of the current lobby.
+                Prints an error if the instance is not connected to a lobby.
 
-- returns the discord user id for the given peer id
+----
+* <a name="get_lobby_secret"></a> string get_lobby_secret()
 
-`Signal created_server()`
+Returns the lobby secret of the current lobby.
+                Prints an error if the instance is not connected to a lobby.
 
-- called when a lobby is created after `network_peer_connected` has been called for **every player (including the local one)**
+----
+* <a name="get_lobby_activity_secret"></a> string get_lobby_activity_secret()
 
-The server_connected signal is, too, fired after `network_peer_connected` has been called for **every player (including the local one)**
+Returns the activity secret of the current lobby.
+                Prints an error if the instance is not connected to a lobby.
 
-`Array get_connected_peers()`
+----
+* <a name="get_current_members"></a> int get_current_members()
 
-- returns an array of currently connected peers (The current members of the lobby). Each value in the Array is a Dictionary representation of the GodotcordPeer struct:
-- Each dictionary follows the following layout:
+Returns the number of currently connected users.
+                Prints an error if the instance is not connected to a lobby.
 
-```
-{
-"discord_id": int (The peer's Discord user ID),
-"discord_peer_id": int,
-"target_id: int (Godot's peer ID),
-"confirmed": bool
-}
-```
+----
+* <a name="get_max_members"></a> int get_max_members()
 
-## Usage
+Returns the capacity of the lobby.
+                Prints an error if the instance is not connected to a lobby.
 
-First you have to create a lobby. This is done by creating a new NetworkedMultiplayerGodotcord and calling `create_server(max_players, public)`. You set a NetworkedMultiplayerGodotcord as the network peer of your root node the same way your would with an enet peer.
+----
+* <a name="set_public"></a> void set_public(public : boolean)
 
-```GDScript
-var peer = NetworkedMultiplayerGodotcord.new()
-peer.create_server(10, true);
-get_tree().network_peer = peer;
-```
 
-Other player can connect either via the ActivitySecret that can be transmitted via the Game Activity, or using the lobby id and lobby secret
 
-```GDScript
-var peer = NetworkedMultiplayerGodotcord.new()
-peer.join_lobby_secret(lobby_id, lobby_secret);
-get_tree().network_peer = peer;
+----
+* <a name="set_size"></a> void set_size(size : int)
 
-#Alternative
 
-var peer = NetworkedMultiplayerGodotcord.new()
-peer.join_lobby(activity_secret);
-get_tree().network_peer = peer;
-```
 
-You can now use the godot networking features (rpc, rset, master, pupper, ...) as usual.
+----
+* <a name="set_metadata"></a> void set_metadata(key : string, value : string)
 
-I had to assign each user a second id (let's call is peer id) **that is not equal to their Discord user id**. The id that is used for network comminucation (e.g. `get_tree().get_rpc_sender_id()`, id for `rpc_id`, ...) is the peer id. You can however use the `get_user_id_by_peer` function to convert to a discord id for use with other Godotcord functions. Conversion the other way around is also possible using `get_peer_id_by_user`.
+Can only be run as the lobby owner.
+                Sets the key/value pair as metadata of the current lobby . 
+                Overwrites the value if the key already exists(?).
+
+----
+* <a name="get_metadata"></a> string get_metadata(key : string)
+
+Returns the value associated with the key.
+
+----
+* <a name="get_connected_peers"></a> Array get_connected_peers()
+
+Returns an array with all connected users
+
+----
+* <a name="get_user_id_by_peer"></a> void get_user_id_by_peer(peer_id : int)
+
+Returns the user id associated with `peer_id`.
+
+----
+* <a name="get_peer_id_by_user"></a> void get_peer_id_by_user(user_id : int)
+
+Returns the peer id associated with `user_id`.
+
+----
