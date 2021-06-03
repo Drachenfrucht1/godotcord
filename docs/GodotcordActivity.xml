@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordActivity" inherits="Reference" version="0.1">
+    <brief_description>
+        Data class for the discord game activity
+    </brief_description>
+    <description>
+        Data class for the discord game activity. 
+    </description>
+    <members>
+        <member name="state" type="string" setter="set_state" getter="get_state" override="true" default="" />
+        <member name="details" type="string" setter="set_details" getter="get_details" override="true" default="" />
+        <member name="large_image" type="string" setter="set_large_image" getter="get_large_image" override="true" default="" />
+        <member name="large_text" type="string" setter="set_large_text" getter="get_large_text" override="true" default="" />
+        <member name="small_image" type="string" setter="set_small_image" getter="get_small_image" override="true" default="" />
+        <member name="small_text" type="string" setter="set_small_text" getter="get_small_text" override="true" default="" />
+        
+        <member name="party_id" type="string" setter="set_party_id" getter="get_party_id" override="true" default="" />
+        <member name="party_max" type="int" setter="set_party_max" getter="get_party_max" override="true" default="-1" />
+        <member name="party_current" type="int" setter="set_party_current" getter="get_party_current" override="true" default="-1" />
+
+        <member name="match_secret" type="string" setter="set_match_secret" getter="get_match_secret" override="true" default="" />
+        <member name="join_secret" type="string" setter="set_join_secret" getter="get_join_secret" override="true" default="" />
+        <member name="spectate_secret" type="string" setter="set_spectate_secret" getter="get_spectate_secret" override="true" default="" />
+
+        <member name="start" type="int" setter="set_start" getter="get_start" override="true" default="0" />
+        <member name="end" type="int" setter="set_end" getter="get_end" override="true" default="0" />
+
+        <member name="application_id" type="int" setter="set_application_id" getter="get_application_id" override="true" default="0" />
+    </members>
+    <constants>
+        <constant name="NO" value="0" enum="ActivityRequestReply">
+            Reject the request
+        </constant>
+        <constant name="YES" value="1" enum="ActivityRequestReply">
+            Accept the request
+        </constant>
+        <constant name="IGNORE" value="2" enum="ActivityRequestReply">
+            Ignore the request
+        </constant>
+
+        <constant name="JOIN" value="1" enum="ActivityActionType">
+            Marks a join request
+        </constant>
+        <constant name="SPECTATE" value="2" enum="ActivityActionType">
+            Marks a spectate request
+        </constant>
+    </constants>
+</class>

@@ -1,0 +1,34 @@
+name: Update gh pages
+on:
+  push:
+    branches:
+    - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/checkout@v2
+      with:
+        path: gh-pages
+        ref: gh-pages
+    - name: Parse docs
+      run: python3 doc_parse.py
+
+    - name: Move docs
+      run: mv docs/*.md gh-pages/
+
+    - name: Move navigation
+      run: mv docs/navigation.yml gh-pages/_data
+
+    - name: Set git identity
+      run: git config --global user.name "Doc update action" && git config --global user.email "admin@drachenfrucht1.de"
+ 
+    - name: Create commit
+      run: git add . && git commit -m "Update docs"
+      working-directory: gh-pages
+    
+    - name: Push
+      run: git push origin
+      working-directory: gh-pages

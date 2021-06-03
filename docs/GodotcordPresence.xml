@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordPresence" inherits="Reference" version="0.1">
+    <brief_description>
+        Data class for a discord presence
+    </brief_description>
+    <description>
+        Data class for a discord presence
+    </description>
+    <methods>
+        <method name="get_status">
+            <returns type="PresenceStatus"></returns>
+        </method>
+        <method name="set_status">
+            <argument index="0" name="property" type="PresenceStatus"></argument>
+        </method>
+        <method name="get_activity">
+            <returns type="GodotcordActivity"></returns>
+        </method>
+        <method name="set_activity">
+            <argument index="0" name="property" type="GodotcordActivity"></argument>
+        </method>
+    </methods>
+    <members>
+        <member name="status" type="PresenceStatus" setter="set_status" getter="get_status" override="false" default=""></member>
+        <member name="activity" type="GodotcordActivity" setter="set_activity" getter="get_activity" override="false" default="0"></member>
+    </members>
+    <constants>
+        <constant name="OFFLINE" value="0" enum="PresenceStatus">
+            The user is currently offline
+        </constant>
+        <constant name="ONLINE" value="1" enum="PresenceStatus">
+            The user is currently online
+        </constant>
+        <constant name="IDLE" value="2" enum="PresenceStatus">
+            The user is currently idling
+        </constant>
+        <constant name="DO_NOT_DISTURB" value="3" enum="PresenceStatus">
+            The users status is do not disturb
+        </constant>
+    </constants>
+</class>

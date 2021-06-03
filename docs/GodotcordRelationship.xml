@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordRelationship" inherits="Reference" version="0.1">
+    <brief_description>
+        Data class for a discord relationship
+    </brief_description>
+    <description>
+        Data class for a discord relationship
+    </description>
+    <methods>
+        <method name="get_type">
+            <returns type="RelationshipStatus"></returns>
+        </method>
+        <method name="set_type">
+            <argument index="0" name="property" type="RelationshipStatus"></argument>
+        </method>
+        <method name="get_user_id">
+            <returns type="int"></returns>
+        </method>
+        <method name="set_user_id">
+            <argument index="0" name="property" type="int"></argument>
+        </method>
+        <method name="get_presence">
+            <returns type="GodotcordPresence"></returns>
+        </method>
+        <method name="set_presence">
+            <argument index="0" name="property" type="GodotcordPresence"></argument>
+        </method>
+    </methods>
+    <members>
+        <member name="type" type="RelationshipType" setter="set_type" getter="get_type" override="false" default=""></member>
+        <member name="user_id" type="int" setter="set_user_id" getter="get_user_id" override="false" default="0"></member>
+        <member name="presence" type="GodotcordPresence" setter="set_presence" getter="get_presence" override="false" default="0"></member>
+    </members>
+    <constants>
+        <constant name="NONE" value="0" enum="RelationshipType">
+            The user has no intrinsic relationship
+        </constant>
+        <constant name="FRIEND" value="1" enum="RelationshipType">
+            The user is a friend
+        </constant>
+        <constant name="BLOCKED" value="2" enum="RelationshipType">
+            The user is blocked
+        </constant>
+        <constant name="PENDING_INCOMING" value="3" enum="RelationshipType">
+            The current user has a pending incoming friend request from the user
+        </constant>
+        <constant name="PENDING_OUTGOING" value="4" enum="RelationshipType">
+            The current user has a pending outgoing friend request to the user
+        </constant>
+        <constant name="IMPLICIT" value="5" enum="RelationshipType">
+            The user is no friend but they interact often
+        </constant>
+    </constants>
+</class>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordRelationshipManager" inherits="Object" version="0.1">
+    <brief_description>
+        A wrapper of the Discord Game SDK Relationship Manager.
+    </brief_description>
+    <description>
+        A wrapper of the Discord Game SDK Relationship Manager. This class is used to fetch the users relationships.
+    </description>
+    <methods>
+        <method name="filter_relationships">
+            <argument index="0" name="object" type="Object">
+            </argument>
+            <argument index="1" name="function_name" type="string">
+            </argument>
+            <returns type="Array"></returns>
+            <description>
+                Fetches the users relationships and filters them using the provided function of the provided object. 
+                The function has to a GodotcordRelationship as parameter and must return a boolean. The boolean indicates whether the relationship should be included in the list or not.
+                Returns an array containing all filtered relationships.
+            </description>
+        </method>
+        <method name="get_relationships">
+            <returns type="Array"></returns>
+            <description>
+                Returns an array containing all relationships using the last filter.
+            </description>
+        </method>
+    </methods>
+</class>

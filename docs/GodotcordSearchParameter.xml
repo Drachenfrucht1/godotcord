@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordLobby" inherits="Reference" version="0.1">
+    <brief_description>
+        Data class for a discord lobby
+    </brief_description>
+    <description>
+        Data class for a discord lobby
+    </description>
+    <methods>
+        <method name="get_property">
+            <returns type="string"></returns>
+        </method>
+        <method name="set_property">
+            <argument index="0" name="property" type="string"></argument>
+        </method>
+        <method name="get_comparison">
+            <returns type="LobbyComparison"></returns>
+        </method>
+        <method name="set_comparison">
+            <argument index="0" name="property" type="LobbyComparison"></argument>
+        </method>
+        <method name="get_cast">
+            <returns type="LobbyCast"></returns>
+        </method>
+        <method name="set_cast">
+            <argument index="0" name="property" type="LobbyCast"></argument>
+        </method>
+        <method name="get_value">
+            <returns type="string"></returns>
+        </method>
+        <method name="set_value">
+            <argument index="0" name="property" type="string"></argument>
+        </method>
+    </methods>
+    <members>
+        <member name="property" type="string" setter="set_property" getter="get_property" override="false" default=""></member>
+        <member name="comparison" type="LobbyComparison" setter="set_comparison" getter="get_comparison" override="false" default="0"></member>
+        <member name="cast" type="LobbyCast" setter="set_cast" getter="get_cast" override="false" default="0"></member>
+        <member name="value" type="int" setter="set_value" getter="get_value" override="false" default="0"></member>
+    </members>
+</class>
