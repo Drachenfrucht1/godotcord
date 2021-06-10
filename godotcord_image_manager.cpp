@@ -71,6 +71,7 @@ void GodotcordImageManager::get_profile_picture(int64_t p_user_id, int p_size, b
 					  }
 					  Ref<ImageTexture> imageTexture;
 					  imageTexture->create_from_image(profile_pic);
+                                          read.release();
 
 					  this->emit_signal("profile_picture_callback", p_user_id, imageTexture);
 					});
