@@ -18,6 +18,20 @@ public:
 		(this->discord_id == p2.discord_id && this->discord_peer_id == p2.discord_peer_id && this->target_id == p2.target_id) ? r = true : r = false;
 		return r;
 	}
+
+protected:
+	static void _bind_methods() {
+		ADD_GODOTCORD_PROPERTY(GodotcordPeer, discord_id, Variant::INT)
+		ADD_GODOTCORD_PROPERTY(GodotcordPeer, discord_peer_id, Variant::INT)
+		ADD_GODOTCORD_PROPERTY(GodotcordPeer, target_id, Variant::INT)
+		ADD_GODOTCORD_PROPERTY(GodotcordPeer, confirmed, Variant::BOOL)
+
+	}
+public:
+	GET_SET_COMBO(discord_id, int64_t)
+	GET_SET_COMBO(discord_peer_id, uint64_t)
+	GET_SET_COMBO(target_id, int)
+	GET_SET_COMBO(confirmed, bool)
 };
 
 class NetworkedMultiplayerGodotcord : public NetworkedMultiplayerPeer {
