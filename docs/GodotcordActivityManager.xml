@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordActivityManager" inherits="Object" version="0.1">
+    <brief_description>
+        A wrapper of the Discord Game SDK Activity Manager.
+    </brief_description>
+    <description>
+        A wrapper of the Discord Game SDK Activity Manager. This class is used to manage the rich presence of the user and to receive and send game invites via Discord.
+        It is provided as a singleton named GodotcordActivityManger
+    </description>
+    <methods>
+        <method name="set_activity">
+            <argument index="0" name="activity" type="GodotcordActivity">
+            </argument>
+            <description>
+                Set the game activity to the provided activity.
+            </description>
+        </method>
+        <method name="clear_activity">
+            <description>
+                Removes the current game activity.
+            </description>
+        </method>
+        <method name="register_steam">
+            <argument index="0" name="steam_id" type="int">
+            </argument> 
+            <description>
+                Register the steam id of the game. Used by Discord to launch the game when pressing on an invite.
+            </description>
+        </method>
+        <method name="register_command">
+            <argument index="0" name="command" type="string">
+            </argument>
+            <description>
+                Register a command that launches the game. Used by Discord to launch the game when pressing on an invite.
+            </description>
+        </method>
+        <method name="send_request_reply">
+            <argument index="0"  name="user_id" type="int">
+            </argument>
+            <argument index="1" name="reply" type="int" enum="GodotcordActivity.ActivityRequestReply"></argument>
+            <description>
+                Answers the request received by [code]user_id[/code] with the provided reply.
+            </description>
+        </method>
+        <method name="send_invite">
+            <argument index="0" name="user_id" type="int">
+            </argument>
+            <argument index="1" name="type" type="int" enum="GodotcordActivity.ActivityActionType">
+            </argument>
+            <argument index="2" name="message" type="string">
+            </argument>
+            <description>
+                Sends an invite of type [code]type[/code] to [code]user_id[/code] with the message [code]message[/code]
+            </description>
+        </method>
+        <method name="accept_invite">
+            <argument index="0" name="user_id" type="int" >
+            </argument>
+            <description>
+                Accepts the invite received by [code]user_id[/code]
+            </description>
+        </method>
+    </methods>
+    <signals>
+        <signal name="activity_join_request">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <argument index="1" name="user_id" type="int">
+            </argument>
+            <description>
+                Emitted when a join request has been send by the user with the name [code]name[/code] and user id [code]user_id[/code]
+            </description>
+        </signal>
+        <signal name="activity_invite">
+            <argument index="0" name="type" type="int" enum="GodotcordActivity.ActivityActionType">
+            </argument>
+            <argument index="1" name="name" type="string">
+            </argument>
+            <argument index="2" name="user_id" type="int">
+            </argument>
+            <argument index="3" name="activity" type="Dictionary">
+            </argument>
+            <description>
+                Emitted when a join/spectate request is received.
+            </description>
+        </signal>
+        <signal name="acvitiy_join">
+            <argument index="0" name="activity_secret" type="string">
+            </argument>
+            <description>
+                Emitted when a chat invite has been pressed or a join request has been accepted.
+            </description>
+        </signal>
+        <signal name="activity_spectate">
+            <argument index="0" name="activity_secret" type="string">
+            </argument>
+            <description>
+                Emmitted when a spectate request has been accepted.
+            </description>
+        </signal>
+    </signals>
+    <constants>
+
+    </constants>
+</class>

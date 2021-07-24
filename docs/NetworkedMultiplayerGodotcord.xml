@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="NetworkedMultiplayerGodotcord" inherits="NetworkedMultiplayerPeer" version="0.1">
+    <brief_description>
+        A multiplayer peer that uses the Discord Network
+    </brief_description>
+    <description>
+        A multiplayer peer that uses the Discord Network.
+        There are multiple id's connected with multiplayer. The first on is the peer id.
+        It is used to identify a user in a lobby. It can however not be used to retrieve other data of a user (e.g. profile picture).
+        The peer id will be set as the sender if of rcp calls.
+        The other one is the user id. It can be used to retrieve additional information about a user.
+        You can convert from one to the other using [code]get_user_id_by_peer[/code] and [code]get_peer_id_by_user[/code]
+    </description>
+    <methods>
+        <method name="create_lobby">
+            <argument index="0" name="max_users" type="int">
+            </argument>
+            <argument index="1" name="public" type="boolean" default="false">
+            </argument>
+            <description>
+                Creates a new lobby with [code]max_users[/code] slots.
+                The creator will automatically set as the owner and joins the lobby himself.
+
+                ...public
+            </description>
+        </method>
+        <method name="join_lobby">
+            <argument index="0" name="lobby_id" type="int">
+            </argument> 
+            <argument index="1" name="secret" type="string">
+            </argument>
+            <description>
+                Joins the lobby with the id [code]lobby_id[/code] using the id and secret.
+            </description>
+        </method>
+        <method name="join_lobby_activity">
+            <argument index="0" name="activity_secret" type="string">
+            </argument>
+            <description>
+                Joins the lobby encoded in [code]activity_secret[/code]
+            </description>
+        </method>
+        <method name="close_connection">
+            <description>
+                Disconnect from the current lobby.
+                Should only be called when the user is currently in a lobby.
+            </description>
+        </method>
+        <method name="disconnect_peer">
+            <argument index="0" name="id" type="int">
+            </argument>
+            <description>
+                Removes the user with the id [code]id[/code] from the lobby.
+                Will only be executed when the local user is the owner of the lobby.
+            </description>
+        </method>
+        <method name="get_lobby_id">
+            <returns type="int">
+            </returns>
+            <description>
+                Returns the lobby id of the current lobby.
+                Prints an error if the instance is not connected to a lobby.
+            </description>
+        </method>
+        <method name="get_lobby_secret">
+            <returns type="string">
+            </returns>
+            <description>
+                Returns the lobby secret of the current lobby.
+                Prints an error if the instance is not connected to a lobby.
+            </description>
+        </method>
+        <method name="get_lobby_activity_secret">
+            <returns type="string">
+            </returns>
+            <description>
+                Returns the activity secret of the current lobby.
+                Prints an error if the instance is not connected to a lobby. 
+            </description>
+        </method>
+        <method name="get_current_members" >
+            <returns type="int">
+            </returns>
+            <description>
+                Returns the number of currently connected users.
+                Prints an error if the instance is not connected to a lobby.
+            </description>
+        </method>
+        <method name="get_max_members">
+            <returns type="int">
+            </returns>
+            <description>
+                Returns the capacity of the lobby.
+                Prints an error if the instance is not connected to a lobby.
+            </description>
+        </method>
+        <method name="set_public">
+            <argument index="0" name="public" type="boolean">
+            </argument>
+        </method>
+        <method name="set_size">
+            <argument index="0" name="size" type="int">
+            </argument>
+        </method>
+        <method name="set_metadata">
+            <argument index="0" name="key" type="string">
+            </argument>
+            <argument index="1" name="value" type="string">
+            </argument>
+            <description>
+                Can only be run as the lobby owner.
+                Sets the key/value pair as metadata of the current lobby . 
+                Overwrites the value if the key already exists(?).
+            </description>
+        </method>
+        <method name="get_metadata">
+            <argument index="0" name="key" type="string">
+            </argument>
+            <returns type="string">
+            </returns>
+            <description>
+                Returns the value associated with the key.
+            </description>
+        </method>
+        <method name="get_connected_peers">
+            <returns type="Array">
+            </returns>
+            <description>
+                Returns an array with all connected users
+            </description>
+        </method>
+        <method name="get_user_id_by_peer">
+            <argument index="0" name="peer_id" type="int">
+            </argument> 
+            <description>
+                Returns the user id associated with [code]peer_id[/code].
+            </description>
+        </method>
+        <method name="get_peer_id_by_user">
+            <argument index="0" name="user_id" type="int">
+            </argument> 
+            <description>
+                Returns the peer id associated with [code]user_id[/code].
+            </description>
+        </method>
+    </methods>
+    <signals>
+        <signal name="created_lobby">
+            <description>
+                Emitted when a new lobby has been creates successfully.
+            </description>
+       </signal>
+    </signals>
+</class>

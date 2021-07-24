@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordStorageManager" inherits="Object" version="0.1">
+    <brief_description>
+        A wrapper of the Discord Game SDK Storage Manager.
+    </brief_description>
+    <description>
+        A wrapper of the Discord Game SDK Storage Manager. This class is used to manage save games in the cloud.
+    </description>
+    <methods>
+        <method name="get_path">
+            <returns type="string"></returns>
+        </method>
+        <method name="read">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <returns type="Array"></returns>
+            <description>
+                Returns the content of file [code]name[/code]
+            </description>
+        </method>
+        <method name="read_async">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <returns type="Array"></returns>
+            <description>
+                Reads the content of [code]name[/code] asnychronously.
+                Returns the content using the [code]async_data_read[/code] signal.
+            </description>
+        </method>
+        <method name="read_async_partial">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <argument index="1" name="offset" type="int">
+            </argument>
+            <argument index="2" name="length" type="int">
+            </argument>
+            <returns type="Array"></returns>
+            <description>
+                Reads [code]length[/code] bytes beginning from the [code]offset[/code]th byte from the file [code]name[/code] asnychronously.
+                Returns the content using the [code]async_data_read[/code] signal.
+            </description>
+        </method>
+        <method name="write">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <argument index="0" name="data" type="Array">
+            </argument>
+        </method>
+        <method name="write_async">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <argument index="0" name="data" type="Array">
+            </argument>
+            <description>
+                Emits the signal [code]async_data_written[/code] after the completion.
+            </description>
+        </method>
+        <method name="destroy">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <description>
+                Destroys the file [code]name[/code].
+            </description>
+        </method>
+        <method name="exists">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <returns type="bool"></returns>
+            <description>
+                Returns whether the file [code]name[/code] exists.
+            </description>
+        </method>
+        <method name="stat">
+            <argument index="0" name="name" type="string">
+            </argument>
+            <returns type="GodotcordFileStat"></returns>
+            <description>
+                Returns the GodotcordFileStat for the file [code]name[/code].
+            </description>
+        </method>
+        <method name="count">
+            <returns type="int"></returns>
+        </method>
+        <method name="stat_at">
+            <argument index="0" name="index" type="int">
+            </argument>
+            <returns type="GodotcordFileStat"></returns>
+        </method>
+    </methods>
+</class>
