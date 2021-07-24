@@ -103,6 +103,7 @@ public:
 	Error join_lobby_activity(String activitySecret);
 
 	void close_connection();
+	void delete_lobby();
 
 	void disconnect_peer(int p_peer);
 
