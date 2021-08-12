@@ -27,7 +27,7 @@ jobs:
                   SCONS_OPTIONS: -j2
                 - os: windows-latest
                   SETUP: .\setup.bat
-                  DOWNLOAD: python -m pip install scons
+                  DOWNLOAD: python -m pip install scons==3.1.2
                   PLATFORM: windows
                   EXTENSION: 64.exe
                   SCONS_OPTIONS: -j2
@@ -36,7 +36,7 @@ jobs:
         - uses: actions/checkout@v2
           with: 
             repository: 'godotengine/godot'
-            ref: '3.2.3-stable'
+            ref: '3.3.2-stable'
             
         - uses: actions/checkout@v2
           with:
