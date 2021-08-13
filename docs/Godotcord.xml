@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="Godotcord" inherits="Object" version="0.1">
+    <brief_description>
+       
+    </brief_description>
+    <description>
+        
+    </description>
+    <methods>
+        <method name="init">
+            <argument index="0" name="client_id" type="int">
+            </argument>
+            <argument index="1" name="createFlags" type="CreateFlags">
+            </argument>
+            <description>
+                
+            </description>
+        </method>
+        <method name="init_debug">
+            <argument index="0" name="client_id" type="int">
+            </argument>
+            <argument index="1" name="id" type="string">
+            </argument>
+            <argument index="2" name="createFlags" type="CreateFlags">
+            </argument>
+            <description>
+                
+            </description>
+        </method>
+        <method name="run_callbacks">
+            <description>
+                Runs all the callbacks from the Discord Game SDK.
+                This should be run every frame.
+            </description>
+        </method>
+        <method name="is_init">
+            <returns type="bool">
+            </returns>
+            <description>
+                Returns whether Godotcord is initialized.
+            </description>
+        </method>
+    </methods>
+    <constants>
+        <constant name="CreateFlags_DEFAULT" value="0" enum="CreateFlags">
+
+        </constant>
+        <constant name="CreateFlags_NO_REQUIRE_DISCORD" value="1" enum="CreateFlags">
+
+        </constant>
+    </constants>
+</class>

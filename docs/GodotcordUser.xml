@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordUser" inherits="Reference" version="0.1">
+    <brief_description>
+        Data class for a discord user.
+    </brief_description>
+    <description>
+        Data class for a discord user.
+    </description>
+    <members>
+        <member name="id" type="int" setter="set_id" getter="get_id" override="true" default="0" />
+        <member name="name" type="string" setter="set_name" getter="get_name" override="true" default="" />
+        <member name="discriminator" type="string" setter="set_discriminator" getter="get_discriminator" override="true" default="" />
+        <member name="avatar" type="string" setter="set_avatar" getter="get_avatar" override="true" default="" />
+        <member name="bot" type="bool" setter="set_bot" getter="get_bot" override="true" default="false" />
+    </members>
+</class>

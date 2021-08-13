@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GodotcordUserManager" inherits="Object" version="0.1">
+    <brief_description>
+        A wrapper of the Discord Game SDK User Manager.
+    </brief_description>
+    <description>
+        A wrapper of the Discord Game SDK User Manager.
+    </description>
+    <methods>
+        <method name="get_user">
+            <argument index="1" type="int" name="user_id">
+            </argument>
+            <description>
+                Request the user object of [code]user_id[/code].
+                The user object is returned via the [code]get_user_callback[/code] signal.
+            </description>
+        </method>
+        <method name="get_current_user">
+            <returns type="GodotcordUser"></returns>
+            <description>
+                Returns the user objects of the local user.
+            </description>
+        </method>
+        <method name="get_current_user_premium_type">
+            <returns type="PremiumType">
+            </returns>
+            <description>
+                Returns the premium type of the local user.
+            </description>
+        </method>
+        <method name="has_current_user_flag">
+            <argument index="1" name="flag" type="UserFlag">
+            </argument>
+            <returns type="bool"></returns>
+            <description>
+                Returns whether the local user has [code]flag[/code].
+            </description>
+        </method>
+    </methods>
+    <constants>
+        <constant name="PARTNER" value="2" enum="UserFlag">
+            The user is a discord partner.
+        </constant>
+        <constant name="HYPE_SQUAD_EVENTS" value="4" enum="UserFlag">
+            The user is a hypesquad events participant
+        </constant>
+        <constant name="HYPE_SQUAD_HOUSE_1" value="64" enum="UserFlag">
+            The user is a member of the house of bravery.
+        </constant>
+        <constant name="HYPE_SQUAD_HOUSE_2" value="128" enum="UserFlag">
+            The user is a member of the house of brilliance.
+        </constant>
+        <constant name="HYPE_SQUAD_HOUSE_3" value="256" enum="UserFlag">
+            The user is a  member of the house of balance.
+        </constant>
+        <constant name="ERROR" value="-1" enum="PremiumType">
+            An error has occured while retrieving the premium type.
+        </constant>
+        <constant name="NONE" value="0" enum="PremiumType">
+            The user is not a nitro subscriber.
+        </constant>
+        <constant name="TIER_1" value="1" enum="PremiumType">
+            The user is a nitro classic subscriber.
+        </constant>
+        <constant name="TIER_2" value="2" enum="PremiumType">
+            The user is a nitro subscriber.
+        </constant>
+    </constants>
+</class>
