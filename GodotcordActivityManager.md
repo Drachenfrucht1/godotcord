@@ -5,6 +5,7 @@ A wrapper of the Discord Game SDK Activity Manager.
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to manage the rich presence of the user and to receive and send game invites via Discord.
         It is provided as a singleton named GodotcordActivityManger
+
 | | |
 ----|----
 void|[set_activity](#set_activity)(activity : GodotcordActivity)

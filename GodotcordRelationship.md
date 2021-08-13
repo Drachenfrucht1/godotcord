@@ -4,6 +4,7 @@ Data class for a discord relationship
 ### Description
 
 Data class for a discord relationship
+
 | | |
 ----|----
 RelationshipType|[type](#type)|
@@ -29,6 +30,7 @@ enum **RelationshipType**
 * **PENDING_INCOMING**=**3** --- The current user has a pending incoming friend request from the user
 * **PENDING_OUTGOING**=**4** --- The current user has a pending outgoing friend request to the user
 * **IMPLICIT**=**5** --- The user is no friend but they interact often
+
 ----
 ### Method Descriptions
 

@@ -4,6 +4,7 @@ Data class for a discord presence
 ### Description
 
 Data class for a discord presence
+
 | | |
 ----|----
 PresenceStatus|[status](#status)|
@@ -24,6 +25,7 @@ enum **PresenceStatus**
 * **ONLINE**=**1** --- The user is currently online
 * **IDLE**=**2** --- The user is currently idling
 * **DO_NOT_DISTURB**=**3** --- The users status is do not disturb
+
 ----
 ### Method Descriptions
 

@@ -1,74 +1,80 @@
 # GodotcordStorageManager
-The GodotcordStorageManger class is provided as a singleton named `GodotcordStorageManager`. I recommend to use this instance and not create a new one.
 
-## GDScript methods/properties
+A wrapper of the Discord Game SDK Storage Manager.
+### Description
 
-`String get_path()`
-- Returns the filepath that was set in `DISCORD_STORAGE_PATH`.
-- use this to get the save path to save files.
-- read more about this function [here](https://discord.com/developers/docs/game-sdk/storage#getpath).
+A wrapper of the Discord Game SDK Storage Manager. This class is used to manage save games in the cloud.
 
-`PoolByteArray read(String name)`
-- reads and returns the binary data.
-- data is being saved in the format of key-value pairs.
-- read more about this function [here](https://discord.com/developers/docs/game-sdk/storage#read).
+| | |
+----|----
+string|[get_path](#get_path)()
+Array|[read](#read)(name : string)
+Array|[read_async](#read_async)(name : string)
+Array|[read_async_partial](#read_async_partial)(name : string, offset : int, length : int)
+void|[write](#write)(data : Array)
+void|[write_async](#write_async)(data : Array)
+void|[destroy](#destroy)(name : string)
+bool|[exists](#exists)(name : string)
+GodotcordFileStat|[stat](#stat)(name : string)
+int|[count](#count)()
+GodotcordFileStat|[stat_at](#stat_at)(index : int)
 
-`void read_async(String name)`
-- reads and returns the string data using signal `async_data_read` asynchronously.
-- read more about this function [here](https://discord.com/developers/docs/game-sdk/storage#readasync).
+### Method Descriptions
 
-`void read_async_partial(String name, int offset, int length)`
-- reads and returns data using signal `async_data_read` asynchronously.
-- starts reading from offset and upto given length.
-- read more about this function [here](https://discord.com/developers/docs/game-sdk/storage#readasyncpartial)
+* <a name="get_path"></a> string get_path()
 
-`void write(String name, PoolByteArray data)`
-- writes the data into the save file.
-- data is being saved in the format of key-value pairs.
-- read more about this function here.
 
-`void write_async(String name, PoolByteArray data)`
-- writes data into the save file asynchronously.
-- `async_data_written` signal will be emitted once the data has been written in the save file.
-- read more about this function here.
 
-`void destroy(String name)`
-- deletes the key and it's value.
-- read more about this function here.
+----
+* <a name="read"></a> Array read(name : string)
 
-`bool exists(String name)`
-- checks if the key exists in the save file.
-- read more about this function here.
+Returns the content of file `name`
 
-`Dictionary stat(String name)`
-- returns the file info of the file.
-- read more about this function here.
+----
+* <a name="read_async"></a> Array read_async(name : string)
 
-`int count()`
-- returns the number of files the storage manager has used.
-- read more about this function here.
+Reads the content of `name` asnychronously.
+                Returns the content using the `async_data_read` signal.
 
-`Dictionary stat_at(int index)`
-- returns the stat of the file at the current index.
-- mainly used for getting the stats of the while iterating over the files.
+----
+* <a name="read_async_partial"></a> Array read_async_partial(name : string, offset : int, length : int)
 
-## Signals:
-`async_data_read`
-- emitted when the read_async and read_async_partial completes reading data.
+Reads `length` bytes beginning from the `offset`th byte from the file `name` asnychronously.
+                Returns the content using the `async_data_read` signal.
 
-`async_data_written`
-- emitted when the write_async completes writing data.
+----
+* <a name="write"></a> void write(data : Array)
 
-## Example:
-```gdscript
-func save(data: Dictionary):
-    for key in data:
-        GodotcordStorageManager.write(key, data[key].to_utf8())
 
-func load(list_of_load_keys: PoolStringArray) -> Dictionary:
-    var dict = Dictionary.new()
-    for key in list_of_load_keys:
-        if GodotcordStorageManager.exists(key):
-            dict[key] = GodotcordStorageManager.read(key)
-    return dict
-```
+
+----
+* <a name="write_async"></a> void write_async(data : Array)
+
+Emits the signal `async_data_written` after the completion.
+
+----
+* <a name="destroy"></a> void destroy(name : string)
+
+Destroys the file `name`.
+
+----
+* <a name="exists"></a> bool exists(name : string)
+
+Returns whether the file `name` exists.
+
+----
+* <a name="stat"></a> GodotcordFileStat stat(name : string)
+
+Returns the GodotcordFileStat for the file `name`.
+
+----
+* <a name="count"></a> int count()
+
+
+
+----
+* <a name="stat_at"></a> GodotcordFileStat stat_at(index : int)
+
+
+
+----

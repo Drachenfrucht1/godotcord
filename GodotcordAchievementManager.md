@@ -4,6 +4,7 @@ A wrapper of the Discord Game SDK Achievement Manager.
 ### Description
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to organise the achievements of the local user.
+
 | | |
 ----|----
 void|[set_user_achievement](#set_user_achievement)(achievement_id : int, percent : int)

@@ -4,6 +4,7 @@ Data class for the discord game activity
 ### Description
 
 Data class for the discord game activity.
+
 | | |
 ----|----
 string|[state](#state)|
@@ -29,9 +30,11 @@ enum **ActivityRequestReply**
 * **NO**=**0** --- Reject the request
 * **YES**=**1** --- Accept the request
 * **IGNORE**=**2** --- Ignore the request
+
 ----
 enum **ActivityActionType**
 
 * **JOIN**=**1** --- Marks a join request
 * **SPECTATE**=**2** --- Marks a spectate request
+
 ----

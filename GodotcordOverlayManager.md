@@ -4,6 +4,7 @@ A wrapper of the Discord Game SDK Overlay Manager.
 ### Description
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to interface with the ingame discord overlay.
+
 | | |
 ----|----
 boolean|[is_enabled](#is_enabled)()

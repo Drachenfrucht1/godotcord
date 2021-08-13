@@ -4,6 +4,7 @@ A wrapper of the Discord Game SDK Relationship Manager.
 ### Description
 
 A wrapper of the Discord Game SDK Relationship Manager. This class is used to fetch the users relationships.
+
 | | |
 ----|----
 Array|[filter_relationships](#filter_relationships)(object : Object, function_name : string)

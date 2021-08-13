@@ -1,9 +1,10 @@
-# GodotcordLobby
+# GodotcordSearchParameter
 
 Data class for a discord lobby
 ### Description
 
 Data class for a discord lobby
+
 | | |
 ----|----
 string|[property](#property)|

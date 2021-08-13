@@ -4,6 +4,7 @@ A wrapper of the Discord Game SDK Achievement Manager.
 ### Description
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to fetch the profile image of users.
+
 | | |
 ----|----
 void|[get_profile_picture](#get_profile_picture)(user_id : int, size : int)

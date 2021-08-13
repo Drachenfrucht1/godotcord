@@ -1,40 +1,48 @@
 # GodotcordStoreManager
 
-The GodotcordStoreManager class is provided as a singleton named `GodotcordStoreManager`. I recommend to use this instance and not create a new one.
+A wrapper of the Discord Game SDK Store Manager.
+### Description
 
-## GDScript methods/properties
+A wrapper of the Discord Game SDK Store Manager.
 
-`fetch_skus(Object o, String function_name)`
+| | |
+----|----
+void|[fetch_skus](#fetch_skus)()
+Array|[get_skus](#get_skus)()
+void|[fetch_entitlements](#fetch_entitlements)()
+Array|[fetch_entitlements](#fetch_entitlements)()
+bool|[fetch_entitlements](#fetch_entitlements)(sku_id : int)
+void|[start_purchase](#start_purchase)(sku_id : int)
 
-- refetches skus and returns them as array to callback function `function_name`
-- skus are returned as Dictionaries. See `get_skus` for structure of Dictionaries
+### Method Descriptions
 
-`Array get_skus()`
+* <a name="fetch_skus"></a> void fetch_skus()
 
-- returns the skus as array of Dictionaries
-- Dictionaries include the fields `id`, `name`, `type`, `price`
-- `price` is a Dictionary with the fields `amount` and `currrency`
 
-`fetch_entitlements(Object o, String function_name)`
 
-- refetches entitlements and returns them as array to callback function `function_name`
-- entitlements are returned as Dictionaries. See `get_entitlements` for structure of Dictionaries
+----
+* <a name="get_skus"></a> Array get_skus()
 
-`Array get_entitlements()`
 
-- returns the entitlements as array of Dictionaries
-- Dictionaries include the fields `id`, `sku_id` and `type`
 
-`bool has_local_user_entitlement(int sku_id)`
+----
+* <a name="fetch_entitlements"></a> void fetch_entitlements()
 
-- returns whether the local user is entitled for the `sku_id`
+Refetches the entitlements of the local user
 
-`start_purchase(int sku_id)`
+----
+* <a name="fetch_entitlements"></a> Array fetch_entitlements()
 
-- opens the overlay or discord client and enables the user to buy the sku
+Returns the entitlements of the local user.
 
-## Usage
+----
+* <a name="fetch_entitlements"></a> bool fetch_entitlements(sku_id : int)
 
-This manager can be used to check if the user hsa purchased DLC content.
+Returns whether the local user has an entitlement for the sku `sku_id`.
 
-You can also use it to create an ingame-store.
+----
+* <a name="start_purchase"></a> void start_purchase(sku_id : int)
+
+Opens the discord client and starts a purchase dialog for the sku `sku_id`.
+
+----

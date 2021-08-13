@@ -9,6 +9,7 @@ A multiplayer peer that uses the Discord Network.
         The peer id will be set as the sender if of rcp calls.
         The other one is the user id. It can be used to retrieve additional information about a user.
         You can convert from one to the other using `get_user_id_by_peer` and `get_peer_id_by_user`
+
 | | |
 ----|----
 void|[create_lobby](#create_lobby)(max_users : int, public : boolean = false)

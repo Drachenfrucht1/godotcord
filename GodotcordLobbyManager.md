@@ -4,6 +4,7 @@ A wrapper of the Discord Game SDK Achievement Manager.
 ### Description
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to search lobbies and manipulate their metadata.
+
 | | |
 ----|----
 void|[set_lobby_metadata](#set_lobby_metadata)(lobby_id : int, key : string, value : string)
@@ -25,6 +26,7 @@ enum **LobbyDistance**
 * **DEFAULT**=**1** --- Lobbies in adjacent regions.
 * **Extended**=**2** --- Lobbies in regions far apart, e.g. Europe and the US
 * **GLOBAL**=**3** --- Lobbies from all around the world.
+
 ----
 enum **LobbyComparison**
 
@@ -34,6 +36,7 @@ enum **LobbyComparison**
 * **GREATER_THAN**=**3** --- 
 * **GREATER_THAN_OR_EQUAL**=**4** --- 
 * **NOT_EQUAL**=**6** --- !=
+
 ----
 ### Method Descriptions
 
