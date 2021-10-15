@@ -158,7 +158,7 @@ void GodotcordLobbyManager::search_lobbies(Array p_params, int p_limit) {
 }
 
 GodotcordLobbyManager::GodotcordLobbyManager() {
-	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordLobbyManager should exist")
+	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordLobbyManager should exist");
 	singleton = this;
 }
 

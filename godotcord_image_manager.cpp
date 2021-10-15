@@ -39,7 +39,7 @@ void GodotcordImageManager::get_profile_picture(int64_t p_user_id, int p_size) {
 }
 
 GodotcordImageManager::GodotcordImageManager() {
-	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordImageManager should exist")
+	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordImageManager should exist");
 	singleton = this;
 }
 

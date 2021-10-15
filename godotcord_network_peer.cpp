@@ -372,7 +372,7 @@ void NetworkedMultiplayerGodotcord::delete_lobby() {
 	ERR_FAIL_COND_MSG(!is_server(), "Can't delete lobby when not lobby owner.");
 
 	_lobby_manager->DeleteLobby(_lobby_id, [this](discord::Result result) {
-		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while deleting the lobby.")
+		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while deleting the lobby.");
 	});
 }
 

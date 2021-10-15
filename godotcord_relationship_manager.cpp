@@ -88,7 +88,7 @@ void GodotcordRelationshipManager::init() {
 }
 
 GodotcordRelationshipManager::GodotcordRelationshipManager() {
-	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordRelationshipManager should exist")
+	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordRelationshipManager should exist");
 	singleton = this;
 }
 
