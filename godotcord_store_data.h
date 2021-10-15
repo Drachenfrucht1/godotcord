@@ -70,7 +70,6 @@ public:
 
 protected:
 	static void _bind_methods() {
-
 		ADD_GODOTCORD_PROPERTY(GodotcordEntitlement, id, Variant::INT)
 		ADD_GODOTCORD_PROPERTY(GodotcordEntitlement, type, Variant::INT)
 		ADD_GODOTCORD_PROPERTY(GodotcordEntitlement, sku_id, Variant::INT)

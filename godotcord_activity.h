@@ -35,7 +35,7 @@ protected:
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, spectate_secret, Variant::STRING)
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, start, Variant::INT)
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, end, Variant::INT)
-		
+
 		ADD_GODOTCORD_PROPERTY(GodotcordActivity, application_id, Variant::INT);
 
 		BIND_ENUM_CONSTANT(NO);

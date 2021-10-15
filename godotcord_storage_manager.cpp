@@ -75,7 +75,6 @@ void GodotcordStorageManager::write(String p_name, PoolByteArray p_data) {
 }
 
 void GodotcordStorageManager::write_async(String p_name, PoolByteArray p_data) {
-
     Godotcord::get_singleton()->get_core()->StorageManager().WriteAsync(p_name.utf8(), (uint8_t*)p_data.join("").utf8().get_data(), p_data.size(), [this](discord::Result result) {
         ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while writing to save file asynchronously.");
         emit_signal("async_data_written");

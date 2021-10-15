@@ -12,7 +12,7 @@ Godotcord currently compiles for Windows, Linux and Mac.
 - Clone the [godot repository](https://github.com/godotengine/godot) to a local directory
 - Checkout out at the 3.2.1-stable tag
 - Clone the godotcord repository into the modules folder
-  
+
 The following steps can all be done by running setup.bat (Windows) or setup.sh (Linux/Mac) in the godotcord directory.<br>
 If you want to do the setup on your own, here are the steps:
 - [Download version 2.5.6 of the Discord Game SDK](https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip)
@@ -20,7 +20,7 @@ If you want to do the setup on your own, here are the steps:
 - Copy the files in the cpp into a folder called 'discord-files' in the godotcord directory
 - Rename the x86 dlls to discord_game_sdk.32.dll and discord_game_sdk.32.dll.lib
 - Copy the all dll's and libs into a folder called libpath in the godotcord directory
-  
+
 The second last step is to [recompile Godot](https://docs.godotengine.org/en/stable/development/compiling/index.html).
 
 The final step is to copy the following libraries into the same folder as the executable you compiled:

@@ -36,9 +36,8 @@ void Godotcord::_bind_methods() {
 
 	BIND_ENUM_CONSTANT(CreateFlags_DEFAULT);
 	BIND_ENUM_CONSTANT(CreateFlags_NO_REQUIRE_DISCORD);
-
 }
-	
+
 Error Godotcord::init(discord::ClientId clientId, CreateFlags createFlags = CreateFlags::CreateFlags_DEFAULT) {
 	discord::Result result = discord::Core::Create(clientId, createFlags, &_core);
 

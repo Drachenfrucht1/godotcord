@@ -55,7 +55,7 @@ Array GodotcordRelationshipManager::get_relationships() {
 
 		Ref<GodotcordRelationship> rel_ship;
 		rel_ship.instance();
-		
+
 		rel_ship->type = (GodotcordRelationship::RelationshipType) d_relationship.GetType();
 		rel_ship->user_id = d_relationship.GetUser().GetId();
 

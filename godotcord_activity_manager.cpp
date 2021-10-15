@@ -143,5 +143,4 @@ GodotcordActivityManager::GodotcordActivityManager() {
 }
 
 GodotcordActivityManager::~GodotcordActivityManager() {
-
 }

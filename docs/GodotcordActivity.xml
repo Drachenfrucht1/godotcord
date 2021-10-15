@@ -4,7 +4,7 @@
         Data class for the discord game activity
     </brief_description>
     <description>
-        Data class for the discord game activity. 
+        Data class for the discord game activity.
     </description>
     <members>
         <member name="state" type="string" setter="set_state" getter="get_state" override="true" default="" />
@@ -13,7 +13,7 @@
         <member name="large_text" type="string" setter="set_large_text" getter="get_large_text" override="true" default="" />
         <member name="small_image" type="string" setter="set_small_image" getter="get_small_image" override="true" default="" />
         <member name="small_text" type="string" setter="set_small_text" getter="get_small_text" override="true" default="" />
-        
+
         <member name="party_id" type="string" setter="set_party_id" getter="get_party_id" override="true" default="" />
         <member name="party_max" type="int" setter="set_party_max" getter="get_party_max" override="true" default="-1" />
         <member name="party_current" type="int" setter="set_party_current" getter="get_party_current" override="true" default="-1" />

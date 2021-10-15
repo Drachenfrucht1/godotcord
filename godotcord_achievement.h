@@ -20,7 +20,7 @@ public:
 	int64_t achievement_id;
     uint8_t percent_complete;
     String unlocked_at;
-    
+
 
 	GET_SET_COMBO(user_id, int64_t);
 	GET_SET_COMBO(achievement_id, int64_t);

@@ -155,7 +155,7 @@ class GDProperty:
         s += "|----|----|\n"
         if self.default == "":
             s += "*Default*|`\"\"`\n"
-        else: 
+        else:
             s += "*Default*|`" + self.default + "`\n"
         s += "*Setter*|" + self.setter + "(value)\n"
         s += "*Getter*|" + self.getter + "\n"
@@ -253,4 +253,4 @@ for f in files:
 
 f = open(join("docs", "navigation.yml"), "w")
 f.write(navigation)
-f.close() 
+f.close()

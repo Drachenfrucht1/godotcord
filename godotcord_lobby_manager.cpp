@@ -53,7 +53,6 @@ String GodotcordLobbyManager::get_lobby_metadata(int64_t p_lobby_id, String p_ke
 }
 
 void GodotcordLobbyManager::search_lobbies(Array p_params, int p_limit) {
-
 	Array params = p_params;
 	discord::LobbySearchQuery query{};
 	discord::Result result = Godotcord::get_singleton()->get_core()->LobbyManager().GetSearchQuery(&query);
@@ -84,7 +83,6 @@ void GodotcordLobbyManager::search_lobbies(Array p_params, int p_limit) {
 
 			query.Distance(distance);
 		} else {
-
 			discord::LobbySearchCast d_cast;
 			discord::LobbySearchComparison d_comp;
 

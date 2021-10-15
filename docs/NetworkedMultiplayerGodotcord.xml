@@ -26,7 +26,7 @@
         </method>
         <method name="join_lobby">
             <argument index="0" name="lobby_id" type="int">
-            </argument> 
+            </argument>
             <argument index="1" name="secret" type="string">
             </argument>
             <description>
@@ -75,7 +75,7 @@
             </returns>
             <description>
                 Returns the activity secret of the current lobby.
-                Prints an error if the instance is not connected to a lobby. 
+                Prints an error if the instance is not connected to a lobby.
             </description>
         </method>
         <method name="get_current_members" >
@@ -109,7 +109,7 @@
             </argument>
             <description>
                 Can only be run as the lobby owner.
-                Sets the key/value pair as metadata of the current lobby . 
+                Sets the key/value pair as metadata of the current lobby .
                 Overwrites the value if the key already exists(?).
             </description>
         </method>
@@ -131,14 +131,14 @@
         </method>
         <method name="get_user_id_by_peer">
             <argument index="0" name="peer_id" type="int">
-            </argument> 
+            </argument>
             <description>
                 Returns the user id associated with [code]peer_id[/code].
             </description>
         </method>
         <method name="get_peer_id_by_user">
             <argument index="0" name="user_id" type="int">
-            </argument> 
+            </argument>
             <description>
                 Returns the peer id associated with [code]user_id[/code].
             </description>
