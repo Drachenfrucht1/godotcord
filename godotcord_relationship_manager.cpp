@@ -55,7 +55,7 @@ Array GodotcordRelationshipManager::get_relationships() {
 
 		Ref<GodotcordRelationship> rel_ship;
 		rel_ship.instance();
-		
+
 		rel_ship->type = (GodotcordRelationship::RelationshipType) d_relationship.GetType();
 		rel_ship->user_id = d_relationship.GetUser().GetId();
 
@@ -88,7 +88,7 @@ void GodotcordRelationshipManager::init() {
 }
 
 GodotcordRelationshipManager::GodotcordRelationshipManager() {
-	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordRelationshipManager should exist")
+	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordRelationshipManager should exist");
 	singleton = this;
 }
 

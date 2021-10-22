@@ -34,10 +34,10 @@ jobs:
             fail-fast: false
         steps:
         - uses: actions/checkout@v2
-          with: 
+          with:
             repository: 'godotengine/godot'
             ref: '3.3.4-stable'
-            
+
         - uses: actions/checkout@v2
           with:
             path: 'modules/godotcord'

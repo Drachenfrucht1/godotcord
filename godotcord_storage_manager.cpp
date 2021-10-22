@@ -29,7 +29,7 @@ void GodotcordStorageManager::_bind_methods() {
 String GodotcordStorageManager::get_path() {
     char path[4096];
     discord::Result result = Godotcord::get_singleton()->get_core()->StorageManager().GetPath(path);
-    ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, path,"Something went wrong while getting path.")
+    ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, path,"Something went wrong while getting path.");
     return path;
 }
 
@@ -43,13 +43,13 @@ PoolByteArray GodotcordStorageManager::read(String p_name) {
         poolByteArray.append(data[i]);
     }
     memfree(data);
-    ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, poolByteArray, "Something went wrong while reading the save file.")
+    ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, poolByteArray, "Something went wrong while reading the save file.");
     return poolByteArray;
 }
 
 void GodotcordStorageManager::read_async(String p_name) {
     Godotcord::get_singleton()->get_core()->StorageManager().ReadAsync(p_name.utf8(),[this](discord::Result result, uint8_t* data, uint32_t data_length) {
-        ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while reading the save file asynchronously.")
+        ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while reading the save file asynchronously.");
         PoolByteArray poolByteArray;
         for (unsigned int i = 0; i < data_length; i++) {
             poolByteArray.append(data[i]);
@@ -60,7 +60,7 @@ void GodotcordStorageManager::read_async(String p_name) {
 
 void GodotcordStorageManager::read_async_partial(String p_name, int32_t p_offset, int32_t p_length) {
     Godotcord::get_singleton()->get_core()->StorageManager().ReadAsyncPartial(p_name.utf8(), p_offset, p_length,[this](discord::Result result, uint8_t* data, uint32_t data_length) {
-        ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while traversing the save file asynchronously.")
+        ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while traversing the save file asynchronously.");
         PoolByteArray poolByteArray;
         for (unsigned int i = 0; i < data_length; i++) {
             poolByteArray.append(data[i]);
@@ -71,13 +71,12 @@ void GodotcordStorageManager::read_async_partial(String p_name, int32_t p_offset
 
 void GodotcordStorageManager::write(String p_name, PoolByteArray p_data) {
     discord::Result result = Godotcord::get_singleton()->get_core()->StorageManager().Write(p_name.utf8(),(uint8_t *) p_data.join("").utf8().get_data(), p_data.size());
-    ERR_FAIL_COND_MSG(result != discord::Result::Ok,"Something went wrong while writing to save file.")
+    ERR_FAIL_COND_MSG(result != discord::Result::Ok,"Something went wrong while writing to save file.");
 }
 
 void GodotcordStorageManager::write_async(String p_name, PoolByteArray p_data) {
-
     Godotcord::get_singleton()->get_core()->StorageManager().WriteAsync(p_name.utf8(), (uint8_t*)p_data.join("").utf8().get_data(), p_data.size(), [this](discord::Result result) {
-        ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while writing to save file asynchronously.")
+        ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while writing to save file asynchronously.");
         emit_signal("async_data_written");
     });
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="Godotcord" inherits="Object" version="0.1">
     <brief_description>
-       
+
     </brief_description>
     <description>
-        
+
     </description>
     <methods>
         <method name="init">
@@ -13,7 +13,7 @@
             <argument index="1" name="createFlags" type="CreateFlags">
             </argument>
             <description>
-                
+
             </description>
         </method>
         <method name="init_debug">
@@ -24,7 +24,7 @@
             <argument index="2" name="createFlags" type="CreateFlags">
             </argument>
             <description>
-                
+
             </description>
         </method>
         <method name="run_callbacks">

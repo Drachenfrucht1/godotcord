@@ -17,7 +17,6 @@ void GodotcordStoreManager::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("fetch_skus_callback", PropertyInfo(Variant::ARRAY, "skus")));
 	ADD_SIGNAL(MethodInfo("fetch_entitlements_callback", PropertyInfo(Variant::ARRAY, "entitlements")));
-
 }
 
 void GodotcordStoreManager::fetch_skus() {
@@ -105,20 +104,19 @@ void GodotcordStoreManager::start_purchase(int64_t p_sku_id) {
 }
 
 void GodotcordStoreManager::init() {
-	Godotcord::get_singleton()->get_core()->StoreManager().FetchEntitlements([](discord::Result result) { ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements") });
-	Godotcord::get_singleton()->get_core()->StoreManager().FetchSkus([](discord::Result result) { ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements") });
+	Godotcord::get_singleton()->get_core()->StoreManager().FetchEntitlements([](discord::Result result) { ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements"); });
+	Godotcord::get_singleton()->get_core()->StoreManager().FetchSkus([](discord::Result result) { ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements"); });
 
 	Godotcord::get_singleton()->get_core()->StoreManager().OnEntitlementCreate.Connect([this](discord::Entitlement p_entitlement) {
-		Godotcord::get_singleton()->get_core()->StoreManager().FetchEntitlements([](discord::Result result) { ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements") });
+		Godotcord::get_singleton()->get_core()->StoreManager().FetchEntitlements([](discord::Result result) { ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements"); });
 	});
 
 	Godotcord::get_singleton()->get_core()->StoreManager().OnEntitlementDelete.Connect([this](discord::Entitlement p_entitlement) {
-		Godotcord::get_singleton()->get_core()->StoreManager().FetchEntitlements([](discord::Result result) { ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements") });
+		Godotcord::get_singleton()->get_core()->StoreManager().FetchEntitlements([](discord::Result result) { ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while fetching user entitlements"); });
 	});
-
 }
 
 GodotcordStoreManager::GodotcordStoreManager() {
-    ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordStoreManager should exist")
+    ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordStoreManager should exist");
 	singleton = this;
 }

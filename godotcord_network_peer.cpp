@@ -372,7 +372,7 @@ void NetworkedMultiplayerGodotcord::delete_lobby() {
 	ERR_FAIL_COND_MSG(!is_server(), "Can't delete lobby when not lobby owner.");
 
 	_lobby_manager->DeleteLobby(_lobby_id, [this](discord::Result result) {
-		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while deleting the lobby.")
+		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while deleting the lobby.");
 	});
 }
 
@@ -391,7 +391,6 @@ void NetworkedMultiplayerGodotcord::disconnect_peer(int p_peer) {
 
 	for (List<Ref<GodotcordPeer>>::Element *E = _peers.front(); E != NULL; E = E->next()) {
 		if (E->get()->target_id == p_peer && E->get()->target_id == _unique_id) {
-
 			uint8_t remove_packet[6];
 			remove_packet[0] = 'c';
 			remove_packet[1] = 'r';
@@ -477,7 +476,6 @@ void NetworkedMultiplayerGodotcord::_send_packet(Ref<GodotcordPeer> peer, uint8_
 }
 
 int NetworkedMultiplayerGodotcord::get_max_packet_size() const {
-
 	return 1 << 24; // Anything is good
 }
 
@@ -492,12 +490,10 @@ void NetworkedMultiplayerGodotcord::_pop_current_packet() {
 }
 
 NetworkedMultiplayerPeer::ConnectionStatus NetworkedMultiplayerGodotcord::get_connection_status() const {
-
 	return _connection_status;
 }
 
 int NetworkedMultiplayerGodotcord::get_unique_id() const {
-
 	ERR_FAIL_COND_V_MSG(!_active, 0, "The multiplayer instance isn't currently active.");
 	return _unique_id;
 }
@@ -507,7 +503,6 @@ uint32_t NetworkedMultiplayerGodotcord::_gen_unique_id() const {
 	uint32_t hash = 0;
 
 	while (hash == 0 || hash == 1) {
-
 		hash = hash_djb2_one_32(
 				(uint32_t)OS::get_singleton()->get_ticks_usec());
 		hash = hash_djb2_one_32(
