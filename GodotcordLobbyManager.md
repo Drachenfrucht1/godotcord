@@ -42,7 +42,7 @@ enum **LobbyComparison**
 
 * <a name="set_lobby_metadata"></a> void set_lobby_metadata(lobby_id : int, key : string, value : string)
 
-Sets the key/value pair as metadata of the lobby `lobby_id`. 
+Sets the key/value pair as metadata of the lobby `lobby_id`.
                 The local user has be the owner of the lobby. Otherwise nothing will happen.
                 Overwrites the value if the key already exists(?).
 

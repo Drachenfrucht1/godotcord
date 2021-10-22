@@ -112,7 +112,7 @@ Returns the capacity of the lobby.
 * <a name="set_metadata"></a> void set_metadata(key : string, value : string)
 
 Can only be run as the lobby owner.
-                Sets the key/value pair as metadata of the current lobby . 
+                Sets the key/value pair as metadata of the current lobby .
                 Overwrites the value if the key already exists(?).
 
 ----

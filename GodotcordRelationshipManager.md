@@ -14,7 +14,7 @@ Array|[get_relationships](#get_relationships)()
 
 * <a name="filter_relationships"></a> Array filter_relationships(object : Object, function_name : string)
 
-Fetches the users relationships and filters them using the provided function of the provided object. 
+Fetches the users relationships and filters them using the provided function of the provided object.
                 The function has to a GodotcordRelationship as parameter and must return a boolean. The boolean indicates whether the relationship should be included in the list or not.
                 Returns an array containing all filtered relationships.
 
