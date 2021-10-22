@@ -26,10 +26,10 @@ jobs:
                   SCONS_OPTIONS: -j2
         steps:
         - uses: actions/checkout@v2
-          with: 
+          with:
             repository: 'godotengine/godot'
             ref: '3.3.2-stable'
-            
+
         - uses: actions/checkout@v2
           with:
             path: 'modules/godotcord'

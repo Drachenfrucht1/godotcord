@@ -21,7 +21,6 @@ public:
 	GET_SET_COMBO(file_name, String)
 	GET_SET_COMBO(last_modified, uint64_t)
 	GET_SET_COMBO(size, uint64_t)
-
 };
 
 class GodotcordStorageManager : public Object {

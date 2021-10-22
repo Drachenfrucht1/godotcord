@@ -23,7 +23,7 @@ public:
 	Array get_entitlements();
 	bool has_sku_entitlement(int64_t p_sku_id);
 	void start_purchase(int64_t p_sku_id);
-	
+
 
 
 	void init();

@@ -93,12 +93,12 @@ void GodotcordActivityManager::clear_activity() {
 
 void GodotcordActivityManager::register_steam(uint32_t p_steam_id) {
     discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterSteam(p_steam_id);
-    ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering steam id.")
+    ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering steam id.");
 }
 
 void GodotcordActivityManager::register_command(String p_command) {
     discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterCommand(p_command.utf8());
-    ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering command.")
+    ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering command.");
 }
 
 void GodotcordActivityManager::send_request_reply(int64_t p_user_id, GodotcordActivity::ActivityRequestReply p_reply) {
@@ -138,10 +138,9 @@ void GodotcordActivityManager::init() {
 }
 
 GodotcordActivityManager::GodotcordActivityManager() {
-	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordActivityManager should exist")
+	ERR_FAIL_COND_MSG(singleton != NULL, "Only one instance of GodotcordActivityManager should exist");
 	singleton = this;
 }
 
 GodotcordActivityManager::~GodotcordActivityManager() {
-
 }

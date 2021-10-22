@@ -46,7 +46,7 @@ private:
 	static int64_t local_user_id;				///< discord user id
 	static uint64_t unique_peer_id;				///< discord peer id
 	static String route;
-	int _unique_id;								///< localy generated godot peer id 
+	int _unique_id;								///< localy generated godot peer id
 
 	bool _active;
 	bool _server;

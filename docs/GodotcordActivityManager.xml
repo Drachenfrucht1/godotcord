@@ -22,7 +22,7 @@
         </method>
         <method name="register_steam">
             <argument index="0" name="steam_id" type="int">
-            </argument> 
+            </argument>
             <description>
                 Register the steam id of the game. Used by Discord to launch the game when pressing on an invite.
             </description>

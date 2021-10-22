@@ -32,7 +32,7 @@ public:
 };
 
 class GodotcordVoiceManager : public Object {
-    GDCLASS(GodotcordVoiceManager, Object);	
+    GDCLASS(GodotcordVoiceManager, Object);
 
 protected:
     static void _bind_methods();
