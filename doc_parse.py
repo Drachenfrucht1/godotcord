@@ -22,7 +22,7 @@ class GDClass:
         s = "# " + self.name + "\n\n"
         s += self.brief_description.strip()
         s += "\n"
-        s += "### Description\n\n"
+        s += "## Description\n\n"
         s += self.description.strip()
         s += "\n\n"
 
@@ -41,22 +41,22 @@ class GDClass:
             s += "\n"
 
         if len(self.signals) > 0:
-            s += "### Signals\n\n"
+            s += "## Signals\n\n"
             for sig in self.signals:
                 s += sig.print()
 
         if len(self.enums) > 0:
-            s += "### Enumerations\n\n"
+            s += "## Enumerations\n\n"
             for k in self.enums:
                 s += self.enums[k].print()
 
         if len([m for m in self.members if not(m.description is None)]) > 0:
-            s += "### Property Descriptions\n\n"
+            s += "## Property Descriptions\n\n"
             for m in self.members:
                 s += m.print_desc()
 
         if len(self.methods) > 0:
-            s += "### Method Descriptions\n\n"
+            s += "## Method Descriptions\n\n"
             for m in self.methods:
                 s += m.print_desc()
 
