@@ -1,7 +1,7 @@
 # NetworkedMultiplayerGodotcord
 
 A multiplayer peer that uses the Discord Network
-### Description
+## Description
 
 A multiplayer peer that uses the Discord Network.
         There are multiple id's connected with multiplayer. The first on is the peer id.
@@ -30,14 +30,14 @@ Array|[get_connected_peers](#get_connected_peers)()
 void|[get_user_id_by_peer](#get_user_id_by_peer)(peer_id : int)
 void|[get_peer_id_by_user](#get_peer_id_by_user)(user_id : int)
 
-### Signals
+## Signals
 
 * created_lobby()
 
 Emitted when a new lobby has been creates successfully.
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="create_lobby"></a> void create_lobby(max_users : int, public : boolean = false)
 

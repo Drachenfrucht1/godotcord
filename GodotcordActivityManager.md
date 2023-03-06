@@ -1,7 +1,7 @@
 # GodotcordActivityManager
 
 A wrapper of the Discord Game SDK Activity Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to manage the rich presence of the user and to receive and send game invites via Discord.
         It is provided as a singleton named GodotcordActivityManger
@@ -16,7 +16,7 @@ void|[send_request_reply](#send_request_reply)(user_id : int, reply : GodotcordA
 void|[send_invite](#send_invite)(user_id : int, type : GodotcordActivity.ActivityActionType, message : string)
 void|[accept_invite](#accept_invite)(user_id : int)
 
-### Signals
+## Signals
 
 * activity_join_request(name : string, user_id : int)
 
@@ -38,7 +38,7 @@ Emitted when a chat invite has been pressed or a join request has been accepted.
 Emmitted when a spectate request has been accepted.
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="set_activity"></a> void set_activity(activity : GodotcordActivity)
 

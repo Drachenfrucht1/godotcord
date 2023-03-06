@@ -1,7 +1,7 @@
 # GodotcordRelationshipManager
 
 A wrapper of the Discord Game SDK Relationship Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK Relationship Manager. This class is used to fetch the users relationships.
 
@@ -10,7 +10,7 @@ A wrapper of the Discord Game SDK Relationship Manager. This class is used to fe
 Array|[filter_relationships](#filter_relationships)(object : Object, function_name : string)
 Array|[get_relationships](#get_relationships)()
 
-### Method Descriptions
+## Method Descriptions
 
 * <a name="filter_relationships"></a> Array filter_relationships(object : Object, function_name : string)
 

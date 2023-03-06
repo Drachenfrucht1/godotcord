@@ -1,7 +1,7 @@
 # GodotcordVoiceManager
 
 A wrapper of the Discord Game SDK Voice Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK Voice Manager.
 
@@ -21,7 +21,7 @@ void|[set_local_mute](#set_local_mute)(user_id : int, b : bool)
 int|[is_local_volume](#is_local_volume)(user_id : int)
 void|[set_local_mute](#set_local_mute)(user_id : int, b : int)
 
-### Method Descriptions
+## Method Descriptions
 
 * <a name="get_input_mode"></a> GodotcordInputMode get_input_mode()
 

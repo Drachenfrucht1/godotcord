@@ -1,7 +1,7 @@
 # GodotcordSearchParameter
 
 Data class for a discord lobby
-### Description
+## Description
 
 Data class for a discord lobby
 
@@ -23,7 +23,7 @@ void|[set_cast](#set_cast)(property : LobbyCast)
 string|[get_value](#get_value)()
 void|[set_value](#set_value)(property : string)
 
-### Method Descriptions
+## Method Descriptions
 
 * <a name="get_property"></a> string get_property()
 

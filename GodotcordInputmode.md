@@ -1,7 +1,7 @@
 # GodotcordInputMode
 
 Data class for the discord input mode.
-### Description
+## Description
 
 Data class for the discord input mode.
 
@@ -10,7 +10,7 @@ Data class for the discord input mode.
 InputModeType|[type](#type)|
 string|[shortcut](#shortcut)|0
 
-### Enumerations
+## Enumerations
 
 enum **InputModeType**
 

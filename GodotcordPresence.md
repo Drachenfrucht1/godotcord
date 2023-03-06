@@ -1,7 +1,7 @@
 # GodotcordPresence
 
 Data class for a discord presence
-### Description
+## Description
 
 Data class for a discord presence
 
@@ -17,7 +17,7 @@ void|[set_status](#set_status)(property : PresenceStatus)
 GodotcordActivity|[get_activity](#get_activity)()
 void|[set_activity](#set_activity)(property : GodotcordActivity)
 
-### Enumerations
+## Enumerations
 
 enum **PresenceStatus**
 
@@ -27,7 +27,7 @@ enum **PresenceStatus**
 * **DO_NOT_DISTURB**=**3** --- The users status is do not disturb
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="get_status"></a> PresenceStatus get_status()
 

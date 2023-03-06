@@ -1,7 +1,7 @@
 # GodotcordUserManager
 
 A wrapper of the Discord Game SDK User Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK User Manager.
 
@@ -12,7 +12,7 @@ GodotcordUser|[get_current_user](#get_current_user)()
 PremiumType|[get_current_user_premium_type](#get_current_user_premium_type)()
 bool|[has_current_user_flag](#has_current_user_flag)(flag : UserFlag)
 
-### Enumerations
+## Enumerations
 
 enum **UserFlag**
 
@@ -31,7 +31,7 @@ enum **PremiumType**
 * **TIER_2**=**2** --- The user is a nitro subscriber.
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="get_user"></a> void get_user(user_id : int)
 

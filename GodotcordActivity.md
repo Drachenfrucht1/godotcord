@@ -1,7 +1,7 @@
 # GodotcordActivity
 
 Data class for the discord game activity
-### Description
+## Description
 
 Data class for the discord game activity.
 
@@ -23,7 +23,7 @@ int|[start](#start)|0
 int|[end](#end)|0
 int|[application_id](#application_id)|0
 
-### Enumerations
+## Enumerations
 
 enum **ActivityRequestReply**
 

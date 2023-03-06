@@ -1,7 +1,7 @@
 # GodotcordUser
 
 Data class for a discord user.
-### Description
+## Description
 
 Data class for a discord user.
 

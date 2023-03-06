@@ -1,7 +1,7 @@
 # GodotcordLobby
 
 Data class for a discord lobby
-### Description
+## Description
 
 Data class for a discord lobby
 
@@ -26,7 +26,7 @@ void|[set_max_users](#set_max_users)(property : int)
 int|[get_current_users](#get_current_users)()
 void|[set_current_users](#set_current_users)(property : int)
 
-### Method Descriptions
+## Method Descriptions
 
 * <a name="get_secret"></a> string get_secret()
 

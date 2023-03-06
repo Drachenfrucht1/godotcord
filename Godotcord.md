@@ -1,7 +1,7 @@
 # Godotcord
 
 
-### Description
+## Description
 
 
 
@@ -12,7 +12,7 @@ void|[init_debug](#init_debug)(client_id : int, id : string, createFlags : Creat
 void|[run_callbacks](#run_callbacks)()
 bool|[is_init](#is_init)()
 
-### Enumerations
+## Enumerations
 
 enum **CreateFlags**
 
@@ -20,7 +20,7 @@ enum **CreateFlags**
 * **CreateFlags_NO_REQUIRE_DISCORD**=**1** --- 
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="init"></a> void init(client_id : int, createFlags : CreateFlags)
 

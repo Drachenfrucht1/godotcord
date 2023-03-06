@@ -1,7 +1,7 @@
 # GodotcordOverlayManager
 
 A wrapper of the Discord Game SDK Overlay Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to interface with the ingame discord overlay.
 
@@ -14,7 +14,7 @@ void|[open_voice_settings](#open_voice_settings)()
 void|[open_activity_invite](#open_activity_invite)(type : ActivityActionType)
 void|[open_build_invite](#open_build_invite)(invite_code : string)
 
-### Signals
+## Signals
 
 * profile_picture_callback(user_id : int, image_data : PoolByteArray)
 
@@ -22,7 +22,7 @@ Emitted when a profile picture has been fetched. The image data is returned as a
                 See the example on how to convert the raw image data into a texture to use it in Godot.
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="is_enabled"></a> boolean is_enabled()
 

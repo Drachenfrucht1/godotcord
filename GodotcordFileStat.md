@@ -1,7 +1,7 @@
 # GodotcordFileStat
 
 Data class for the discord file stat
-### Description
+## Description
 
 Data class for the discord file stat.
 

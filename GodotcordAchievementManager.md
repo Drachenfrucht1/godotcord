@@ -1,7 +1,7 @@
 # GodotcordAchievementManager
 
 A wrapper of the Discord Game SDK Achievement Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to organise the achievements of the local user.
 
@@ -11,14 +11,14 @@ void|[set_user_achievement](#set_user_achievement)(achievement_id : int, percent
 void|[fetch_user_achievement](#fetch_user_achievement)()
 Array|[get_user_achievements](#get_user_achievements)()
 
-### Signals
+## Signals
 
 * fetch_user_achievements()
 
 Emitted when the user achievements have been fetched.
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="set_user_achievement"></a> void set_user_achievement(achievement_id : int, percent : int)
 

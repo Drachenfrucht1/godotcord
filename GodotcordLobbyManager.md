@@ -1,7 +1,7 @@
 # GodotcordLobbyManager
 
 A wrapper of the Discord Game SDK Achievement Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK Activity Manager. This class is used to search lobbies and manipulate their metadata.
 
@@ -11,14 +11,14 @@ void|[set_lobby_metadata](#set_lobby_metadata)(lobby_id : int, key : string, val
 string|[get_lobby_metadata](#get_lobby_metadata)(lobby_id : int, key : string)
 void|[search_lobbies](#search_lobbies)(parameters : Variant, limit : int)
 
-### Signals
+## Signals
 
 * search_lobbies_callback(lobbies : Array)
 
 Emitted after a lobby search has been completed.
 
 ----
-### Enumerations
+## Enumerations
 
 enum **LobbyDistance**
 
@@ -38,7 +38,7 @@ enum **LobbyComparison**
 * **NOT_EQUAL**=**6** --- !=
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="set_lobby_metadata"></a> void set_lobby_metadata(lobby_id : int, key : string, value : string)
 

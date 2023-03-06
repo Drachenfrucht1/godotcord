@@ -1,7 +1,7 @@
 # GodotcordRelationship
 
 Data class for a discord relationship
-### Description
+## Description
 
 Data class for a discord relationship
 
@@ -20,7 +20,7 @@ void|[set_user_id](#set_user_id)(property : int)
 GodotcordPresence|[get_presence](#get_presence)()
 void|[set_presence](#set_presence)(property : GodotcordPresence)
 
-### Enumerations
+## Enumerations
 
 enum **RelationshipType**
 
@@ -32,7 +32,7 @@ enum **RelationshipType**
 * **IMPLICIT**=**5** --- The user is no friend but they interact often
 
 ----
-### Method Descriptions
+## Method Descriptions
 
 * <a name="get_type"></a> RelationshipStatus get_type()
 

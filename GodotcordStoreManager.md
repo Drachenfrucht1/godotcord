@@ -1,7 +1,7 @@
 # GodotcordStoreManager
 
 A wrapper of the Discord Game SDK Store Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK Store Manager.
 
@@ -14,7 +14,7 @@ Array|[fetch_entitlements](#fetch_entitlements)()
 bool|[fetch_entitlements](#fetch_entitlements)(sku_id : int)
 void|[start_purchase](#start_purchase)(sku_id : int)
 
-### Method Descriptions
+## Method Descriptions
 
 * <a name="fetch_skus"></a> void fetch_skus()
 

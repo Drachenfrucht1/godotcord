@@ -1,7 +1,7 @@
 # GodotcordStorageManager
 
 A wrapper of the Discord Game SDK Storage Manager.
-### Description
+## Description
 
 A wrapper of the Discord Game SDK Storage Manager. This class is used to manage save games in the cloud.
 
@@ -19,7 +19,7 @@ GodotcordFileStat|[stat](#stat)(name : string)
 int|[count](#count)()
 GodotcordFileStat|[stat_at](#stat_at)(index : int)
 
-### Method Descriptions
+## Method Descriptions
 
 * <a name="get_path"></a> string get_path()
 

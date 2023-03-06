@@ -2,43 +2,43 @@
   url: /
 - title: Classes
   subfolderitems:
-    - page: GodotcordStorageManager
-      url: GodotcordStorageManager.html
-    - page: GodotcordImageManager
-      url: GodotcordImageManager.html
-    - page: GodotcordUserManager
-      url: GodotcordUserManager.html
-    - page: GodotcordUser
-      url: GodotcordUser.html
     - page: GodotcordActivityManager
       url: GodotcordActivityManager.html
-    - page: Godotcord
-      url: Godotcord.html
-    - page: GodotcordRelationshipManager
-      url: GodotcordRelationshipManager.html
-    - page: GodotcordActivity
-      url: GodotcordActivity.html
-    - page: GodotcordStoreManager
-      url: GodotcordStoreManager.html
-    - page: GodotcordSearchParameter
-      url: GodotcordSearchParameter.html
-    - page: GodotcordLobbyManager
-      url: GodotcordLobbyManager.html
-    - page: GodotcordAchievementManager
-      url: GodotcordAchievementManager.html
-    - page: GodotcordPresence
-      url: GodotcordPresence.html
-    - page: GodotcordInputMode
-      url: GodotcordInputMode.html
-    - page: GodotcordLobby
-      url: GodotcordLobby.html
-    - page: GodotcordFileStat
-      url: GodotcordFileStat.html
-    - page: GodotcordOverlayManager
-      url: GodotcordOverlayManager.html
-    - page: NetworkedMultiplayerGodotcord
-      url: NetworkedMultiplayerGodotcord.html
-    - page: GodotcordRelationship
-      url: GodotcordRelationship.html
     - page: GodotcordVoiceManager
       url: GodotcordVoiceManager.html
+    - page: GodotcordActivity
+      url: GodotcordActivity.html
+    - page: Godotcord
+      url: Godotcord.html
+    - page: GodotcordFileStat
+      url: GodotcordFileStat.html
+    - page: GodotcordUser
+      url: GodotcordUser.html
+    - page: GodotcordLobby
+      url: GodotcordLobby.html
+    - page: GodotcordRelationshipManager
+      url: GodotcordRelationshipManager.html
+    - page: GodotcordLobbyManager
+      url: GodotcordLobbyManager.html
+    - page: NetworkedMultiplayerGodotcord
+      url: NetworkedMultiplayerGodotcord.html
+    - page: GodotcordSearchParameter
+      url: GodotcordSearchParameter.html
+    - page: GodotcordAchievementManager
+      url: GodotcordAchievementManager.html
+    - page: GodotcordRelationship
+      url: GodotcordRelationship.html
+    - page: GodotcordImageManager
+      url: GodotcordImageManager.html
+    - page: GodotcordStoreManager
+      url: GodotcordStoreManager.html
+    - page: GodotcordInputMode
+      url: GodotcordInputMode.html
+    - page: GodotcordStorageManager
+      url: GodotcordStorageManager.html
+    - page: GodotcordUserManager
+      url: GodotcordUserManager.html
+    - page: GodotcordPresence
+      url: GodotcordPresence.html
+    - page: GodotcordOverlayManager
+      url: GodotcordOverlayManager.html
