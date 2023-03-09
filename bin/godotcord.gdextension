@@ -1,0 +1,13 @@
+[configuration]
+
+entry_symbol = "godotcord_init"
+
+[libraries]
+
+linux.64 = "res://bin/x11/libgodotcord.so"
+
+[dependencies]
+
+linux.64=["res://bin/x11/libdiscord_game_sdk.so"]
+Windows.64=["res://bin/discord_game_sdk.dll"]
+OSX.64=["res://bin/discord_game_sdk.dylib"]

@@ -1,15 +1,13 @@
 #ifndef GODOTCORD_H
 #define GODOTCORD_H
 
-#include "core/object.h"
-#include "scene/resources/texture.h"
-#include <string.h>
-#include "discord-files/discord.h"
-#include "godotcord_activity.h"
-#include "godotcord_relationship.h"
-#include "godotcord_lobby.h"
+#include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/variant/variant.hpp>
 
-#include "godotcord_activity_manager.h"
+#include "discord-files/discord.h"
+
+using namespace godot;
 
 class Godotcord : public Object {
     GDCLASS(Godotcord, Object)
@@ -17,7 +15,6 @@ class Godotcord : public Object {
 private:
 	discord::Core *_core{};
 	bool init_bool = false;
-	String _route;
 
 	void _init_discord();
 
@@ -28,13 +25,16 @@ public:
 	static Godotcord *singleton;
 	static Godotcord *get_singleton();
 
-	enum CreateFlags {
-		CreateFlags_DEFAULT = 0,
-		CreateFlags_NO_REQUIRE_DISCORD = 1,
-	};
+	static const int CreateFlags_DEFAULT = 0;
+	static const int CreateFlags_NO_REQUIRE_DISCORD = 1;
 
-    Error init(discord::ClientId clientId, CreateFlags createFlags);
-	void init_debug(discord::ClientId clientId, String id, CreateFlags createFlags);
+	// enum CreateFlags {
+	// 	CreateFlags_DEFAULT = 0,
+	// 	CreateFlags_NO_REQUIRE_DISCORD = 1,
+	// };
+
+    Error init(int64_t clientId, int createFlags);
+	void init_debug(int64_t clientId, String id, int createFlags);
 
 	void run_callbacks();
 
@@ -42,16 +42,10 @@ public:
 		return init_bool;
 	}
 
-	String get_route() { return _route; }
-
-	void removeRouteEvent();
-
 	discord::Core *get_core();
 
     Godotcord();
 	~Godotcord();
 };
-
-VARIANT_ENUM_CAST(Godotcord::CreateFlags);
 
 #endif

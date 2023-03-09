@@ -4,6 +4,11 @@ config.pyc
 __pycache__
 *.obj
 *.o
+*.os
 build.txt
 docs/*.md
 docs/navigation.yml
+.vscode
+.sconsign.dblite
+bin/*
+!bin/godotcord.gdextension
