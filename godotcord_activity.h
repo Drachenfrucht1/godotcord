@@ -1,11 +1,15 @@
 #ifndef GODOTCORD_ACTIVITY_H
 #define GODOTCORD_ACTIVITY_H
 
-#include "core/reference.h"
+#include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/ref.hpp>
+
 #include "godotcord_utils.h"
 
-class GodotcordActivity : public Reference {
-	GDCLASS(GodotcordActivity, Reference)
+using namespace godot;
+
+class GodotcordActivity : public RefCounted {
+	GDCLASS(GodotcordActivity, RefCounted)
 
 public:
 	enum ActivityRequestReply {
@@ -49,7 +53,7 @@ protected:
 public:
 	static Ref<GodotcordActivity> from_discord_activity(discord::Activity p_act) {
 		Ref<GodotcordActivity> ret;
-		ret.instance();
+		ret.instantiate();
 		ret->state = p_act.GetState();
 		ret->details = p_act.GetDetails();
 		ret->party_id = p_act.GetParty().GetId();

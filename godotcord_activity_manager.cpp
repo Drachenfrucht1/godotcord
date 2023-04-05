@@ -24,32 +24,32 @@ void GodotcordActivityManager::_bind_methods() {
 void GodotcordActivityManager::set_activity(Ref<GodotcordActivity> p_activity) {
 	discord::Activity activity{};
 
-	if (!p_activity->state.empty()) {
-		activity.SetState(p_activity->state.utf8());
+	if (!p_activity->state.is_empty()) {
+		activity.SetState(p_activity->state.utf8().get_data());
 	}
 
-	if (!p_activity->details.empty()) {
-		activity.SetDetails(p_activity->details.utf8());
+	if (!p_activity->details.is_empty()) {
+		activity.SetDetails(p_activity->details.utf8().get_data());
 	}
 
-	if (!p_activity->large_text.empty()) {
-		activity.GetAssets().SetLargeText(p_activity->large_text.utf8());
+	if (!p_activity->large_text.is_empty()) {
+		activity.GetAssets().SetLargeText(p_activity->large_text.utf8().get_data());
 	}
 
-	if (!p_activity->large_image.empty()) {
-		activity.GetAssets().SetLargeImage(p_activity->large_image.utf8());
+	if (!p_activity->large_image.is_empty()) {
+		activity.GetAssets().SetLargeImage(p_activity->large_image.utf8().get_data());
 	}
 
-	if (!p_activity->small_text.empty()) {
-		activity.GetAssets().SetSmallText(p_activity->small_text.utf8());
+	if (!p_activity->small_text.is_empty()) {
+		activity.GetAssets().SetSmallText(p_activity->small_text.utf8().get_data());
 	}
 
-	if (!p_activity->small_image.empty()) {
-		activity.GetAssets().SetSmallImage(p_activity->small_image.utf8());
+	if (!p_activity->small_image.is_empty()) {
+		activity.GetAssets().SetSmallImage(p_activity->small_image.utf8().get_data());
 	}
 
-	if (!p_activity->party_id.empty()) {
-		activity.GetParty().SetId(p_activity->party_id.utf8());
+	if (!p_activity->party_id.is_empty()) {
+		activity.GetParty().SetId(p_activity->party_id.utf8().get_data());
 	}
 
 	if (p_activity->party_max >= 0) {
@@ -60,16 +60,16 @@ void GodotcordActivityManager::set_activity(Ref<GodotcordActivity> p_activity) {
 		activity.GetParty().GetSize().SetCurrentSize(p_activity->party_current);
 	}
 
-	if (!p_activity->match_secret.empty()) {
-		activity.GetSecrets().SetMatch(p_activity->match_secret.utf8());
+	if (!p_activity->match_secret.is_empty()) {
+		activity.GetSecrets().SetMatch(p_activity->match_secret.utf8().get_data());
 	}
 
-	if (!p_activity->join_secret.empty()) {
-		activity.GetSecrets().SetJoin(p_activity->join_secret.utf8());
+	if (!p_activity->join_secret.is_empty()) {
+		activity.GetSecrets().SetJoin(p_activity->join_secret.utf8().get_data());
 	}
 
-	if (!p_activity->spectate_secret.empty()) {
-		activity.GetSecrets().SetSpectate(p_activity->spectate_secret.utf8());
+	if (!p_activity->spectate_secret.is_empty()) {
+		activity.GetSecrets().SetSpectate(p_activity->spectate_secret.utf8().get_data());
 	}
 
 	if (p_activity->start != 0) {
@@ -97,7 +97,7 @@ void GodotcordActivityManager::register_steam(uint32_t p_steam_id) {
 }
 
 void GodotcordActivityManager::register_command(String p_command) {
-    discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterCommand(p_command.utf8());
+    discord::Result result = Godotcord::get_singleton()->get_core()->ActivityManager().RegisterCommand(p_command.utf8().get_data());
     ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while registering command.");
 }
 
@@ -108,7 +108,7 @@ void GodotcordActivityManager::send_request_reply(int64_t p_user_id, GodotcordAc
 }
 
 void GodotcordActivityManager::send_invite(int64_t p_user_id, GodotcordActivity::ActivityActionType p_type, String p_message) {
-	Godotcord::get_singleton()->get_core()->ActivityManager().SendInvite(p_user_id, (discord::ActivityActionType)p_type, p_message.utf8(), [this](discord::Result result) {
+	Godotcord::get_singleton()->get_core()->ActivityManager().SendInvite(p_user_id, (discord::ActivityActionType)p_type, p_message.utf8().get_data(), [this](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while sending the invite");
 	});
 }
