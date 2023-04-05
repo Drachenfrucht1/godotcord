@@ -5,7 +5,7 @@ import sys
 sources = [
     "register_types.cpp",
     "godotcord.cpp",
-    # "godotcord_activity_manager.cpp",
+    "godotcord_activity_manager.cpp",
     # "godotcord_overlay_manager.cpp",
     # "godotcord_relationship_manager.cpp",
     # "godotcord_user_manager.cpp",

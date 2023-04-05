@@ -1,12 +1,14 @@
 #ifndef GODOTCORD_RELATIONSHIP_H
 #define GODOTCORD_RELATIONSHIP_H
 
-#include "core/reference.h"
+#include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/ref.hpp>
+
 #include "godotcord_utils.h"
 #include "godotcord_activity.h"
 
-class GodotcordPresence : public Reference {
-	GDCLASS(GodotcordPresence, Reference);
+class GodotcordPresence : public RefCounted {
+	GDCLASS(GodotcordPresence, RefCounted);
 
 public:
 	enum PresenceStatus {
@@ -35,8 +37,8 @@ public:
     GET_SET_COMBO_OBJ(activity, GodotcordActivity);
 };
 
-class GodotcordRelationship : public Reference {
-    GDCLASS(GodotcordRelationship, Reference)
+class GodotcordRelationship : public RefCounted {
+    GDCLASS(GodotcordRelationship, RefCounted)
 
 public:
 	enum RelationshipType {

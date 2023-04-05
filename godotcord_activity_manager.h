@@ -1,8 +1,10 @@
 #ifndef GODOTCORD_ACTIVITY_MANAGER_H
 #define GODOTCORD_ACTIVITY_MANAGER_H
 
-#include "core/object.h"
+#include <godot_cpp/classes/object.hpp>
+
 #include "godotcord.h"
+#include "godotcord_activity.h"
 
 class GodotcordActivityManager : public Object {
 	GDCLASS(GodotcordActivityManager, Object);

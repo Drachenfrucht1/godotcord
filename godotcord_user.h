@@ -1,11 +1,13 @@
 #ifndef GODOTCORD_USER_H
 #define GODOTCORD_USER_H
 
-#include "core/reference.h"
+#include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/ref.hpp>
+
 #include "godotcord_utils.h"
 
-class GodotcordUser : public Reference {
-	GDCLASS(GodotcordUser, Reference)
+class GodotcordUser : public RefCounted {
+	GDCLASS(GodotcordUser, RefCounted)
 protected:
 	static void _bind_methods() {
 		ADD_GODOTCORD_PROPERTY(GodotcordUser, id, Variant::INT);
