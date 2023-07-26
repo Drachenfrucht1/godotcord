@@ -9,17 +9,17 @@
 #include "godotcord_relationship.h"
 
 #include "godotcord_activity_manager.h"
-// #include "godotcord_overlay_manager.h"
-// #include "godotcord_relationship_manager.h"
-// #include "godotcord_user_manager.h"
+#include "godotcord_overlay_manager.h"
+#include "godotcord_relationship_manager.h"
+#include "godotcord_user_manager.h"
 
 #include "godotcord_user.h"
 
 static Godotcord *GC_ptr = NULL;
 static GodotcordActivityManager *GC_ACT_ptr = NULL;
-// static GodotcordOverlayManager *GC_OVRL_ptr = NULL;
-// static GodotcordRelationshipManager *GC_RELSHIP_ptr = NULL;
-// static GodotcordUserManager *GC_USR_ptr = NULL;
+static GodotcordOverlayManager *GC_OVRL_ptr = NULL;
+static GodotcordRelationshipManager *GC_RELSHIP_ptr = NULL;
+static GodotcordUserManager *GC_USR_ptr = NULL;
 
 using namespace godot;
 
@@ -35,8 +35,8 @@ void register_godotcord_types(ModuleInitializationLevel l) {
 
 	ClassDB::register_class<GodotcordActivityManager>();
 	// Overlay
-	// ClassDB::register_class<GodotcordRelationshipManager>();
-	// ClassDB::register_class<GodotcordUserManager>();
+	ClassDB::register_class<GodotcordRelationshipManager>();
+	ClassDB::register_class<GodotcordUserManager>();
 
 	GC_ptr = memnew(Godotcord);
 	Engine::get_singleton()->register_singleton("Godotcord", Godotcord::get_singleton());
@@ -44,23 +44,23 @@ void register_godotcord_types(ModuleInitializationLevel l) {
 	GC_ACT_ptr = memnew(GodotcordActivityManager);
 	Engine::get_singleton()->register_singleton("GodotcordActivityManager", GodotcordActivityManager::get_singleton());
 
-	// GC_OVRL_ptr = memnew(GodotcordOverlayManager);
-	// Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordOverlayManager", GodotcordOverlayManager::get_singleton()));
+	GC_OVRL_ptr = memnew(GodotcordOverlayManager);
+	Engine::get_singleton()->register_singleton("GodotcordOverlayManager", GodotcordOverlayManager::get_singleton());
 
-	// GC_RELSHIP_ptr = memnew(GodotcordRelationshipManager);
-	// Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordRelationshipManager", GodotcordRelationshipManager::get_singleton()));
+	GC_RELSHIP_ptr = memnew(GodotcordRelationshipManager);
+	Engine::get_singleton()->register_singleton("GodotcordRelationshipManager", GodotcordRelationshipManager::get_singleton());
 
-	// GC_USR_ptr = memnew(GodotcordUserManager);
-	// Engine::get_singleton()->add_singleton(Engine::Singleton("GodotcordUserManager", GodotcordUserManager::get_singleton()));
+	GC_USR_ptr = memnew(GodotcordUserManager);
+	Engine::get_singleton()->register_singleton("GodotcordUserManager", GodotcordUserManager::get_singleton());
 }
 
 void unregister_godotcord_types(ModuleInitializationLevel l) {
 	if (l != ModuleInitializationLevel::MODULE_INITIALIZATION_LEVEL_SCENE) return;
 	memdelete(GC_ptr);
 	memdelete(GC_ACT_ptr);
-	// memdelete(GC_OVRL_ptr);
-	// memdelete(GC_RELSHIP_ptr);
-	// memdelete(GC_USR_ptr);
+	memdelete(GC_OVRL_ptr);
+	memdelete(GC_RELSHIP_ptr);
+	memdelete(GC_USR_ptr);
 }
 
 extern "C" {

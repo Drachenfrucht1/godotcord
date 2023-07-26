@@ -46,7 +46,7 @@ void GodotcordOverlayManager::open_activity_invite(GodotcordActivity::ActivityAc
 }
 
 void GodotcordOverlayManager::open_guild_invite(String p_invite_code) {
-	Godotcord::get_singleton()->get_core()->OverlayManager().OpenGuildInvite(p_invite_code.utf8(), [](discord::Result result) {
+	Godotcord::get_singleton()->get_core()->OverlayManager().OpenGuildInvite(p_invite_code.utf8().get_data(), [](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occurred while trying to open the guild invite dialog in the overlay");
 	});
 }

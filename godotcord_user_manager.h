@@ -1,8 +1,10 @@
 #ifndef GODOTCORD_USER_MANAGER_H
 #define GODOTCORD_USER_MANAGER_H
 
+#include <godot_cpp/classes/object.hpp>
+
+#include "godotcord.h"
 #include "godotcord_user.h"
-#include "core/object.h"
 
 class GodotcordUserManager : public Object {
     GDCLASS(GodotcordUserManager, Object)
