@@ -1,8 +1,11 @@
 #include "godotcord.h"
 
+#include <godot/gdnative_interface.h>
 #include <godot_cpp/core/class_db.hpp>
-// #include "godotcord_relationship_manager.h"
-// #include "godotcord_user_manager.h"
+
+#include "godotcord_activity_manager.h"
+#include "godotcord_relationship_manager.h"
+#include "godotcord_user_manager.h"
 
 using namespace godot;
 
@@ -69,10 +72,10 @@ void Godotcord::_init_discord() {
 	// _core->SetLogHook(discord::LogLevel::Info, [](discord::LogLevel level, const char *msg) {
 	// 	switch (level) {
 	// 		case discord::LogLevel::Warn:
-	// 			print_line(vformat("[DiscordGameSDK][Warn] %s", msg));
+	// 			print_warning(vformat("[DiscordGameSDK][Warn] %s", msg));
 	// 			break;
 	// 		case discord::LogLevel::Info:
-	// 			print_line(vformat("[DiscordGameSDK][Info] %s", msg));
+	// 			print(vformat("[DiscordGameSDK][Info] %s", msg));
 	// 			break;
 	// 		case discord::LogLevel::Error:
 	// 			print_error(vformat("[DiscordGameSDK][ERR] %s", msg));
@@ -80,9 +83,9 @@ void Godotcord::_init_discord() {
 	// 	}
 	// });
 
-	// GodotcordActivityManager::get_singleton()->init();
-	// GodotcordRelationshipManager::get_singleton()->init();
-	// GodotcordUserManager::get_singleton()->init();
+	GodotcordActivityManager::get_singleton()->init();
+	GodotcordRelationshipManager::get_singleton()->init();
+	GodotcordUserManager::get_singleton()->init();
 }
 
 discord::Core* Godotcord::get_core() {

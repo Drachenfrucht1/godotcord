@@ -35,7 +35,7 @@ Array GodotcordRelationshipManager::filter_relationships(Callable filter_func) {
 
 		a.push_back(rel_ship);
 
-		return filter_func.call(a);
+		return filter_func.callv({a});
 	});
 
 	return get_relationships();

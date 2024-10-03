@@ -21,7 +21,7 @@ jobs:
                   SCONS_OPTIONS: -j2
                 - os: windows-latest
                   SETUP: .\setup.bat
-                  DOWNLOAD: python -m pip install scons==3.1.2
+                  DOWNLOAD: python -m pip install scons==4.5
                   PLATFORM: windows
                   SCONS_OPTIONS: -j2
         steps:

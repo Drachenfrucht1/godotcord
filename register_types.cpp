@@ -34,7 +34,7 @@ void register_godotcord_types(ModuleInitializationLevel l) {
 	ClassDB::register_class<GodotcordUser>();
 
 	ClassDB::register_class<GodotcordActivityManager>();
-	// Overlay
+	ClassDB::register_class<GodotcordOverlayManager>();
 	ClassDB::register_class<GodotcordRelationshipManager>();
 	ClassDB::register_class<GodotcordUserManager>();
 
