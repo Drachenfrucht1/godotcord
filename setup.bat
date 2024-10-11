@@ -8,6 +8,8 @@ mkdir libpath
 copy dgsdk\lib\x86_64\discord_game_sdk.so libpath\libdiscord_game_sdk.so
 copy dgsdk\lib\x86_64\discord_game_sdk.bundle libpath\libdiscord_game_sdk.bundle
 copy dgsdk\lib\x86_64\discord_game_sdk.dylib libpath\libdiscord_game_sdk.dylib
+copy dgsdk\lib\aarch64\discord_game_sdk.bundle libpath\libdiscord_game_sdk.arm64.bundle
+copy dgsdk\lib\aarch64\discord_game_sdk.dylib libpath\libdiscord_game_sdk.arm64.dylib
 del dgsdk\lib\x86_64\discord_game_sdk.so
 copy dgsdk\lib\x86_64 libpath
 del discord_game_sdk.zip

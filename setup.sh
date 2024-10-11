@@ -7,6 +7,9 @@ mv ./libpath/discord_game_sdk.so ./libpath/libdiscord_game_sdk.so
 mv ./libpath/discord_game_sdk.bundle ./libpath/libdiscord_game_sdk.bundle
 mv ./libpath/discord_game_sdk.dylib ./libpath/libdiscord_game_sdk.dylib
 
+mv dgsk/lib/aarch64/discord_game_sdk.bundle ./libpath/libdiscord_game_sdk.arm64.bundle
+mv dgsk/lib/aarch64/discord_game_sdk.dylib ./libpath/libdiscord_game_sdk.arm64.dylib
+
 rm -rf dgsk
 rm discord_game_sdk.zip
 
