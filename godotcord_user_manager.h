@@ -1,6 +1,13 @@
 #ifndef GODOTCORD_USER_MANAGER_H
 #define GODOTCORD_USER_MANAGER_H
 
+#ifdef ERROR
+#undef ERROR
+#endif
+#ifdef NONE
+#undef NONE
+#endif
+
 #include <godot_cpp/classes/object.hpp>
 
 #include "godotcord.h"
