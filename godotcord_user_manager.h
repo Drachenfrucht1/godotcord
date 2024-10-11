@@ -1,13 +1,6 @@
 #ifndef GODOTCORD_USER_MANAGER_H
 #define GODOTCORD_USER_MANAGER_H
 
-#ifdef ERROR
-#undef ERROR
-#endif
-#ifdef NONE
-#undef NONE
-#endif
-
 #include <godot_cpp/classes/object.hpp>
 
 #include "godotcord.h"
@@ -26,7 +19,7 @@ public:
 	};
 
 	enum PremiumType {
-		ERROR = -1,
+		ERROR_TYPE = -1,
 		NONE = 0,
 		TIER_1,
 		TIER_2

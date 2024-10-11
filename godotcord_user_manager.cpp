@@ -22,7 +22,7 @@ void GodotcordUserManager::_bind_methods() {
 	BIND_ENUM_CONSTANT(HYPE_SQUAD_HOUSE_2);
 	BIND_ENUM_CONSTANT(HYPE_SQUAD_HOUSE_3);
 
-	BIND_ENUM_CONSTANT(ERROR);
+	BIND_ENUM_CONSTANT(ERROR_TYPE);
 	BIND_ENUM_CONSTANT(NONE);
 	BIND_ENUM_CONSTANT(TIER_1);
 	BIND_ENUM_CONSTANT(TIER_2);
@@ -69,7 +69,7 @@ Ref<GodotcordUser> GodotcordUserManager::get_current_user() {
 GodotcordUserManager::PremiumType GodotcordUserManager::get_current_user_premium_type() {
 	discord::PremiumType premium_type;
 	discord::Result result = Godotcord::get_singleton()->get_core()->UserManager().GetCurrentUserPremiumType(&premium_type);
-	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, PremiumType::ERROR, "An error occured while fetching the users premium type");
+	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, PremiumType::ERROR_TYPE, "An error occured while fetching the users premium type");
 
 	return (PremiumType)premium_type;
 }
