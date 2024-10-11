@@ -86,7 +86,8 @@ void GodotcordActivityManager::set_activity(Ref<GodotcordActivity> p_activity) {
 }
 
 void GodotcordActivityManager::clear_activity() {
-	Godotcord::get_singleton()->get_core()->ActivityManager().ClearActivity([](discord::Result result) {
+	discord::Activity activity{};
+	Godotcord::get_singleton()->get_core()->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "Something went wrong while clearing the activity");
 	});
 }
