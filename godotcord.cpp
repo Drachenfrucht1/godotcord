@@ -1,7 +1,6 @@
 #include "godotcord.h"
 
-#include <godot_cpp/core/class_db.hpp>
-
+#include "godotcord_activity.h"
 #include "godotcord_activity_manager.h"
 #include "godotcord_relationship_manager.h"
 #include "godotcord_user_manager.h"
