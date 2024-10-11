@@ -1,14 +1,31 @@
 [configuration]
 
 entry_symbol = "godotcord_init"
-compatibility_minimum = 4.1
+compatibility_minimum = 4.3
 
 [libraries]
 
-linux.64 = "res://bin/x11/libgodotcord.so"
+macos.debug = "res://bin/libgodotcord.macos.template_debug.framework"
+macos.release = "res://bin/libgodotcord.macos.template_release.framework"
+windows.debug.x86_32 = "res://bin/libgodotcord.windows.template_debug.x86_32.dll"
+windows.release.x86_32 = "res://bin/libgodotcord.windows.template_release.x86_32.dll"
+windows.debug.x86_64 = "res://bin/libgodotcord.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://bin/libgodotcord.windows.template_release.x86_64.dll"
+linux.debug.x86_64 = "res://bin/libgodotcord.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://bin/libgodotcord.linux.template_release.x86_64.so"
 
 [dependencies]
 
-linux.64=["res://bin/x11/libdiscord_game_sdk.so"]
-Windows.64=["res://bin/discord_game_sdk.dll"]
-OSX.64=["res://bin/discord_game_sdk.dylib"]
+linux.debug={
+    "res://bin/libdiscord_game_sdk.so": ""
+}
+linux.release={
+    "res://bin/libdiscord_game_sdk.so": ""
+}
+windows.debug={
+    "res://bin/discord_game_sdk.dll": ""
+}
+windows.release={
+    "res://bin/discord_game_sdk.dll": ""
+}
+macos.64=["res://bin/discord_game_sdk.dylib"]

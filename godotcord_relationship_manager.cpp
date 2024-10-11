@@ -18,7 +18,7 @@ void GodotcordRelationshipManager::_bind_methods() {
 
 Array GodotcordRelationshipManager::filter_relationships(Callable filter_func) {
 	Array ret;
-	ERR_FAIL_NULL_V(filter_func, ret);
+	// ERR_FAIL_NULL_V(filter_func, ret);
 
 	Godotcord::get_singleton()->get_core()->RelationshipManager().Filter([&filter_func](discord::Relationship p_relationship) -> bool {
 		Array a;

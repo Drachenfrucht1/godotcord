@@ -1,6 +1,5 @@
 #include "godotcord.h"
 
-#include <godot/gdnative_interface.h>
 #include <godot_cpp/core/class_db.hpp>
 
 #include "godotcord_activity_manager.h"
@@ -12,7 +11,6 @@ using namespace godot;
 Godotcord *Godotcord::singleton = NULL;
 
 Godotcord::Godotcord() {
-
 	singleton = this;
 }
 
@@ -40,7 +38,7 @@ void Godotcord::_bind_methods() {
 	BIND_ENUM_CONSTANT(CreateFlags_DEFAULT);
 	BIND_ENUM_CONSTANT(CreateFlags_NO_REQUIRE_DISCORD);
 }
-	
+
 Error Godotcord::init(int64_t clientId, int createFlags = CreateFlags_DEFAULT) {
 	discord::Result result = discord::Core::Create(clientId, createFlags, &_core);
 

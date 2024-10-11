@@ -1,6 +1,6 @@
 #include "register_types.h"
 
-#include <godot/gdnative_interface.h>
+#include <gdextension_interface.h>
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/engine.hpp>
@@ -26,7 +26,7 @@ using namespace godot;
 
 void register_godotcord_types(ModuleInitializationLevel l) {
 	if (l != ModuleInitializationLevel::MODULE_INITIALIZATION_LEVEL_SCENE) return;
-	
+
 	ClassDB::register_class<Godotcord>();
 	ClassDB::register_class<GodotcordActivity>();
 	ClassDB::register_class<GodotcordRelationship>();
@@ -64,7 +64,6 @@ void unregister_godotcord_types(ModuleInitializationLevel l) {
 }
 
 extern "C" {
-
 GDExtensionBool GDE_EXPORT godotcord_init(const GDExtensionInterfaceGetProcAddress p_get_proc_address, const GDExtensionClassLibraryPtr p_library, GDExtensionInitialization *r_initialization) {
 	godot::GDExtensionBinding::InitObject init_obj(p_get_proc_address, p_library, r_initialization);
 
@@ -74,5 +73,4 @@ GDExtensionBool GDE_EXPORT godotcord_init(const GDExtensionInterfaceGetProcAddre
 
 	return init_obj.init();
 }
-
 }
