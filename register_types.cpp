@@ -27,16 +27,16 @@ using namespace godot;
 void register_godotcord_types(ModuleInitializationLevel l) {
 	if (l != ModuleInitializationLevel::MODULE_INITIALIZATION_LEVEL_SCENE) return;
 
-	ClassDB::register_class<Godotcord>();
-	ClassDB::register_class<GodotcordActivity>();
-	ClassDB::register_class<GodotcordRelationship>();
-	ClassDB::register_class<GodotcordPresence>();
-	ClassDB::register_class<GodotcordUser>();
+	GDREGISTER_CLASS(Godotcord)
+	GDREGISTER_CLASS(GodotcordActivity);
+	GDREGISTER_CLASS(GodotcordRelationship);
+	GDREGISTER_CLASS(GodotcordPresence);
+	GDREGISTER_CLASS(GodotcordUser);
 
-	ClassDB::register_class<GodotcordActivityManager>();
-	ClassDB::register_class<GodotcordOverlayManager>();
-	ClassDB::register_class<GodotcordRelationshipManager>();
-	ClassDB::register_class<GodotcordUserManager>();
+	GDREGISTER_CLASS(GodotcordActivityManager);
+	GDREGISTER_CLASS(GodotcordOverlayManager);
+	GDREGISTER_CLASS(GodotcordRelationshipManager);
+	GDREGISTER_CLASS(GodotcordUserManager);
 
 	GC_ptr = memnew(Godotcord);
 	Engine::get_singleton()->register_singleton("Godotcord", Godotcord::get_singleton());
