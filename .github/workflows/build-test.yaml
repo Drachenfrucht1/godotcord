@@ -12,17 +12,14 @@ jobs:
                 - os: macos-latest
                   SETUP: ./setup.sh
                   DOWNLOAD: brew install scons
-                  PLATFORM: osx
                   SCONS_OPTIONS: -j3
                 - os: ubuntu-latest
                   SETUP: ./setup.sh
                   DOWNLOAD: sudo apt update && sudo apt-get install build-essential scons pkg-config
-                  PLATFORM: x11
                   SCONS_OPTIONS: -j2
                 - os: windows-latest
                   SETUP: .\setup.bat
                   DOWNLOAD: python -m pip install scons==4.5
-                  PLATFORM: windows
                   SCONS_OPTIONS: -j2
         steps:
         - name: Checkout Repository
@@ -35,10 +32,6 @@ jobs:
 
         - name: Download Scons and other build dependencies
           run: ${{matrix.DOWNLOAD}}
-
-        - name: Compile Godot-CPP
-          working-directory: godot-cpp
-          run: scons target=template_debug generate_bindings=yes
 
         - name: Compile Godotcord
           run: scons ${{matrix.SCONS_OPTIONS}}
