@@ -22,7 +22,7 @@ void GodotcordUserManager::_bind_methods() {
 	BIND_ENUM_CONSTANT(HYPE_SQUAD_HOUSE_2);
 	BIND_ENUM_CONSTANT(HYPE_SQUAD_HOUSE_3);
 
-	BIND_ENUM_CONSTANT(ERROR);
+	BIND_ENUM_CONSTANT(ERROR_TYPE);
 	BIND_ENUM_CONSTANT(NONE);
 	BIND_ENUM_CONSTANT(TIER_1);
 	BIND_ENUM_CONSTANT(TIER_2);
@@ -32,7 +32,7 @@ void GodotcordUserManager::get_user(int64_t p_user_id) {
 	Godotcord::get_singleton()->get_core()->UserManager().GetUser(p_user_id, [this](discord::Result result, discord::User user) {
 		ERR_FAIL_COND_MSG(result != discord::Result::Ok, "An error occured while trying to fetch the user");
 		Ref<GodotcordUser> godotcordUser;
-                godotcordUser.instance();
+                godotcordUser.instantiate();
 
 		godotcordUser->id = user.GetId();
 	        godotcordUser->name = user.GetUsername();
@@ -48,7 +48,7 @@ void GodotcordUserManager::get_user(int64_t p_user_id) {
 Ref<GodotcordUser> GodotcordUserManager::get_current_user() {
 	discord::User user{};
 	Ref<GodotcordUser> godotcordUser;
-        godotcordUser.instance();
+        godotcordUser.instantiate();
 	discord::Result result = Godotcord::get_singleton()->get_core()->UserManager().GetCurrentUser(&user);
 	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, godotcordUser, "An error occured while trying to fetch the user");
 
@@ -69,7 +69,7 @@ Ref<GodotcordUser> GodotcordUserManager::get_current_user() {
 GodotcordUserManager::PremiumType GodotcordUserManager::get_current_user_premium_type() {
 	discord::PremiumType premium_type;
 	discord::Result result = Godotcord::get_singleton()->get_core()->UserManager().GetCurrentUserPremiumType(&premium_type);
-	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, PremiumType::ERROR, "An error occured while fetching the users premium type");
+	ERR_FAIL_COND_V_MSG(result != discord::Result::Ok, PremiumType::ERROR_TYPE, "An error occured while fetching the users premium type");
 
 	return (PremiumType)premium_type;
 }
@@ -84,7 +84,7 @@ bool GodotcordUserManager::has_current_user_flag(GodotcordUserManager::UserFlag 
 
 void GodotcordUserManager::init() {
 	Godotcord::get_singleton()->get_core()->UserManager().OnCurrentUserUpdate.Connect([this]() {
-		print_verbose("Local Discord user updated");
+		//print_verbose("Local Discord user updated");
 
 		emit_signal("local_user_updated");
 	});

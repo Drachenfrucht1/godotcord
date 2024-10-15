@@ -12,33 +12,26 @@ jobs:
                 - os: macos-latest
                   SETUP: ./setup.sh
                   DOWNLOAD: brew install scons
-                  PLATFORM: osx
-                  SCONS_OPTIONS: arch=x86_64 -j3
+                  SCONS_OPTIONS: -j3
                 - os: ubuntu-latest
                   SETUP: ./setup.sh
-                  DOWNLOAD: sudo apt update && sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
-                  PLATFORM: x11
+                  DOWNLOAD: sudo apt update && sudo apt-get install build-essential scons pkg-config
                   SCONS_OPTIONS: -j2
                 - os: windows-latest
                   SETUP: .\setup.bat
-                  DOWNLOAD: python -m pip install scons==3.1.2
-                  PLATFORM: windows
+                  DOWNLOAD: python -m pip install scons==4.5
                   SCONS_OPTIONS: -j2
         steps:
-        - uses: actions/checkout@v2
+        - name: Checkout Repository
+          uses: actions/checkout@v2
           with:
-            repository: 'godotengine/godot'
-            ref: '3.3.2-stable'
-
-        - uses: actions/checkout@v2
-          with:
-            path: 'modules/godotcord'
+            submodules: recursive
 
         - name: Download Discord Game SDK
-          working-directory: modules/godotcord
           run: ${{matrix.SETUP}}
 
-        - run: ${{matrix.DOWNLOAD}}
+        - name: Download Scons and other build dependencies
+          run: ${{matrix.DOWNLOAD}}
 
-        - name: Compile
-          run: scons bits=64 ${{matrix.SCONS_OPTIONS}} target=debug tools=no disable_3d=yes disable_advanced_gui=yes module_arkit_enabled=no module_bullet_enabled=no module_hdr_enabled=no module_camera_enabled=no module_enet_enabled=no module_mobile_vr_enabled=no module_websocket_enabled=no module_webrtc_enabled=no module_gdnative_enabled=no module_visual_script_enabled=no module_dds_enabled=no module_webp_enabled=no module_webm_enabled=no module_upnp_enabled=no
+        - name: Compile Godotcord
+          run: scons ${{matrix.SCONS_OPTIONS}}

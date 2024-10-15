@@ -1,6 +1,10 @@
 #ifndef GODOTCORD_ACTIVITY_H
 #define GODOTCORD_ACTIVITY_H
 
+#ifdef IGNORE
+#undef IGNORE
+#endif
+
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/ref.hpp>
 

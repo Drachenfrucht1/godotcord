@@ -1,8 +1,10 @@
 #ifndef GODOTCORD_OVERLAY_MANAGER
 #define GODOTCORD_OVERLAY_MANAGER
 
-#include "core/object.h"
+#include <godot_cpp/classes/object.hpp>
+
 #include "godotcord.h"
+#include "godotcord_activity.h"
 
 class GodotcordOverlayManager : public Object {
 	GDCLASS(GodotcordOverlayManager, Object);
