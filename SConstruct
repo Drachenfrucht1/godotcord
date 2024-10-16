@@ -50,7 +50,7 @@ else:
         source=sources,
     )
 
-env.Append(LIBPATH=['libpath'])
+env.Append(LIBPATH=['bin'])
 
 if env["platform"] == "windows":
     env.Append(LINKFLAGS=['discord_game_sdk.dll.lib'])
